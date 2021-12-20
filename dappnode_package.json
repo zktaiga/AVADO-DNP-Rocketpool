@@ -1,0 +1,25 @@
+{
+  "name": "rocketpool.avado.dnp.dappnode.eth",
+  "version": "0.0.1",
+  "upstream": "v1.1.2",
+  "title": "Rocket Pool",
+  "description": "Rocket Pool TODO",
+  "mainService": "Rocket Pool TODO",
+  "avatar": "/ipfs/QmZopmEFUGeQXZAeok5BCtzw49QQ9UChvQ1MboA3dsBVZp",
+  "type": "service",
+  "autoupdate": true,
+  "image": {
+    "volumes": [
+      "rocketpool:/.rocketpool",
+      "/var/run/docker.sock:/var/run/docker.sock"
+    ],
+    "restart": "always"
+  },
+  "author": "heeckhau",
+  "license": "Apache(c)",
+  "links": {
+    "OnboardingWizard": "https://rocketpool.my.ava.do",
+    "HomePage": "https://rocketpool.net/"
+  },
+  "builddate": "2021-12-17T06:55:27.090Z"
+}
