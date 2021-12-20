@@ -17,7 +17,7 @@ COPY --from=builder /app/cmd/validator/validator /usr/local/bin/validator
 
 RUN apk add supervisor gcompat
 
-COPY prater/config.yml /srv/rocketpool
+COPY config.yml /srv/rocketpool
 COPY restart-validator.sh /srv/rocketpool
 COPY settings.yml /srv/rocketpool
 COPY supervisord.conf /etc

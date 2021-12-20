@@ -20,8 +20,8 @@ smartnode:
   stakeUrl: https://testnet.rocketpool.net
 chains:
   eth1:
-    provider: http://127.0.0.1:8545
-    wsProvider: ws://127.0.0.1:8546
+    provider: http://my.goerli-geth.avado.dnp.dappnode.eth:8545
+    wsProvider: ws://my.goerli-geth.avado.dnp.dappnode.eth:8546
     chainID: 5 # Goerli
     client:
       options:
