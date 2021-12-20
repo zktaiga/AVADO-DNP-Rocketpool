@@ -1,20 +1,30 @@
-ARG PRYSM_VERSION=latest
-ARG RP_VERSION=v1.1.2
+FROM  gcr.io/prysmaticlabs/prysm/validator:latest as builder
 
-# TODO run this in builder
 
-FROM rocketpool/smartnode:${RP_VERSION} as rocketpool
 
-# RUN mkdir -p /.rocketpool/
-# RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rp-smartnode-install-amd64.tar.xz
-# # TODO mainnet
-# RUN tar -xvf rp-smartnode-install-amd64.tar.xz amd64/rp-smartnode-install/network/prater
-# RUN mv amd64/rp-smartnode-install/network/prater /.rocketpool
-# RUN ls /.rocketpool
+FROM alpine:latest
 
-COPY prater/ /.rocketpool/
+RUN mkdir -p /srv/rocketpool
 
-# COPY --from=rocketpool /go/bin/rocketpool /go/bin/rocketpool
+RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rocketpool-cli-linux-amd64 -O /usr/local/bin/rocketpool
 
-#COPY --from=prysm /app/cmd/validator/validator /bin/validator
+RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rocketpool-daemon-linux-amd64 -O /usr/local/bin/rocketpoold
+
+RUN chmod +x /usr/local/bin/rocketpool /usr/local/bin/rocketpoold
+
+COPY --from=builder /app/cmd/validator/validator /usr/local/bin/validator
+#RUN wget https://github.com/prysmaticlabs/prysm/releases/download/v2.0.5/validator-v2.0.5-linux-amd64  -O /usr/local/bin/validator
+
+RUN apk add supervisor gcompat
+
+COPY prater/config.yml /srv/rocketpool
+COPY restart-validator.sh /srv/rocketpool
+COPY settings.yml /srv/rocketpool
+COPY supervisord.conf /etc
+COPY test.sh /
+COPY entrypoint.sh /
+
+RUN chmod a+x /entrypoint.sh
+
+#ENTRYPOINT /entrypoint.sh
 

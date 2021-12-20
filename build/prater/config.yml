@@ -7,10 +7,10 @@ smartnode:
   projectName: rocketpool
   graffitiVersion: v1.1.3
   image: rocketpool/smartnode:v1.1.3
-  passwordPath: /.rocketpool/data/password
-  walletPath: /.rocketpool/data/wallet
-  validatorKeychainPath: /.rocketpool/data/validators
-  validatorRestartCommand: "$HOME/.rocketpool/chains/eth2/restart-validator.sh"
+  passwordPath: /rocketpool/data/password
+  walletPath: /rocketpool/data/wallet
+  validatorKeychainPath: /rocketpool/data/validators
+  validatorRestartCommand: "/srv/rocketpool/chains/eth2/restart-validator.sh"
   maxFee: 0 # The maximum amount you're willing to pay, in gwei, to use for transactions.
             # Set it to 0 if you want to view the current suggested prices and choose this number manually for each transaction.
   maxPriorityFee: 2 # The most "extra" you want to spend on a transaction to make it faster, in gwei. 
@@ -20,8 +20,8 @@ smartnode:
   stakeUrl: https://testnet.rocketpool.net
 chains:
   eth1:
-    provider: http://eth1:8545
-    wsProvider: ws://eth1:8546
+    provider: http://127.0.0.1:8545
+    wsProvider: ws://127.0.0.1:8546
     chainID: 5 # Goerli
     client:
       options:
@@ -113,7 +113,7 @@ chains:
           env: WS_PROVIDER_URL
           required: true
   eth2:
-    provider: http://eth2:5052
+    provider: http://127.0.0.1:5052
     client:
       options:
       - id: lighthouse
