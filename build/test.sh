@@ -5,5 +5,6 @@ alias rp="rocketpool -d /usr/local/bin/rocketpoold -c /srv/rocketpool --allow-ro
 
 mkdir -p /rocketpool/data
 
-rp wallet init
+
+#rp wallet init
 
