@@ -21,7 +21,7 @@ COPY config.yml /srv/rocketpool
 COPY restart-validator.sh /srv/rocketpool
 COPY settings.yml /srv/rocketpool
 
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY supervisord.conf /etc/supervisord.conf
 
 COPY test.sh /
 COPY entrypoint.sh /
