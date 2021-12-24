@@ -24,9 +24,7 @@ COPY settings.yml /srv/rocketpool
 COPY supervisord.conf /etc/supervisord.conf
 
 COPY test.sh /
-COPY entrypoint.sh /
 
-RUN chmod a+x /entrypoint.sh
+ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
 
-ENTRYPOINT /entrypoint.sh
 

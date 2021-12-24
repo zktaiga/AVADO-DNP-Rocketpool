@@ -1,6 +1,6 @@
 {
   "name": "rocketpool.avado.dnp.dappnode.eth",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "upstream": "v1.1.2",
   "title": "Rocket Pool",
   "description": "Rocket Pool TODO",
@@ -13,9 +13,9 @@
       "rocketpool:/rocketpool"
     ],
     "restart": "always",
-    "path": "rocketpool.avado.dnp.dappnode.eth_0.0.8.tar.xz",
-    "hash": "/ipfs/QmSHGYtHG3AH1MfM9TPgftAWmRJNJhwRHuUJaFAVh2r9e5",
-    "size": 58595092
+    "path": "rocketpool.avado.dnp.dappnode.eth_0.0.9.tar.xz",
+    "hash": "/ipfs/QmdtXb7BMTguMUv9uknW1d3h7PYp7J78YLCFmqoAgJbiPu",
+    "size": 58590412
   },
   "author": "heeckhau",
   "license": "Apache(c)",
@@ -23,5 +23,5 @@
     "OnboardingWizard": "https://rocketpool.my.ava.do",
     "HomePage": "https://rocketpool.net/"
   },
-  "builddate": "2021-12-24T14:22:38.332Z"
+  "builddate": "2021-12-24T14:34:57.098Z"
 }
