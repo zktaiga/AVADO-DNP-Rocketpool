@@ -20,7 +20,9 @@ RUN apk add supervisor gcompat
 COPY config.yml /srv/rocketpool
 COPY restart-validator.sh /srv/rocketpool
 COPY settings.yml /srv/rocketpool
-COPY supervisord.conf /etc
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
 COPY test.sh /
 COPY entrypoint.sh /
 

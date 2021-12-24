@@ -1,2 +1,2 @@
 #!/bin/sh
-supervisorctl restart prysm
+supervisorctl restart validator

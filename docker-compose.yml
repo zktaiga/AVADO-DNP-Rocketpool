@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   rocketpool.avado.dnp.dappnode.eth:
-    image: 'rocketpool.avado.dnp.dappnode.eth:0.0.2'
+    image: 'rocketpool.avado.dnp.dappnode.eth:0.0.4'
     build:
       context: ./build
       args:
@@ -9,7 +9,6 @@ services:
         PRYSM_VERSION: v2.0.5
     volumes:
       - 'rocketpool:/rocketpool'
-      - '/var/run/docker.sock:/var/run/docker.sock'
     environment:
       - EXTRA_OPTS=
 volumes:
