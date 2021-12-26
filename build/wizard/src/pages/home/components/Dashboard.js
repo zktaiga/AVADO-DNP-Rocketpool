@@ -79,20 +79,15 @@ const Comp = () => {
                 <div className="columns is-mobile">
                     <div className="column is-8-desktop is-10">
 
-                        <h1 className="title is-1 is-spaced has-text-white">ETH2.0 Staking Key Generator</h1>
-                        <p>This package allows you to generate staking keys for ETH2.0 on your local machine.</p>
+                        <h1 className="title is-1 is-spaced has-text-white">Avado Rocket Pool</h1>
+                        <p>Todo...</p>
                         <br />
                         <div className="columns">
                             <div className="column is-half ">
                                 <h1 className="title is-3 has-text-white">How does this work?</h1>
 
                                 <p>
-                                    This package will generate exactly the same keys as if you were using the launchpad binary which
-                                    you can later use to deposit on the Ethereum Launchpad & use these keys in the AVADO ETH2.0 Prysm client (or other clients)
-                        </p><br />
-                                <p>This is just a little more user friendly, and true to the AVADO spirit of making everything as easy as possible !</p>
-                                <br />
-                                <p>NOTE: After generating and downloading the keys - you can remove this package again. It is not required to run your validator. It is just a tool to easily generate ETH2.0 validator keys.</p>
+                                    TODO.</p>
 
                             </div>
                             <div className="column is-half">

@@ -16,6 +16,7 @@ const cors = corsMiddleware({
     origins: [
         /^http:\/\/localhost(:[\d]+)?$/,
         "http://*.dappnode.eth",
+        "http://*.my.ava.do"
     ]
 });
 
