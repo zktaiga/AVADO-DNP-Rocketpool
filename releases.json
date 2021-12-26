@@ -89,5 +89,19 @@
     "uploadedTo": {
       "dappnode": "Sun, 26 Dec 2021 22:11:17 GMT"
     }
+  },
+  "0.0.15": {
+    "hash": "/ipfs/QmdUUR7XCgEBiLWDfYYRisuKfCY7EsWoAexMDqVMZJLFoC",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Sun, 26 Dec 2021 22:18:45 GMT"
+    }
+  },
+  "0.0.16": {
+    "hash": "/ipfs/QmT1Erg6N4B5VvbMbxxV6ecJa2GmiEpfBPV6bJ5D1RympV",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Sun, 26 Dec 2021 22:27:52 GMT"
+    }
   }
 }
