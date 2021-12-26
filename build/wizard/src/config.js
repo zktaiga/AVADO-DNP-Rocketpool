@@ -3,7 +3,7 @@ const configs = {
         name: "dev",
         admin: true,
         api: {
-            HTTP: "http://localhost:9999",
+            HTTP: "http://my.rocketpool.avado.dnp.dappnode.eth:9999",
         }
     },
 

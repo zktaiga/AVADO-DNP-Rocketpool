@@ -29,16 +29,16 @@ server.post("/rpd", (req, res, next) => {
         return next();
     }
 
-    rpd(req.body.language, req.body.password, req.body.amount).then((stdout) => {
+    rpd(req.body.command).then((stdout) => {
         res.send(200, stdout);
     }).catch((e) => {
         res.send(500, e);
     })
 });
 
-const rpd = () => {
+const rpd = (command) => {
     return new Promise((resolve, reject) => {
-        const cmd = `/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api $command`;
+        const cmd = `/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api ${command}`;
         console.log(`Running ${cmd}`);
         const child = exec(cmd, (error, stdout, stderr) => {
             if (error) {

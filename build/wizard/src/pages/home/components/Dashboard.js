@@ -28,7 +28,6 @@ const Comp = () => {
     const [wampSession, setWampSession] = React.useState();
 
     React.useEffect(() => {
-        reset();
         const connection = new autobahn.Connection({
             url,
             realm
@@ -57,19 +56,6 @@ const Comp = () => {
         }
     }, [password, amount, verifyPassword, generating]);
 
-
-
-    const reset = async () => {
-        await axios.get(`${config.api.HTTP}/reset`).then((res) => {
-            // 
-        }).finally(() => {
-            setCmdOutput(null);
-            setPassword(null);
-            setVerifyPassword(null);
-            setPasswordFieldType("password");
-        })
-    }
-
     const toggleViewPassword = () => {
         const currentType = passwordFieldType;
         setPasswordFieldType(currentType === "password" ? "text" : "password");
@@ -78,11 +64,13 @@ const Comp = () => {
 
     const generate = async (password, amount) => {
         if (generating) return;
-        setGenerating(true);
+        setGenerating(false);
         setProgress(`Running key generator.. Hang on to your socks! This might take a minute.`);
-        await axios.post(`${config.api.HTTP}/rpd`, { language: mnemonicLanguage, password: password, amount: amount }, { timeout: 5 * 60 * 1000 }).then((res) => {
+        await axios.post(`${config.api.HTTP}/rpd`, { command: "minipool status" }, { timeout: 5 * 60 * 1000 }).then((res) => {
             setCmdOutput(res.data);
+            alert(res.data);
         })
+        
         setGenerating(false);
     }
 
@@ -207,8 +195,7 @@ const Comp = () => {
                                     </div>
                                     <p><a onClick={() => { setCmdShowOutput(!cmdShowOutput) }} className=" is-small is-link">show a transcript of key generation</a></p>
                                     <br />
-                                    <button onClick={() => { reset() }} className="button">Reset: wipe keys from package - and start over</button>
-                                    {cmdShowOutput && (
+                                   {cmdShowOutput && (
                                         <>
                                             <br /><br />
                                             <pre className="transcript">

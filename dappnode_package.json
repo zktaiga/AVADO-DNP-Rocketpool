@@ -1,6 +1,6 @@
 {
   "name": "rocketpool.avado.dnp.dappnode.eth",
-  "version": "0.0.10",
+  "version": "0.0.15",
   "upstream": "v1.1.2",
   "title": "Rocket Pool",
   "description": "Rocket Pool TODO",
@@ -13,9 +13,9 @@
       "rocketpool:/rocketpool"
     ],
     "restart": "always",
-    "path": "rocketpool.avado.dnp.dappnode.eth_0.0.10.tar.xz",
-    "hash": "/ipfs/QmPCWmXaAAY9zuv62NtVvZsqQGMnSQUcxmzC8U6eYGMmNx",
-    "size": 58591864
+    "path": "",
+    "hash": "",
+    "size": ""
   },
   "author": "heeckhau",
   "license": "Apache(c)",
@@ -24,8 +24,8 @@
     "prysm-beacon-chain-prater.avado.dnp.dappnode.eth": ""
   },
   "links": {
-    "OnboardingWizard": "https://rocketpool.my.ava.do",
+    "OnboardingWizard": "https://my.rocketpool.avado.dnp.dappnode.eth",
     "HomePage": "https://rocketpool.net/"
   },
-  "builddate": "2021-12-25T11:23:53.585Z"
+  "builddate": "2021-12-26T22:15:10.434Z"
 }
