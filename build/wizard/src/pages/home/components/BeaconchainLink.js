@@ -1,19 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-function url(publicKey) {
-    return "https://prater.beaconcha.in/validator/" + publicKey + "#rocketpool";
+function url(validatorPubkey) {
+    return "https://prater.beaconcha.in/validator/" + validatorPubkey + "#rocketpool";
 }
 
-const BeaconchainLink = ({ publicKey }) => {
-    if (!publicKey)
+const BeaconchainLink = ({ validator }) => {
+    if (!validator)
         return (
             <>
             </>
         );
     return (
         <>
-            <p><a href={url(publicKey)}>More validator info on the Ethereum 2.0 Beacon Chain Explorer</a></p>
+            <h2>Validator {validator.index}</h2>
+            <p><b>Status:</b> {validator.status}</p>
+            <p><b>Active:</b> {validator.active?"true":"false"}</p>
+            <p><a href={url(validator.pubkey)}>More validator info on the Ethereum 2.0 Beacon Chain Explorer</a></p>
         </>
     );
 };
@@ -22,8 +25,8 @@ BeaconchainLink.defaultProps = {
     title : ""
 }
 
-BeaconchainLink.prototypes = {
-    title: PropTypes.string
-}
+// BeaconchainLink.prototypes = {
+//     title: PropTypes.string
+// }
 
 export default BeaconchainLink

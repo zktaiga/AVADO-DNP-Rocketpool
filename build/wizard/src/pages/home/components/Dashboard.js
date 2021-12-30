@@ -3,7 +3,7 @@ import axios from "axios";
 import spinner from "../../../assets/spinner.svg";
 import config from "../../../config";
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import rhino from "../../../assets/rhino.png";
+import rocketpool from "../../../assets/rocketpool.png";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DownloadKeys from "./DownloadKeys.js";
@@ -26,7 +26,14 @@ const Comp = () => {
     const [cmdOutput, setCmdOutput] = React.useState();
     const [wampSession, setWampSession] = React.useState();
 
-    const [publicKey, setPublicKey] = React.useState("");
+    // interface validatorStatus {
+    //     pubkey : String;
+    //     status : String;
+    //     active : Boolean;
+    //     index : BigInteger;
+    // }
+
+    const [validator, setValidator] = React.useState();
 
     React.useEffect(() => {
         const connection = new autobahn.Connection({
@@ -58,11 +65,19 @@ const Comp = () => {
     }, [password, amount, verifyPassword, generating]);
 
     React.useEffect(() => {
-        if (!publicKey) {
+        if (!validator) {
             async function fetchStatus() {
                 await axios.post(`${config.api.HTTP}/rpd`, { command: "minipool status" }, { timeout: 5 * 60 * 1000 }).then((res) => {
                     const data = JSON.parse(res.data);
-                    setPublicKey(data.minipools[0].validatorPubkey);
+                    const minipoool0 = data.minipools[0];
+                    
+                    const validator = {
+                        pubkey : minipoool0.validatorPubkey,
+                        status : minipoool0.status.status,
+                        index : minipoool0.validator.index,
+                        active : minipoool0.validator.active
+                    }
+                    setValidator(validator);
                 })
             }
             fetchStatus();
@@ -81,9 +96,7 @@ const Comp = () => {
         setProgress(`Running key generator.. Hang on to your socks! This might take a minute.`);
         await axios.post(`${config.api.HTTP}/rpd`, { command: "minipool status" }, { timeout: 5 * 60 * 1000 }).then((res) => {
             const data = JSON.parse(res.data);
-            console.log(data);
-            setCmdOutput(JSON.toString(data.minipools[0]));
-            setPublicKey(data.minipools[0].validatorPubkey);
+            setCmdOutput(JSON.stringify(data));
         })
 
         setGenerating(false);
@@ -107,8 +120,7 @@ const Comp = () => {
 
                             </div>
                             <div className="column is-half">
-                                <img src={rhino} />
-                                <p className="has-text-centered help">Leslie the Launchpad Rhino (<a target="_blank" href="https://launchpad.ethereum.org/">source</a>)</p>
+                                <img src={rocketpool} />
                             </div>
                         </div>
                         {
@@ -141,7 +153,8 @@ const Comp = () => {
                             )
                         }
                         <br />
-                        <BeaconchainLink publicKey={publicKey} />
+                        <BeaconchainLink validator={validator} />
+                        
                     </div>
                 </div>
             </section>
