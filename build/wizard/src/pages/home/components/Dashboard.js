@@ -8,6 +8,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DownloadKeys from "./DownloadKeys.js";
 import autobahn from "autobahn-browser";
+import BeaconchainLink from "./BeaconchainLink";
 
 const url = "ws://my.wamp.dnp.dappnode.eth:8080/ws";
 const realm = "dappnode_admin";
@@ -22,10 +23,10 @@ const Comp = () => {
     const [readyToGenerate, setReadyToGenerate] = React.useState(false);
     const [passwordFieldType, setPasswordFieldType] = React.useState("password");
     const [passwordFieldIcon, setPasswordFieldIcon] = React.useState(faEyeSlash);
-    const [mnemonicLanguage, setMnemonicLanguage] = React.useState("english");
     const [cmdOutput, setCmdOutput] = React.useState();
-    const [cmdShowOutput, setCmdShowOutput] = React.useState(false);
     const [wampSession, setWampSession] = React.useState();
+
+    const [publicKey, setPublicKey] = React.useState("");
 
     React.useEffect(() => {
         const connection = new autobahn.Connection({
@@ -56,6 +57,18 @@ const Comp = () => {
         }
     }, [password, amount, verifyPassword, generating]);
 
+    React.useEffect(() => {
+        if (!publicKey) {
+            async function fetchStatus() {
+                await axios.post(`${config.api.HTTP}/rpd`, { command: "minipool status" }, { timeout: 5 * 60 * 1000 }).then((res) => {
+                    const data = JSON.parse(res.data);
+                    setPublicKey(data.minipools[0].validatorPubkey);
+                })
+            }
+            fetchStatus();
+        }
+    }, []);
+
     const toggleViewPassword = () => {
         const currentType = passwordFieldType;
         setPasswordFieldType(currentType === "password" ? "text" : "password");
@@ -67,9 +80,12 @@ const Comp = () => {
         setGenerating(false);
         setProgress(`Running key generator.. Hang on to your socks! This might take a minute.`);
         await axios.post(`${config.api.HTTP}/rpd`, { command: "minipool status" }, { timeout: 5 * 60 * 1000 }).then((res) => {
-            setCmdOutput("<pre>"+res.data+"</pre>");
+            const data = JSON.parse(res.data);
+            console.log(data);
+            setCmdOutput(JSON.toString(data.minipools[0]));
+            setPublicKey(data.minipools[0].validatorPubkey);
         })
-        
+
         setGenerating(false);
     }
 
@@ -113,7 +129,7 @@ const Comp = () => {
                         {
                             (
                                 <>
-                                   {
+                                    {
                                         <>
                                             <br /><br />
                                             <pre className="transcript">
@@ -125,6 +141,7 @@ const Comp = () => {
                             )
                         }
                         <br />
+                        <BeaconchainLink publicKey={publicKey} />
                     </div>
                 </div>
             </section>

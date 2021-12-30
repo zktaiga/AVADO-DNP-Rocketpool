@@ -105,10 +105,73 @@
     }
   },
   "0.0.17": {
-    "hash": "/ipfs/QmbxmsdxGcaD8XhSFC6ibRGcQ5uEb4BE9iGr8VhYoEFnik",
+    "hash": "/ipfs/QmTRWj5kvsz4NcEBsRopoz7Ebq1HdajBrjmpMajszvFGCG",
     "type": "manifest",
     "uploadedTo": {
-      "dappnode": "Sun, 26 Dec 2021 22:37:48 GMT"
+      "dappnode": "Wed, 29 Dec 2021 11:26:35 GMT"
+    }
+  },
+  "0.0.18": {
+    "hash": "/ipfs/QmZPSTwKxhrKmzKJnMgvAUBs91L2xZWJsWbt9PV2kyrjvT",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Wed, 29 Dec 2021 11:29:47 GMT"
+    }
+  },
+  "0.0.19": {
+    "hash": "/ipfs/QmcrZMdpZiEdXN7rBkQiAvArq8FtMzVi2hb5by3BAxmTpz",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Wed, 29 Dec 2021 11:42:02 GMT"
+    }
+  },
+  "0.0.20": {
+    "hash": "/ipfs/QmVoNoLvwvpfjaT5XWBwEKetxgjy75APLHWi7jwnZwFLaK",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Wed, 29 Dec 2021 11:50:18 GMT"
+    }
+  },
+  "0.0.21": {
+    "hash": "/ipfs/QmPf7KLDYNijSaED2sYuZhsP3e4ACp3Lcvubws73SZZqE9",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Wed, 29 Dec 2021 12:54:33 GMT"
+    }
+  },
+  "0.0.22": {
+    "hash": "/ipfs/QmPQoWA9iiiMsNNWvxjnE3QMbE5UpbDEHtg6Ur2P1vxkAz",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Wed, 29 Dec 2021 13:03:02 GMT"
+    }
+  },
+  "0.0.23": {
+    "hash": "/ipfs/QmZDKLFne7MFQrMKeB1ZNk6Cq1HUu2FBKPyMMXosNh1m7K",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Wed, 29 Dec 2021 13:22:31 GMT"
+    }
+  },
+  "0.0.24": {
+    "hash": "/ipfs/QmQqCshCFeogGGR8ioENmMXLQ79LXSXuuPDtFoeLpwYDGW",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Wed, 29 Dec 2021 13:31:45 GMT"
+    }
+  },
+  "0.0.26": {
+    "hash": "/ipfs/Qme6RzAoMRc8evXJ41sf9Niymnmm1J5JcQJhvdSLp3vna5",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Thu, 30 Dec 2021 08:19:14 GMT"
+    }
+  },
+  "0.0.27": {
+    "hash": "/ipfs/QmTqRrgWetXx1UW7zGzZUnY3cRGzkAgAZZ4mUvCYvabLBd",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Thu, 30 Dec 2021 08:27:53 GMT"
     }
   }
 }

@@ -1,5 +1,5 @@
 const restify = require("restify");
-const corsMiddleware = require("restify-cors-middleware");
+const corsMiddleware = require("restify-cors-middleware2");
 const exec = require("child_process").exec;
 const fs = require('fs');
 const path = require("path");
