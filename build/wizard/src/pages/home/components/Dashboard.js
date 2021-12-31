@@ -6,7 +6,6 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import rocketpool from "../../../assets/rocketpool.png";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DownloadKeys from "./DownloadKeys.js";
 import autobahn from "autobahn-browser";
 import BeaconchainLink from "./BeaconchainLink";
 import DownloadBackup from "./DownloadBackup";
@@ -179,8 +178,8 @@ const Comp = () => {
 
                                         {tab === "backup" && (
                                             <section className="is-medium has-text-white">
-                                                <p className="">You can download your node identity keys. this is very important when you stake AVAX since the nodeID is part of your stake.</p>
-                                                <DownloadBackup fileprefix="rocketpool" session={wampSession} />
+                                                <p className="">TODO: add info about downloading backup (security advisory too (contains password)).</p>
+                                                <DownloadBackup />
                                             </section>
                                         )}
                                         {tab === "restore" && (

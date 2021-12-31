@@ -82,6 +82,26 @@ server.get("/"+backupFileName, (req, res) => {
     });
 });
 
+//restore
+server.post('/upload-test', (req, res, next) => {
+    console.log("upload test");
+    if (req.files.file) {
+        const file = req.files.file;
+        req.info = file.name;
+        fs.rename( file.path, "/tmp/" + file.name, (err) => {if (err) console.log('ERROR: ' + err)});
+        console.log("received " + file.name);
+    }
+    //TODO check file (data folder...)
+    //     and actually restore
+
+    res.send({
+      code: 'success',
+      info: req.info,
+      message: 'Backup file is not implemented yet, but thanks for trying (TODO)',
+    });
+    next();
+  });
+
 server.listen(9999, function () {
     console.log("%s listening at %s", server.name, server.url);
 });

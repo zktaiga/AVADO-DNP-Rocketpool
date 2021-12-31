@@ -180,5 +180,12 @@
     "uploadedTo": {
       "dappnode": "Fri, 31 Dec 2021 07:44:22 GMT"
     }
+  },
+  "0.0.29": {
+    "hash": "/ipfs/Qmd4PNe7zLcHQPuD4EGJPBkwZcdvUpMeFvu8pGEwE6MGu1",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Fri, 31 Dec 2021 08:01:26 GMT"
+    }
   }
 }

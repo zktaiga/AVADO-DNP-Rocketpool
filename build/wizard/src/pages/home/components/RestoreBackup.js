@@ -1,12 +1,19 @@
 import React from "react";
 import { saveAs } from "file-saver";
+import axios from "axios";
+import config from "../../../config";
 
-const packageName = "avalanchego.avado.dnp.dappnode.eth";
+
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import autobahn from "autobahn-browser";
+
+const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
 const Comp = ({ session, fileprefix }) => {
 
-    const [stakerkeyresult, setStakerkeyresult] = React.useState();
-    const [stakercrtresult, setStakercrtresult] = React.useState();
+    const [dataresult, setDataresult] = React.useState();
     const [restartresult, setRestartresult] = React.useState();
 
     const restart = async () => {
@@ -20,54 +27,28 @@ const Comp = ({ session, fileprefix }) => {
     }
 
 
-    function fileToDataUri(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = e => {
-                // fileContent is a base64 URI = data:application/zip;base64,UEsDBBQAAAg...
-                const fileContent = e.target.result;
-                resolve(fileContent);
-            };
+   async function uploadFile(file, path, name, setMsg) {
+        const data = new FormData();
+        data.append('file', file);
+        axios.post(`${config.api.HTTP}/upload-test`, data).then(res => {
+            setMsg(res.data.message);
+        }).catch(err => {
+          console.log(err);
         });
-    }
-
-    async function uploadFile(file, path, name, setMsg) {
-        try {
-            const dataUri = await fileToDataUri(file);
-            const res = JSON.parse(await session.call("copyFileTo.dappmanager.dnp.dappnode.eth", [],
-                {
-                    id: packageName,
-                    dataUri: dataUri,
-                    filename: name,
-                    toPath: path
-                }));
-            setMsg(res.message);
-        } catch (e) {
-            console.error(`Error on copyFileTo ${packageName} ${path}/${name}: ${e.stack}`);
-        }
     }
 
     return (
         <>
             <div>
-                staker.key &nbsp;
+                data.upload &nbsp;
             <input
                     type="file"
-                    onChange={e => uploadFile(e.target.files[0], "/root/.avalanchego/staking", "staker.key", setStakerkeyresult)}
+                    onChange={e => uploadFile(e.target.files[0], "/", "data", setDataresult)}
                 />
-                {stakerkeyresult && (<div className="is-size-7">{stakerkeyresult}</div>)}
+                {dataresult && (<div className="is-size-7">{dataresult}</div>)}
             </div>
-            <div>
-                staker.crt &nbsp;
-            <input
-                    type="file"
-                    onChange={e => uploadFile(e.target.files[0], "/root/.avalanchego/staking", "staker.crt", setStakercrtresult)}
-                />
-                {stakercrtresult && (<div className="is-size-7">{stakercrtresult}</div>)}
-            </div>
-
-            {stakerkeyresult && stakercrtresult && (
+            
+            {dataresult && (
                 <>
                     <button className="button" onClick={restart}>restart node</button>
                     {restartresult && (<div className="is-size-7">{restartresult}</div>)}
