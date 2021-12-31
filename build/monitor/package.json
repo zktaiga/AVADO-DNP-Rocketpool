@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.24.0",
     "restify": "^8.6.0",
-    "restify-cors-middleware2": "^2.1.2"
+    "restify-cors-middleware2": "^2.1.2",
+    "archiver":""
   }
 }

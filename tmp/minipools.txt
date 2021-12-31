@@ -1,0 +1,23 @@
+1 Staking minipool(s):
+
+--------------------
+
+Address:              0x333333AAf839ef6413C3C816A7313Fc777C40b16
+Status updated:       2021-12-22, 10:21 +0000 UTC
+Node fee:             20.000000%
+Node deposit:         16.000000 ETH
+RP ETH assigned:      2021-12-22, 09:20 +0000 UTC
+RP deposit:           16.000000 ETH
+Validator pubkey:     0xb23387f9b746b34303a7fbaedcea8c50ea54745420bd32e606f745d888a3c4386ece4439d2398efccdbdee74130877aa
+Validator index:      270454
+Validator active:     yes
+Validator balance:    32.076833 ETH
+
+Expected rewards:     16.046099 ETH
+Use latest delegate:  no
+Delegate address:     0xc6b40C1A317144a09C303c504cb525ee68aB8C8e
+Rollback delegate:    <none>
+Effective delegate:   0xc6b40C1A317144a09C303c504cb525ee68aB8C8e
+
+
+0 finalized minipool(s):

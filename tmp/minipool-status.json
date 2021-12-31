@@ -1,0 +1,50 @@
+{
+    "status": "success",
+    "error": "",
+    "minipools": [
+        {
+            "address": "0x333333aaf839ef6413c3c816a7313fc777c40b16",
+            "validatorPubkey": "b23387f9b746b34303a7fbaedcea8c50ea54745420bd32e606f745d888a3c4386ece4439d2398efccdbdee74130877aa",
+            "status": {
+                "status": "Staking",
+                "statusBlock": 6066145,
+                "statusTime": "2021-12-22T10:21:32Z"
+            },
+            "depositType": "Half",
+            "node": {
+                "address": "0x65459a6549b6a186ff758a3eeaec2f80d44b5a6e",
+                "fee": 0.2,
+                "depositBalance": 16000000000000000000,
+                "refundBalance": 0,
+                "depositAssigned": true
+            },
+            "user": {
+                "depositBalance": 16000000000000000000,
+                "depositAssigned": true,
+                "depositAssignedTime": "2021-12-22T09:20:44Z"
+            },
+            "balances": {
+                "eth": 0,
+                "reth": 0,
+                "rpl": 0,
+                "fixedSupplyRpl": 0
+            },
+            "validator": {
+                "exists": true,
+                "active": true,
+                "index": 270454,
+                "balance": 32076791651000000000,
+                "nodeBalance": 16046074990600000000
+            },
+            "refundAvailable": false,
+            "withdrawalAvailable": false,
+            "closeAvailable": false,
+            "finalised": false,
+            "useLatestDelegate": false,
+            "delegate": "0xc6b40c1a317144a09c303c504cb525ee68ab8c8e",
+            "previousDelegate": "0x0000000000000000000000000000000000000000",
+            "effectiveDelegate": "0xc6b40c1a317144a09c303c504cb525ee68ab8c8e"
+        }
+    ],
+    "latestDelegate": "0xc6b40c1a317144a09c303c504cb525ee68ab8c8e"
+}

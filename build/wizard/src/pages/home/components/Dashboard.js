@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DownloadKeys from "./DownloadKeys.js";
 import autobahn from "autobahn-browser";
 import BeaconchainLink from "./BeaconchainLink";
+import DownloadBackup from "./DownloadBackup";
+import RestoreBackup from "./RestoreBackup";
 
 const url = "ws://my.wamp.dnp.dappnode.eth:8080/ws";
 const realm = "dappnode_admin";
@@ -24,7 +26,6 @@ const Comp = () => {
     const [passwordFieldType, setPasswordFieldType] = React.useState("password");
     const [passwordFieldIcon, setPasswordFieldIcon] = React.useState(faEyeSlash);
     const [cmdOutput, setCmdOutput] = React.useState();
-    const [wampSession, setWampSession] = React.useState();
 
     // interface validatorStatus {
     //     pubkey : String;
@@ -34,6 +35,8 @@ const Comp = () => {
     // }
 
     const [validator, setValidator] = React.useState();
+    const [tab, setTab] = React.useState("backup");
+    const [wampSession, setWampSession] = React.useState();
 
     React.useEffect(() => {
         const connection = new autobahn.Connection({
@@ -70,12 +73,12 @@ const Comp = () => {
                 await axios.post(`${config.api.HTTP}/rpd`, { command: "minipool status" }, { timeout: 5 * 60 * 1000 }).then((res) => {
                     const data = JSON.parse(res.data);
                     const minipoool0 = data.minipools[0];
-                    
+
                     const validator = {
-                        pubkey : minipoool0.validatorPubkey,
-                        status : minipoool0.status.status,
-                        index : minipoool0.validator.index,
-                        active : minipoool0.validator.active
+                        pubkey: minipoool0.validatorPubkey,
+                        status: minipoool0.status.status,
+                        index: minipoool0.validator.index,
+                        active: minipoool0.validator.active
                     }
                     setValidator(validator);
                 })
@@ -104,60 +107,96 @@ const Comp = () => {
 
     const header = () => {
         return (
-            <section className="keygen is-medium has-text-white">
-                <div className="columns is-mobile">
-                    <div className="column is-8-desktop is-10">
+            <div className="dashboard">
 
-                        <h1 className="title is-1 is-spaced has-text-white">Avado Rocket Pool</h1>
-                        <p>Todo...</p>
-                        <br />
-                        <div className="columns">
-                            <div className="column is-half ">
-                                <h1 className="title is-3 has-text-white">How does this work?</h1>
+                <section className="keygen is-medium has-text-white">
+                    <div className="columns is-mobile">
+                        <div className="column is-8-desktop is-10">
 
-                                <p>
-                                    TODO.</p>
+                            <h1 className="title is-1 is-spaced has-text-white">Avado Rocket Pool</h1>
+                            <p>Todo...</p>
+                            <br />
+                            <div className="columns">
+                                <div className="column is-half ">
+                                    <h1 className="title is-3 has-text-white">How does this work?</h1>
 
+                                    <p>
+                                        TODO.</p>
+
+                                </div>
+                                <div className="column is-half">
+                                    <img src={rocketpool} />
+                                </div>
                             </div>
+                            {
+                                <>
+                                    <div className="field is-grouped">
+                                        <div className="control">
+                                            <button disabled={!readyToGenerate || generating} onClick={() => { generate(password, amount) }} className="button is-link is-light">Query rocket pool node status</button>
+                                        </div>
+                                    </div>
+                                </>}
+                            {generating && (
+                                <>
+                                    <p>{progress}</p>
+                                    <img alt="spinner" src={spinner} />
+                                </>
+                            )}
+
+                            {
+                                (
+                                    <>
+                                        {
+                                            <>
+                                                <br /><br />
+                                                <pre className="transcript">
+                                                    {cmdOutput}
+                                                </pre>
+                                            </>
+                                        }
+                                    </>
+                                )
+                            }
+                            <br />
+                            <BeaconchainLink validator={validator} />
+
+                        </div>
+                    </div>
+                </section>
+                <div className="setting">
+                    <section className="is-medium has-text-white">
+                        <div className="columns">
                             <div className="column is-half">
-                                <img src={rocketpool} />
+
+                                <nav className="panel is-half">
+                                    <p className="panel-heading">Backup and Restore</p>
+
+                                    <p className="panel-tabs">
+                                        <a className={`${tab === "backup" ? "is-active  has-text-weight-bold" : ""} has-text-white`} onClick={() => { setTab("backup") }} >Backup</a>
+                                        <a className={`${tab === "restore" ? "is-active has-text-weight-bold" : ""} has-text-white`} onClick={() => { setTab("restore") }} >Restore</a>
+                                    </p>
+                                    <div className="panel-block">
+
+                                        {tab === "backup" && (
+                                            <section className="is-medium has-text-white">
+                                                <p className="">You can download your node identity keys. this is very important when you stake AVAX since the nodeID is part of your stake.</p>
+                                                <DownloadBackup fileprefix="rocketpool" session={wampSession} />
+                                            </section>
+                                        )}
+                                        {tab === "restore" && (
+                                            <section className="is-medium has-text-white">
+                                                <p className="">Here you can upload your node identity keys. If you want to restore your node ID from a previous installation.</p>
+                                                <RestoreBackup session={wampSession} />
+                                            </section>
+                                        )}
+                                    </div>
+                                </nav>
                             </div>
                         </div>
-                        {
-                            <>
-                                <div className="field is-grouped">
-                                    <div className="control">
-                                        <button disabled={!readyToGenerate || generating} onClick={() => { generate(password, amount) }} className="button is-link is-light">Query rocket pool node status</button>
-                                    </div>
-                                </div>
-                            </>}
-                        {generating && (
-                            <>
-                                <p>{progress}</p>
-                                <img alt="spinner" src={spinner} />
-                            </>
-                        )}
-
-                        {
-                            (
-                                <>
-                                    {
-                                        <>
-                                            <br /><br />
-                                            <pre className="transcript">
-                                                {cmdOutput}
-                                            </pre>
-                                        </>
-                                    }
-                                </>
-                            )
-                        }
-                        <br />
-                        <BeaconchainLink validator={validator} />
-                        
-                    </div>
+                    </section>
                 </div>
-            </section>
+            </div>
+
         )
     }
 

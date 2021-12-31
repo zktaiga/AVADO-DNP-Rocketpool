@@ -2,7 +2,7 @@ const restify = require("restify");
 const corsMiddleware = require("restify-cors-middleware2");
 const exec = require("child_process").exec;
 const fs = require('fs');
-const path = require("path");
+const archiver = require('archiver');
 
 console.log("Monitor starting...");
 
@@ -51,12 +51,36 @@ const rpd = (command) => {
             }
             return resolve(stdout);
         });
-        child.stdout.on('data', function(data) {
-            console.log(data.toString()); 
+        child.stdout.on('data', function (data) {
+            console.log(data.toString());
         });
     });
-
 }
+
+//backup
+const backupFileName = "rocket-pool-backup.zip";
+server.get("/"+backupFileName, (req, res) => {
+    const filepath = "/tmp/" + backupFileName;
+    console.log("Creating backup in " + filepath);
+    
+    fs.unlink(filepath, (err) => { }); // delete if exists
+
+    const archive = archiver('zip', { zlib: { level: 9 } });
+    const stream = fs.createWriteStream(filepath);
+    archive
+        .directory("/rocketpool", true)
+        .on('error', err => reject(err))
+        .pipe(stream)
+        ;
+    archive.finalize();
+    
+    stream.on('close', () => {
+        const rs = fs.createReadStream(filepath);
+        res.setHeader("Content-Disposition", "attachment; " + backupFileName);
+        res.setHeader("Content-Type", "application/zip");
+        rs.pipe(res);
+    });
+});
 
 server.listen(9999, function () {
     console.log("%s listening at %s", server.name, server.url);
