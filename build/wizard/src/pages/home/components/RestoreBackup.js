@@ -11,7 +11,7 @@ import autobahn from "autobahn-browser";
 
 const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
-const Comp = ({ session, fileprefix }) => {
+const Comp = ({ session }) => {
 
     const [dataresult, setDataresult] = React.useState();
     const [restartresult, setRestartresult] = React.useState();
@@ -25,7 +25,6 @@ const Comp = ({ session, fileprefix }) => {
             setRestartresult("restarting package - wait a few minutes and reload this page");
         }
     }
-
 
    async function uploadFile(file, path, name, setMsg) {
         const data = new FormData();

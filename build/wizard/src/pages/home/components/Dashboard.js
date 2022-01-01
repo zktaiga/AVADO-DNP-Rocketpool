@@ -7,14 +7,12 @@ import rocketpool from "../../../assets/rocketpool.png";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import autobahn from "autobahn-browser";
-import BeaconchainLink from "./BeaconchainLink";
-import DownloadBackup from "./DownloadBackup";
-import RestoreBackup from "./RestoreBackup";
 import MiniPoolStatus from "./MiniPoolStatus";
+import BackupDashboard from "./BackupDashboard";
+import LogView from "./LogView";
 
 const url = "ws://my.wamp.dnp.dappnode.eth:8080/ws";
 const realm = "dappnode_admin";
-const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
 const Comp = () => {
 
@@ -28,18 +26,11 @@ const Comp = () => {
     const [passwordFieldIcon, setPasswordFieldIcon] = React.useState(faEyeSlash);
     const [cmdOutput, setCmdOutput] = React.useState();
 
-    // interface validatorStatus {
-    //     pubkey : String;
-    //     status : String;
-    //     active : Boolean;
-    //     index : BigInteger;
-    // }
+
 
     const [validator, setValidator] = React.useState();
     const [minipools, setMinipools] = React.useState();
-    const [tab, setTab] = React.useState("backup");
     const [wampSession, setWampSession] = React.useState();
-    const [log, setLog] = React.useState("Loading...");
 
     React.useEffect(() => {
         const connection = new autobahn.Connection({
@@ -58,21 +49,6 @@ const Comp = () => {
         connection.open();
     }, []);
 
-    React.useEffect(() => {
-        async function test() {
-            if (wampSession) {
-                const x = await wampSession.call("logPackage.dappmanager.dnp.dappnode.eth", [],
-                    {
-                        id: packageName,
-                        options: { tail: 20 }
-                    }
-                );
-                const res = JSON.parse(x);
-                setLog(res.result);
-            }
-        }
-        test();
-    }, [wampSession])
 
     React.useEffect(() => {
         if (password && password.length > 7 &&
@@ -94,14 +70,6 @@ const Comp = () => {
                     const data = JSON.parse(res.data);
                     const minipoool0 = data.minipools[0];
                     setMinipools(data.minipools)
-
-                    const validator = {
-                        pubkey: minipoool0.validatorPubkey,
-                        status: minipoool0.status.status,
-                        index: minipoool0.validator.index,
-                        active: minipoool0.validator.active
-                    }
-                    setValidator(validator);
                 })
             }
             fetchStatus();
@@ -140,89 +108,21 @@ const Comp = () => {
                             <div className="columns">
                                 <div className="column is-half ">
                                     <h1 className="title is-3 has-text-white">How does this work?</h1>
-
-                                    <p>
-                                        TODO.</p>
-
+                                    <p>TODO.</p>
                                 </div>
                                 <div className="column is-half">
                                     <img src={rocketpool} />
                                 </div>
                             </div>
-                            {
-                                <>
-                                    <div className="field is-grouped">
-                                        <div className="control">
-                                            <button disabled={!readyToGenerate || generating} onClick={() => { generate(password, amount) }} className="button is-link is-light">Query rocket pool node status</button>
-                                        </div>
-                                    </div>
-                                </>}
-                            {generating && (
-                                <>
-                                    <p>{progress}</p>
-                                    <img alt="spinner" src={spinner} />
-                                </>
-                            )}
-
-                            {
-                                (
-                                    <>
-                                        {
-                                            <>
-                                                <br /><br />
-                                                <pre className="transcript">
-                                                    {cmdOutput}
-                                                </pre>
-                                            </>
-                                        }
-                                    </>
-                                )
-                            }
                             <br />
-                            {/* <BeaconchainLink validator={validator} /> */}
                             <MiniPoolStatus minipools={minipools} />
-
                         </div>
                     </div>
                 </section>
-                <div className="setting">
-                    <section className="is-medium has-text-white">
-                        <div className="columns">
-                            <div className="column is-half">
 
-                                <nav className="panel is-half">
-                                    <p className="panel-heading">Backup and Restore</p>
+                <BackupDashboard wampSession={wampSession} />
 
-                                    <p className="panel-tabs">
-                                        <a className={`${tab === "backup" ? "is-active  has-text-weight-bold" : ""} has-text-white`} onClick={() => { setTab("backup") }} >Backup</a>
-                                        <a className={`${tab === "restore" ? "is-active has-text-weight-bold" : ""} has-text-white`} onClick={() => { setTab("restore") }} >Restore</a>
-                                    </p>
-                                    <div className="panel-block">
-
-                                        {tab === "backup" && (
-                                            <section className="is-medium has-text-white">
-                                                <p className="">TODO: add info about downloading backup (security advisory too (contains password)).</p>
-                                                <DownloadBackup />
-                                            </section>
-                                        )}
-                                        {tab === "restore" && (
-                                            <section className="is-medium has-text-white">
-                                                <p className="">Here you can upload your node identity keys. If you want to restore your node ID from a previous installation.</p>
-                                                <RestoreBackup session={wampSession} />
-                                            </section>
-                                        )}
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <div>
-                    <h2 className="title is-3 has-text-white">Latest log entries</h2>
-                    <pre className="transcript">
-                        {log}
-                    </pre>
-                </div>
+                <LogView wampSession={wampSession}/>
             </div>
 
         )

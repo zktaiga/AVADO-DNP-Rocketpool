@@ -4,11 +4,11 @@ import PropTypes from "prop-types";
 
 const MiniPoolStatus = ({ minipools }) => {
     function beaconchainUrl(validatorPubkey, text) {
-        return <a href={"https://prater.beaconcha.in/validator/" + validatorPubkey + "#rocketpool"}>{text?text:validatorPubkey}</a>;
+        return <a href={"https://prater.beaconcha.in/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
     }
 
-    function etherscanUrl(address,text) {
-        return <a href={"https://goerli.etherscan.io/address/" + address }>{text?text:address}</a>;
+    function etherscanUrl(address, text) {
+        return <a href={"https://goerli.etherscan.io/address/" + address}>{text ? text : address}</a>;
     }
 
     function displayAsETH(number) {
@@ -16,33 +16,39 @@ const MiniPoolStatus = ({ minipools }) => {
     }
 
     if (!minipools)
-    return (
-        <>
+        return (
+            <>
             </>
         );
     const minipool0 = minipools[0];
     return (
-        <>
-            <h1>Minipool status</h1>
-            <ul>
-                <li><b>Address:</b> {etherscanUrl(minipool0.address)}</li>
-                <li><b>Status updated:</b> {minipool0.status.statusTime}</li>
-                <li><b>Node fee:</b> {parseFloat(minipool0.node.fee*100).toFixed(2)+"%"}</li>
-                <li><b>Node deposit:</b> {displayAsETH(minipool0.node.depositBalance)}</li>
-                <li><b>RP ETH assigned:</b> {minipool0.user.depositAssignedTime}</li>
-                <li><b>RP deposit:</b> {displayAsETH(minipool0.node.depositBalance)}</li>
-                <li><b>Validator pubkey:</b> {beaconchainUrl(minipool0.validatorPubkey)}</li>
-                <li><b>Validator index:</b> {beaconchainUrl(minipool0.validator.index)}</li>
-                <li><b>Validator active:</b> {minipool0.validator.active?"yes":"no"}</li>
-                <li><b>Validator balance:</b> {displayAsETH(minipool0.validator.balance)}</li>
-                <li><b>Expected rewards:</b> {displayAsETH(minipool0.validator.nodeBalance)}</li>
-                
-                <li><b>Use latest delegate:</b> {minipool0.useLatestDelegate?"yes":"no"}</li>
-                <li><b>Delegate address:</b> {etherscanUrl(minipool0.delegate)}</li>
-                <li><b>Effective delegate:</b> {etherscanUrl(minipool0.effectiveDelegate)}</li>
-            </ul>
-            <p>{beaconchainUrl(minipool0.validatorPubkey,"More validator info on the Ethereum 2.0 Beacon Chain Explorer")}</p>
-        </>
+        <div>
+            <h2>Minipool status</h2>
+            <table>
+                <tbody>
+                    <tr><td><b>Address</b></td><td>{etherscanUrl(minipool0.address)}</td></tr>
+                    <tr><td><b>Status updated</b></td><td>{minipool0.status.statusTime}</td></tr>
+                    <tr><td><b>Node fee</b></td><td>{parseFloat(minipool0.node.fee * 100).toFixed(2) + "%"}</td></tr>
+                    <tr><td><b>Node deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)}</td></tr>
+                    <tr><td><b>RP ETH assigned</b></td><td>{minipool0.user.depositAssignedTime}</td></tr>
+                    <tr><td><b>RP deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)}</td></tr>
+                    <tr><td><b>Validator pubkey</b></td><td>{beaconchainUrl(minipool0.validatorPubkey, minipool0.validatorPubkey.substring(0, 6) + "..." + minipool0.validatorPubkey.substring(90))}</td></tr>
+                    <tr><td><b>Validator index</b></td><td>{beaconchainUrl(minipool0.validator.index)}</td></tr>
+                    <tr><td><b>Validator active</b></td><td>{minipool0.validator.active ? "yes" : "no"}</td></tr>
+                    <tr><td><b>Validator balance</b></td><td>{displayAsETH(minipool0.validator.balance)}</td></tr>
+                    <tr><td><b>Expected rewards</b></td><td>{displayAsETH(minipool0.validator.nodeBalance)}</td></tr>
+                </tbody>
+            </table>
+            <br />
+            <table>
+                <tbody>
+                    <tr><td><b>Use latest delegate</b></td><td>{minipool0.useLatestDelegate ? "yes" : "no"}</td></tr>
+                    <tr><td><b>Delegate address</b></td><td>{etherscanUrl(minipool0.delegate)}</td></tr>
+                    <tr><td><b>Effective delegate</b></td><td>{etherscanUrl(minipool0.effectiveDelegate)}</td></tr>
+                </tbody>
+            </table>
+            <p>{beaconchainUrl(minipool0.validatorPubkey, "More validator info on the Ethereum 2.0 Beacon Chain Explorer")}</p>
+        </div>
     );
 };
 
