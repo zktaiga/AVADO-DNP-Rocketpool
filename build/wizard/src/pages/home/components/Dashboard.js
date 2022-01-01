@@ -10,6 +10,7 @@ import autobahn from "autobahn-browser";
 import BeaconchainLink from "./BeaconchainLink";
 import DownloadBackup from "./DownloadBackup";
 import RestoreBackup from "./RestoreBackup";
+import MiniPoolStatus from "./MiniPoolStatus";
 
 const url = "ws://my.wamp.dnp.dappnode.eth:8080/ws";
 const realm = "dappnode_admin";
@@ -35,6 +36,7 @@ const Comp = () => {
     // }
 
     const [validator, setValidator] = React.useState();
+    const [minipools, setMinipools] = React.useState();
     const [tab, setTab] = React.useState("backup");
     const [wampSession, setWampSession] = React.useState();
     const [log, setLog] = React.useState("Loading...");
@@ -91,6 +93,7 @@ const Comp = () => {
                 await axios.post(`${config.api.HTTP}/rpd`, { command: "minipool status" }, { timeout: 5 * 60 * 1000 }).then((res) => {
                     const data = JSON.parse(res.data);
                     const minipoool0 = data.minipools[0];
+                    setMinipools(data.minipools)
 
                     const validator = {
                         pubkey: minipoool0.validatorPubkey,
@@ -176,7 +179,8 @@ const Comp = () => {
                                 )
                             }
                             <br />
-                            <BeaconchainLink validator={validator} />
+                            {/* <BeaconchainLink validator={validator} /> */}
+                            <MiniPoolStatus minipools={minipools} />
 
                         </div>
                     </div>
