@@ -13,6 +13,7 @@ import RestoreBackup from "./RestoreBackup";
 
 const url = "ws://my.wamp.dnp.dappnode.eth:8080/ws";
 const realm = "dappnode_admin";
+const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
 const Comp = () => {
 
@@ -36,6 +37,7 @@ const Comp = () => {
     const [validator, setValidator] = React.useState();
     const [tab, setTab] = React.useState("backup");
     const [wampSession, setWampSession] = React.useState();
+    const [log, setLog] = React.useState("Loading...");
 
     React.useEffect(() => {
         const connection = new autobahn.Connection({
@@ -43,6 +45,7 @@ const Comp = () => {
             realm
         });
         connection.onopen = session => {
+            console.log("CONNECTED to \nurl: " + url + " \nrealm: " + realm);
             setWampSession(session);
         };
         // connection closed, lost or unable to connect
@@ -52,6 +55,22 @@ const Comp = () => {
         };
         connection.open();
     }, []);
+
+    React.useEffect(() => {
+        async function test() {
+            if (wampSession) {
+                const x = await wampSession.call("logPackage.dappmanager.dnp.dappnode.eth", [],
+                    {
+                        id: packageName,
+                        options: { tail: 20 }
+                    }
+                );
+                const res = JSON.parse(x);
+                setLog(res.result);
+            }
+        }
+        test();
+    }, [wampSession])
 
     React.useEffect(() => {
         if (password && password.length > 7 &&
@@ -193,6 +212,12 @@ const Comp = () => {
                             </div>
                         </div>
                     </section>
+                </div>
+                <div>
+                    <h2 className="title is-3 has-text-white">Latest log entries</h2>
+                    <pre className="transcript">
+                        {log}
+                    </pre>
                 </div>
             </div>
 
