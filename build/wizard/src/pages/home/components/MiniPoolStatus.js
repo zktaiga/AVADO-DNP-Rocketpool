@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
-
 
 const MiniPoolStatus = ({ minipools }) => {
     function beaconchainUrl(validatorPubkey, text) {
