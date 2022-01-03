@@ -3,6 +3,7 @@ const corsMiddleware = require("restify-cors-middleware2");
 const exec = require("child_process").exec;
 const fs = require('fs');
 const archiver = require('archiver');
+const AdmZip = require("adm-zip");
 
 console.log("Monitor starting...");
 
@@ -35,6 +36,7 @@ server.post("/rpd", (req, res, next) => {
     }).catch((e) => {
         res.send(500, e);
     })
+    next();
 });
 
 const rpd = (command) => {
@@ -59,48 +61,75 @@ const rpd = (command) => {
 
 //backup
 const backupFileName = "rocket-pool-backup.zip";
-server.get("/"+backupFileName, (req, res) => {
-    const filepath = "/tmp/" + backupFileName;
-    console.log("Creating backup in " + filepath);
+server.get("/" + backupFileName, (req, res) => {
+    // const archive = new AdmZip();
+    // archive.addLocalFolder("/rocketpool/data", "/data")
+    // const buffer = archive.toBuffer()
+    // buffer.pipe(res);
     
-    fs.unlink(filepath, (err) => { }); // delete if exists
+    res.setHeader("Content-Disposition", "attachment; " + backupFileName);
+    res.setHeader("Content-Type", "application/zip");
 
     const archive = archiver('zip', { zlib: { level: 9 } });
-    const stream = fs.createWriteStream(filepath);
     archive
-        .directory("/rocketpool", true)
+        .directory("/rocketpoo/datal", "data", true)
         .on('error', err => reject(err))
-        .pipe(stream)
+        .pipe(res)
         ;
     archive.finalize();
-    
-    stream.on('close', () => {
-        const rs = fs.createReadStream(filepath);
-        res.setHeader("Content-Disposition", "attachment; " + backupFileName);
-        res.setHeader("Content-Type", "application/zip");
-        rs.pipe(res);
-    });
 });
 
 //restore
+//TODO: 2 separate methods for validate and restore
 server.post('/upload-test', (req, res, next) => {
     console.log("upload test");
     if (req.files.file) {
         const file = req.files.file;
         req.info = file.name;
-        fs.rename( file.path, "/tmp/" + file.name, (err) => {if (err) console.log('ERROR: ' + err)});
+        const zipfilePath = "/tmp/" + file.name;
+        fs.rename(file.path, zipfilePath, (err) => { if (err) console.log('ERROR: ' + err) });
         console.log("received " + file.name);
+        try {
+            validateZipFile(zipfilePath);
+        } catch(e) {
+            console.log(e);
+            res.send({
+                code: 400,
+                message: e.message,
+            });
+            next();
+            return;
+        }
+
+        // delete existing data folder (if it exists)
+        fs.unlink("/rocketpool/data", (err) => { });
+        // unzip
+        const zip = new AdmZip(zipfilePath);
+        zip.extractAllTo("/rocketpool/data", /*overwrite*/ true);
     }
-    //TODO check file (data folder...)
+
+    function validateZipFile(zipfilePath) {
+        const zip = new AdmZip(zipfilePath);
+        const zipEntries = zip.getEntries();
+
+        const containsDataFolder = zipEntries.some((entry)=>entry.isDirectory && entry.entryName == "data");
+        // if (!containsDataFolder) return error...
+        
+    }
+
+    
+
     //     and actually restore
 
     res.send({
-      code: 'success',
-      info: req.info,
-      message: 'Backup file is not implemented yet, but thanks for trying (TODO)',
+        code: 'success',
+        info: req.info,
+        message: 'Backup file is not implemented yet, but thanks for trying (TODO)',
     });
     next();
-  });
+});
+
+
 
 server.listen(9999, function () {
     console.log("%s listening at %s", server.name, server.url);

@@ -26,10 +26,16 @@ const Comp = ({ session }) => {
         }
     }
 
+    //TODO: 2 steps:
+    // 1 upload and validate
+    // 2 ask confirmation (or report problems)
+    // 3 upload and restore
    async function uploadFile(file, path, name, setMsg) {
         const data = new FormData();
         data.append('file', file);
         axios.post(`${config.api.HTTP}/upload-test`, data).then(res => {
+            //TODO Error handling
+            // console.log(res);
             setMsg(res.data.message);
         }).catch(err => {
           console.log(err);
