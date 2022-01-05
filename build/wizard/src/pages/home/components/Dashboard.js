@@ -7,6 +7,7 @@ import autobahn from "autobahn-browser";
 import MiniPoolStatus from "./MiniPoolStatus";
 import BackupDashboard from "./BackupDashboard";
 import LogView from "./LogView";
+import InitWallet from "./InitWallet";
 
 // https://github.com/sponnet/avado-portal/blob/master/src/pages/Home.js#L4-L7
 const states = {
@@ -20,6 +21,7 @@ const states = {
 };
 
 const Comp = () => {
+    const [walletStatus, setWalletStatus] = React.useState();
     const [minipoolStatus, setMinipoolStatus] = React.useState();
     const [nodeStatus, setNodeStatus] = React.useState();
     const [wampSession, setWampSession] = React.useState();
@@ -66,12 +68,13 @@ const Comp = () => {
         connection.open();
     }, []);
 
+    const rpdDaemon = async (command, callback) => {
+        await axios.post(`${config.api.HTTP}/rpd`, { command: command }, { timeout: 5 * 60 * 1000 }).then((res) => {
+            callback(res);
+        })
+    }
+
     React.useEffect(() => {
-        const rpdDaemon = async (command, callback) => {
-            await axios.post(`${config.api.HTTP}/rpd`, { command: command }, { timeout: 5 * 60 * 1000 }).then((res) => {
-                callback(res);
-            })
-        }
 
         rpdDaemon("minipool status", (res) => {
             const data = JSON.parse(res.data);
@@ -83,7 +86,10 @@ const Comp = () => {
             setNodeStatus(data)
         });
 
-
+        rpdDaemon("wallet status", (res) => {
+            const data = JSON.parse(res.data);
+            setWalletStatus(data)
+        });
     }, []);
 
     const header = () => {
@@ -105,6 +111,7 @@ const Comp = () => {
                                     <img src={rocketpool} alt="Rocket Pool logo" />
                                 </div>
                             </div>
+                            <InitWallet rpdDaemon={rpdDaemon} />
                             <br />
                             <MiniPoolStatus minipools={minipoolStatus} />
                         </div>
