@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 
-const InitWallet = ({ rpdDaemon }) => {
+const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
     const [password, setPassword] = React.useState("");
     const [verifyPassword, setVerifyPassword] = React.useState();
     const [passwordFeedback, setPasswordFeedback] = React.useState("");
@@ -35,12 +35,9 @@ const InitWallet = ({ rpdDaemon }) => {
     }, [password, verifyPassword]);
 
     React.useEffect(() => {
-        rpdDaemon("wallet status", (res) => {
-            const data = JSON.parse(res.data);
-            console.log(JSON.stringify(data));
-            setInitialWalletStatus(data);
-        });
-    }, []);
+        if (!initialWalletStatus)
+            setInitialWalletStatus(walletStatus);
+    }, [walletStatus,initialWalletStatus]);
 
     // Flow:
     // User picks password (twice)
@@ -53,28 +50,31 @@ const InitWallet = ({ rpdDaemon }) => {
         // TODO: /rocketpool/data needs to exist, before the "wallet set-password" works.
         //       How to ensure this? Is this a potential issue?
 
-        if (!initialWalletStatus.passwordSet) {
+        if (!walletStatus.passwordSet) {
             rpdDaemon("wallet set-password \"" + password + "\"", (res) => {
                 const data = JSON.parse(res.data);
                 console.log(res);
-                if (data.status == "error") {
+                if (data.status === "error") {
                     setPasswordFeedback(data.error);
-                    return;
                 }
+                updateWalletStatus();
             });
         }
 
-        rpdDaemon("wallet init", (res) => {
-            //{"status":"success","error":"","mnemonic":"corn wool actor cable marine anger nothing return coast energy magnet evolve best lion dutch clerk visit begin agree about sing federal sausage ribbon","accountAddress":"0xd97afeffa7ce00aa489e5c88880e124fb75b8e05"}
-            const data = JSON.parse(res.data);
-            console.log(res);
-            if (data.status == "error") {
-                setPasswordFeedback(data.error);
-            }
-            setWalletAddress(data.accountAddress);
-            setWalletMnemonic(data.mnemonic);
-            setButtonDisabled(true);
-        });
+        if (walletStatus.passwordSet) {
+            rpdDaemon("wallet init", (res) => {
+                //{"status":"success","error":"","mnemonic":"corn wool actor cable marine anger nothing return coast energy magnet evolve best lion dutch clerk visit begin agree about sing federal sausage ribbon","accountAddress":"0xd97afeffa7ce00aa489e5c88880e124fb75b8e05"}
+                const data = JSON.parse(res.data);
+                console.log(res);
+                if (data.status === "error") {
+                    setPasswordFeedback(data.error);
+                }
+                setWalletAddress(data.accountAddress);
+                setWalletMnemonic(data.mnemonic);
+                setButtonDisabled(true);
+                updateWalletStatus();
+            });
+        }
     }
 
 
@@ -98,6 +98,7 @@ const InitWallet = ({ rpdDaemon }) => {
 
                         </div>
                         <div className="control">
+                            {/* eslint-disable-next-line */}
                             <a onClick={toggleViewPassword} className="button is-link is-light"><FontAwesomeIcon
                                 className="icon is-small is-right avadoiconpadding"
                                 icon={passwordFieldIcon}

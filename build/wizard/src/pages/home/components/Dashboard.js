@@ -13,6 +13,7 @@ import InitWallet from "./InitWallet";
 const states = {
     WELCOME: Symbol("Welcome"),
     CREATE_WALLET: Symbol("Create Wallet"),
+    FUND_NODE: Symbol("Fund Node"),
     // CHECKINTERNET: 2,
     // CHECKUPDATES: 3,
     // PROVISIONING: 4,
@@ -38,15 +39,23 @@ const Comp = () => {
             setViewState(states.WELCOME);
             return;
         }
-        if (nodeStatus.status == "error" && nodeStatus.error.includes("rocketpool wallet init")) {
+        if (nodeStatus.status === "error" && nodeStatus.error.includes("rocketpool wallet init")) {
             setViewState(states.CREATE_WALLET);
             return;
         }
-        if (nodeStatus.status == "success") {
+        if (nodeStatus.status === "success"
+            && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
+            && nodeStatus.registered === false
+        ) {
+            setViewState(states.FUND_NODE);
+            return;
+        }
+
+        if (nodeStatus.status === "success") {
             setViewState(states.FINISHED_STATUS);
             return;
         }
-    }, [nodeStatus]);
+    }, [nodeStatus, walletStatus, minipoolStatus]);
 
 
     React.useEffect(() => {
@@ -73,24 +82,33 @@ const Comp = () => {
             callback(res);
         })
     }
-
-    React.useEffect(() => {
-
+    const updateMiniPoolStatus = () => {
         rpdDaemon("minipool status", (res) => {
             const data = JSON.parse(res.data);
             setMinipoolStatus(data.minipools)
         });
+    }
 
+    const updateNodeStatus = () => {
         rpdDaemon("node status", (res) => {
             const data = JSON.parse(res.data);
             setNodeStatus(data)
         });
-
+    }
+    
+    const updateWalletStatus = () => {
         rpdDaemon("wallet status", (res) => {
             const data = JSON.parse(res.data);
             setWalletStatus(data)
         });
-    }, []);
+    }
+
+    React.useEffect(() => {
+        updateMiniPoolStatus();
+        updateNodeStatus();
+        updateWalletStatus();
+    }, []); // eslint-disable-line
+
 
     const header = () => {
         return (
@@ -111,7 +129,7 @@ const Comp = () => {
                                     <img src={rocketpool} alt="Rocket Pool logo" />
                                 </div>
                             </div>
-                            <InitWallet rpdDaemon={rpdDaemon} />
+                            <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
                             <br />
                             <MiniPoolStatus minipools={minipoolStatus} />
                         </div>
