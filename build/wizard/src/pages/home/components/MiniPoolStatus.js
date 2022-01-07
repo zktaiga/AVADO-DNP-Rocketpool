@@ -1,6 +1,6 @@
 import React from "react";
 
-const MiniPoolStatus = ({ minipools }) => {
+const MiniPoolStatus = ({ minipoolStatus }) => {
     function beaconchainUrl(validatorPubkey, text) {
         return <a href={"https://prater.beaconcha.in/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
     }
@@ -13,15 +13,21 @@ const MiniPoolStatus = ({ minipools }) => {
         return (number / 1000000000000000000) + " ETH";
     }
 
-    if (!minipools)
+    console.log(minipoolStatus)
+
+    // https://docs.rocketpool.net/guides/node/create-validator.html#depositing-eth-and-creating-a-minipool
+    //minipool status: initialized -> prelaunch (currently 12 hours) -> staking
+
+    if (!minipoolStatus)
         return (
             <>
             </>
         );
-    const minipool0 = minipools[0];
+    const minipool0 = minipoolStatus.minipools[0];
     return (
         <div>
-            <h2>Minipool status</h2>
+            <h2 className="title is-3 has-text-white">Minipool status</h2>
+            <p><b>Status:</b>{minipool0.status.status}</p>
             <table>
                 <tbody>
                     <tr><td><b>Address</b></td><td>{etherscanUrl(minipool0.address)}</td></tr>

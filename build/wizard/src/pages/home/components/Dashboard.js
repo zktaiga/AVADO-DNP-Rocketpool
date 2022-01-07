@@ -8,6 +8,10 @@ import MiniPoolStatus from "./MiniPoolStatus";
 import BackupDashboard from "./BackupDashboard";
 import LogView from "./LogView";
 import InitWallet from "./InitWallet";
+import FundWallet from "./FundWallet";
+import RegisterNode from "./RegisterNode";
+import SetWithdrawalAddress from "./SetWithdrawalAddress";
+import CreateMinipool from "./CreateMinipool";
 
 // https://github.com/sponnet/avado-portal/blob/master/src/pages/Home.js#L4-L7
 const states = {
@@ -85,7 +89,8 @@ const Comp = () => {
     const updateMiniPoolStatus = () => {
         rpdDaemon("minipool status", (res) => {
             const data = JSON.parse(res.data);
-            setMinipoolStatus(data.minipools)
+            console.log(res.data);
+            setMinipoolStatus(data)
         });
     }
 
@@ -129,15 +134,21 @@ const Comp = () => {
                                     <img src={rocketpool} alt="Rocket Pool logo" />
                                 </div>
                             </div>
+
                             <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
-                            <br />
-                            <MiniPoolStatus minipools={minipoolStatus} />
+                            <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus}/>
+                            <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                            <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                            <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
                         </div>
                     </div>
                 </section>
 
+                <br />
+                <MiniPoolStatus minipoolStatus={minipoolStatus} />
+                <br />
                 <BackupDashboard wampSession={wampSession} />
-
+                <br />
                 <LogView wampSession={wampSession} />
             </div>
 
