@@ -2,11 +2,12 @@ import React from "react";
 import web3 from "web3";
 
 const FundWallet = ({ nodeStatus, updateNodeStatus }) => {
+    console.log(nodeStatus);
 
     // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
     return (
         <div>
-            {nodeStatus && (
+            {nodeStatus && nodeStatus.accountAddress && nodeStatus.accountBalances.eth && nodeStatus.accountBalances.rpl && (
                 <>
                     <h2 className="title is-3 has-text-white">Fund wallet</h2>
                     <p>Before you can... fund your wallet ({nodeStatus.accountAddress})</p>

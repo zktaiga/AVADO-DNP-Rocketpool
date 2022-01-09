@@ -18,7 +18,7 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
     // https://docs.rocketpool.net/guides/node/create-validator.html#depositing-eth-and-creating-a-minipool
     //minipool status: initialized -> prelaunch (currently 12 hours) -> staking
 
-    if (!minipoolStatus)
+    if (!minipoolStatus || !minipoolStatus.minipools)
         return (
             <>
             </>
