@@ -39,10 +39,8 @@ server.post("/rpd", (req, res, next) => {
     next();
 });
 
-const rpd = (command) => {
+const execute = (cmd) => {
     return new Promise((resolve, reject) => {
-        const cmd = `/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api ${command}`;
-        console.log(`Running ${cmd}`);
         const child = exec(cmd, (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);
@@ -59,6 +57,27 @@ const rpd = (command) => {
     });
 }
 
+const rpd = (command) => {
+    const cmd = `/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api ${command}`;
+    console.log(`Running ${cmd}`);
+    return execute(cmd);
+}
+
+const restartValidator = () => {
+    console.log(`Restart validator`);
+    // const cmd = "sh /srv/rocketpool/restart-validator.sh";
+    const cmd = "sh /Users/heeckhau/git/avado-daps/AVADO-DNP-Rocketpool/build/monitor/test.sh";
+    return execute(cmd);
+}
+
+server.get("/restart-validator", (req, res) => {
+    restartValidator().then((stdout) => {
+        res.send(200, stdout);
+    }).catch((e) => {
+        res.send(500, e);
+    })
+});
+
 //backup
 const backupFileName = "rocket-pool-backup.zip";
 server.get("/" + backupFileName, (req, res) => {
@@ -66,7 +85,7 @@ server.get("/" + backupFileName, (req, res) => {
     // archive.addLocalFolder("/rocketpool/data", "/data")
     // const buffer = archive.toBuffer()
     // buffer.pipe(res);
-    
+
     res.setHeader("Content-Disposition", "attachment; " + backupFileName);
     res.setHeader("Content-Type", "application/zip");
 
@@ -91,7 +110,7 @@ server.post('/upload-test', (req, res, next) => {
         console.log("received " + file.name);
         try {
             validateZipFile(zipfilePath);
-        } catch(e) {
+        } catch (e) {
             console.log(e);
             res.send({
                 code: 400,
@@ -112,12 +131,12 @@ server.post('/upload-test', (req, res, next) => {
         const zip = new AdmZip(zipfilePath);
         const zipEntries = zip.getEntries();
 
-        const containsDataFolder = zipEntries.some((entry)=>entry.isDirectory && entry.entryName == "data");
+        const containsDataFolder = zipEntries.some((entry) => entry.isDirectory && entry.entryName == "data");
         // if (!containsDataFolder) return error...
-        
+
     }
 
-    
+
 
     //     and actually restore
 

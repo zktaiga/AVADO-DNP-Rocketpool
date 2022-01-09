@@ -15,6 +15,7 @@ FROM alpine:latest
 
 RUN mkdir -p /srv/rocketpool
 
+#TODO
 #RUN wget https://github.com/rocket-pool/smartnode-install/releases/download/${RP_VERSION}/rocketpool-cli-linux-amd64 -O /usr/local/bin/rocketpool
 RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rocketpool-cli-linux-amd64 -O /usr/local/bin/rocketpool
 
@@ -40,10 +41,14 @@ COPY settings.yml /srv/rocketpool
 COPY supervisord.conf /etc/supervisord.conf
 COPY nginx.conf /etc/nginx/
 
-COPY test.sh /
+# For testing
+RUN alias rp="rocketpool -d /usr/local/bin/rocketpoold -c /srv/rocketpool --allow-root"
+RUN alias rpd="/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api"
 
+# TODO?
 # RUN useradd nginx
 
+WORKDIR /
 ENTRYPOINT ["supervisord", "--nodaemon", "--configuration", "/etc/supervisord.conf"]
 
 

@@ -42,6 +42,9 @@ const CreateMinipool = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
             //     }
             // });
 
+
+            //TODO: restart validator in supervisord (via monitor)
+
             if (nodeStatus.accountBalances.eth / 1000000000000000000 >= 16)
                 setEthButtonDisabled(false);
             if (nodeStatus.accountBalances.rpl / 1000000000000000000 >= 199) //TODO calculate this number
