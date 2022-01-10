@@ -72,8 +72,7 @@ const rpd = (command) => {
 
 const restartValidator = () => {
     console.log(`Restart validator`);
-    // const cmd = "sh /srv/rocketpool/restart-validator.sh";
-    const cmd = "sh /Users/heeckhau/git/avado-daps/AVADO-DNP-Rocketpool/build/monitor/test.sh";
+    const cmd = "sh /srv/rocketpool/restart-validator.sh";
     return execute(cmd);
 }
 
