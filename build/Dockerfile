@@ -42,8 +42,8 @@ COPY supervisord.conf /etc/supervisord.conf
 COPY nginx.conf /etc/nginx/
 
 # For testing
-RUN alias rp="rocketpool -d /usr/local/bin/rocketpoold -c /srv/rocketpool --allow-root"
-RUN alias rpd="/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api"
+RUN echo 'alias rp="rocketpool -d /usr/local/bin/rocketpoold -c /srv/rocketpool --allow-root"' >> ~/.bashrc
+RUN echo 'alias rpd="/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api"' >> ~/.bashrc
 
 # TODO?
 # RUN useradd nginx

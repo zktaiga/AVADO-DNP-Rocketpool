@@ -7,7 +7,7 @@ const FundWallet = ({ nodeStatus, updateNodeStatus }) => {
     // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
     return (
         <div>
-            {nodeStatus && nodeStatus.accountAddress && nodeStatus.accountBalances.eth && nodeStatus.accountBalances.rpl && (
+            {nodeStatus && nodeStatus.accountAddress && nodeStatus.accountBalances.eth !== null && nodeStatus.accountBalances.rpl !== null && (
                 <>
                     <h2 className="title is-3 has-text-white">Fund wallet</h2>
                     <p>Before you can... fund your wallet ({nodeStatus.accountAddress})</p>

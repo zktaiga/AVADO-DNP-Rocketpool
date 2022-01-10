@@ -10,7 +10,7 @@ smartnode:
   passwordPath: /rocketpool/data/password
   walletPath: /rocketpool/data/wallet
   validatorKeychainPath: /rocketpool/data/validators
-  validatorRestartCommand: "/srv/rocketpool/chains/eth2/restart-validator.sh"
+  validatorRestartCommand: "/srv/rocketpool/restart-validator.sh"
   maxFee: 0 # The maximum amount you're willing to pay, in gwei, to use for transactions.
             # Set it to 0 if you want to view the current suggested prices and choose this number manually for each transaction.
   maxPriorityFee: 2 # The most "extra" you want to spend on a transaction to make it faster, in gwei. 

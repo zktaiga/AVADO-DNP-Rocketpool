@@ -29,14 +29,15 @@ server.post("/rpd", (req, res, next) => {
     if (!req.body) {
         res.send(400, "not enough parameters");
         return next();
+    } else {
+        rpd(req.body.command).then((stdout) => {
+            res.send(200, stdout);
+            return next();
+        }).catch((e) => {
+            res.send(500, e);
+            return next();
+        })
     }
-
-    rpd(req.body.command).then((stdout) => {
-        res.send(200, stdout);
-    }).catch((e) => {
-        res.send(500, e);
-    })
-    next();
 });
 
 const execute = (cmd) => {
@@ -47,13 +48,12 @@ const execute = (cmd) => {
                 return reject(error.message);
             }
             if (stderr) {
+                console.log(`error: ${stderr}`);
                 return reject(stderr);
             }
             return resolve(stdout);
         });
-        child.stdout.on('data', function (data) {
-            console.log(data.toString());
-        });
+        child.stdout.on('data', (data) => console.log(data.toString()));
     });
 }
 
