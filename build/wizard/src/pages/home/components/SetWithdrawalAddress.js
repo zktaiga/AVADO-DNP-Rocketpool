@@ -37,9 +37,15 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
     return (
         <div>
-            {nodeStatus && !nodeStatus.withdrawalAddress && (
+            <h2 className="title is-3 has-text-white">Withdrawal address</h2>
+            {nodeStatus && (
+                <div>
+                    <p><b>Hot wallet address:</b> {nodeStatus.accountAddress}</p>
+                    <p><b>Withdrawal address:</b> {nodeStatus.withdrawalAddress}</p>
+                </div>
+            )}
+            {nodeStatus && nodeStatus.withdrawalAddress == nodeStatus.accountAddress && (
                 <>
-                    <h2 className="title is-3 has-text-white">Set withdrawal address</h2>
                     <p>Hotwallet too risky ({nodeStatus.accountAddress}), so you must configure a withdrawal address. All gains will be deposited to this address.</p>
                     <p>TODO: extra info about procedure</p>
                     <div>
@@ -51,8 +57,8 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                             <input className="input" onChange={(e) => { setWithdrawalAddress(e.target.value) }} />
                         </div>
                         {withdrawalAddress && (
-                                <p className="help is-danger">{addressFeedback}</p>
-                            )}
+                            <p className="help is-danger">{addressFeedback}</p>
+                        )}
                     </div>
                     <div className="field">
                         <button onClick={onClick} disabled={buttonDisabled}>Set withdrawal address</button>

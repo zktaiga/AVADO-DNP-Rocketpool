@@ -31,7 +31,7 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
 
     return (
         <div>
-            {nodeStatus && (
+            {nodeStatus && !nodeStatus.registered && (
                 <>
                     <h2 className="title is-3 has-text-white">Register Node</h2>
                     <button onClick={registerNode} disabled={buttonDisabled}>Register Node</button>
