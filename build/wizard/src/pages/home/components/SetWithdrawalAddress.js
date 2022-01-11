@@ -22,9 +22,7 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     }, [withdrawalAddress]);
 
     const onClick = () => {
-        rpdDaemon(`node set-withdrawal-address ${withdrawalAddress} yes`, (res) => {
-            const data = JSON.parse(res.data);
-            console.log(res);
+        rpdDaemon(`node set-withdrawal-address ${withdrawalAddress} yes`, (data) => {
             if (data.status === "error") {
                 setAddressFeedback(data.error);
             }

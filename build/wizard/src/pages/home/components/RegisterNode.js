@@ -8,8 +8,7 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     React.useEffect(() => {
         setButtonDisabled(true); //set default
         if (nodeStatus && !nodeStatus.registered) { // TODO: needs gas mony too ()
-            rpdDaemon(`node can-register ${timeZone()}`, (res) => {
-                const data = JSON.parse(res.data);
+            rpdDaemon(`node can-register ${timeZone()}`, (data) => {
                 if (data.canRegister)
                     setButtonDisabled(false);
             });
@@ -26,7 +25,7 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
             console.log(receipt);
             setTransactionReceipt(JSON.stringify(receipt));
         });
-    });
+    },[]);
 
     const timeZone = () => {
         try {
@@ -37,9 +36,7 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     }
 
     const registerNode = () => {
-        rpdDaemon(`node register ${timeZone()}`, (res) => {
-            console.log(res);
-            const data = JSON.parse(res.data);
+        rpdDaemon(`node register ${timeZone()}`, (data) => {
             updateNodeStatus();
             // txHash = data.txHash;
             // data.error

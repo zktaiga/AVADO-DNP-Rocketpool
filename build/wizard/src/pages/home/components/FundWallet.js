@@ -2,8 +2,6 @@ import React from "react";
 import web3 from "web3";
 
 const FundWallet = ({ nodeStatus, updateNodeStatus }) => {
-    console.log(nodeStatus);
-
     // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
     return (
         <div>

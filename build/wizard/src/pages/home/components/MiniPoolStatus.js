@@ -1,19 +1,8 @@
 import React from "react";
+import { beaconchainUrl, etherscanUrl, displayAsETH } from './utils.js';
 
 const MiniPoolStatus = ({ minipoolStatus }) => {
-    function beaconchainUrl(validatorPubkey, text) {
-        return <a href={"https://prater.beaconcha.in/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
-    }
 
-    function etherscanUrl(address, text) {
-        return <a href={"https://goerli.etherscan.io/address/" + address}>{text ? text : address}</a>;
-    }
-
-    function displayAsETH(number) {
-        return (number / 1000000000000000000) + " ETH";
-    }
-
-    console.log(minipoolStatus)
 
     // https://docs.rocketpool.net/guides/node/create-validator.html#depositing-eth-and-creating-a-minipool
     //minipool status: initialized -> prelaunch (currently 12 hours) -> staking

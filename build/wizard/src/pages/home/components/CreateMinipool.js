@@ -23,8 +23,7 @@ const CreateMinipool = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
 
     React.useEffect(() => {
         if (nodeStatus) {
-            rpdDaemon(`network node-fee`, (res) => {
-                const data = JSON.parse(res.data);
+            rpdDaemon(`network node-fee`, (data) => {
                 if (data.status === "error") {
                     setFeedback(data.error);
                 } else {
@@ -43,10 +42,8 @@ const CreateMinipool = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
         if (nodeStatus) {
 
             if (nodeStatus.accountBalances.eth / 1000000000000000000 >= 16)
-                rpdDaemon(`node can-deposit 16000000000000000000 ${currentNodeFee} 0`, (res) => {
+                rpdDaemon(`node can-deposit 16000000000000000000 ${currentNodeFee} 0`, (data) => {
                     //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
-                    const data = JSON.parse(res.data);
-                    console.log(res);
                     if (data.status === "error") {
                         setFeedback(data.error);
                     } else {
@@ -58,10 +55,8 @@ const CreateMinipool = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
 
             if (nodeStatus.accountBalances.rpl / 1000000000000000000 >= 199) //TODO calculate this number
                 if (nodeStatus.rplStake < 199000000000000000000) {
-                    rpdDaemon(`node can-stake-rpl 199000000000000000000`, (res) => {
+                    rpdDaemon(`node can-stake-rpl 199000000000000000000`, (data) => {
                         //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
-                        const data = JSON.parse(res.data);
-                        console.log(res);
                         if (data.status === "error") {
                             setFeedback(data.error);
 
@@ -83,9 +78,7 @@ const CreateMinipool = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     }, [nodeStatus, currentNodeFee]);
 
     const approveRpl = () => {
-        rpdDaemon(`node stake-rpl-approve-rpl 199000000000000000000`, (res) => {
-            const data = JSON.parse(res.data);
-            console.log(res);
+        rpdDaemon(`node stake-rpl-approve-rpl 199000000000000000000`, (data) => {
             if (data.status === "error") {
                 setFeedback(data.error);
             }
@@ -94,9 +87,7 @@ const CreateMinipool = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     }
 
     const stakeRpl = () => {
-        rpdDaemon(`node stake-rpl 199000000000000000000`, (res) => {
-            const data = JSON.parse(res.data);
-            console.log(res);
+        rpdDaemon(`node stake-rpl 199000000000000000000`, (data) => {
             if (data.status === "error") {
                 setFeedback(data.error);
             }
@@ -105,9 +96,7 @@ const CreateMinipool = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     }
 
     const depositEth = () => {
-        rpdDaemon(`node deposit 16000000000000000000 ${currentNodeFee} 0`, (res) => {  //   rocketpool api node deposit amount min-fee salt
-            const data = JSON.parse(res.data);
-            console.log(res);
+        rpdDaemon(`node deposit 16000000000000000000 ${currentNodeFee} 0`, (data) => {  //   rocketpool api node deposit amount min-fee salt
             if (data.status === "error") {
                 setFeedback(data.error);
             }

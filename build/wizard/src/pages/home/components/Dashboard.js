@@ -5,6 +5,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import rocketpool from "../../../assets/rocketpool.png";
 import autobahn from "autobahn-browser";
 import MiniPoolStatus from "./MiniPoolStatus";
+import NodeStatus from "./NodeStatus";
 import BackupDashboard from "./BackupDashboard";
 import LogView from "./LogView";
 import InitWallet from "./InitWallet";
@@ -29,6 +30,7 @@ const Comp = () => {
     const [walletStatus, setWalletStatus] = React.useState();
     const [minipoolStatus, setMinipoolStatus] = React.useState();
     const [nodeStatus, setNodeStatus] = React.useState();
+    const [nodeSyncStatus, setNodeSyncStatus] = React.useState();
     const [wampSession, setWampSession] = React.useState();
     const [viewState, setViewState] = React.useState(states.WELCOME);
 
@@ -83,34 +85,21 @@ const Comp = () => {
 
     const rpdDaemon = async (command, callback) => {
         await axios.post(`${config.api.HTTP}/rpd`, { command: command }, { timeout: 5 * 60 * 1000 }).then((res) => {
-            callback(res);
+            const data = JSON.parse(res.data);
+            console.log(`rocketpoold api ${command}: ` + res.data);
+            callback(data);
         })
     }
-    const updateMiniPoolStatus = () => {
-        rpdDaemon("minipool status", (res) => {
-            const data = JSON.parse(res.data);
-            console.log(res.data);
-            setMinipoolStatus(data)
-        });
-    }
 
-    const updateNodeStatus = () => {
-        rpdDaemon("node status", (res) => {
-            const data = JSON.parse(res.data);
-            setNodeStatus(data)
-        });
-    }
-    
-    const updateWalletStatus = () => {
-        rpdDaemon("wallet status", (res) => {
-            const data = JSON.parse(res.data);
-            setWalletStatus(data)
-        });
-    }
+    const updateMiniPoolStatus = () => rpdDaemon("minipool status", (data) => setMinipoolStatus(data));
+    const updateNodeStatus = () => rpdDaemon("node status", (data) => setNodeStatus(data));
+    const updateNodeSyncStatus = () => rpdDaemon("node sync", (data) => setNodeSyncStatus(data));
+    const updateWalletStatus = () => rpdDaemon("wallet status", (data) => setWalletStatus(data));
 
     React.useEffect(() => {
         updateMiniPoolStatus();
         updateNodeStatus();
+        updateNodeSyncStatus();
         updateWalletStatus();
     }, []); // eslint-disable-line
 
@@ -144,6 +133,8 @@ const Comp = () => {
                     </div>
                 </section>
 
+                <br />
+                <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus}/>
                 <br />
                 <MiniPoolStatus minipoolStatus={minipoolStatus} />
                 <br />

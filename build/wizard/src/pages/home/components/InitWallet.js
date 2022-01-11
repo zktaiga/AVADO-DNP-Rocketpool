@@ -51,9 +51,7 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
         //       How to ensure this? Is this a potential issue?
 
         if (!walletStatus.passwordSet) {
-            rpdDaemon("wallet set-password \"" + password + "\"", (res) => {
-                const data = JSON.parse(res.data);
-                console.log(res);
+            rpdDaemon("wallet set-password \"" + password + "\"", (data) => {
                 if (data.status === "error") {
                     setPasswordFeedback(data.error);
                 }
@@ -62,10 +60,8 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
         }
 
         if (walletStatus.passwordSet) {
-            rpdDaemon("wallet init", (res) => {
+            rpdDaemon("wallet init", (data) => {
                 //{"status":"success","error":"","mnemonic":"corn wool actor cable marine anger nothing return coast energy magnet evolve best lion dutch clerk visit begin agree about sing federal sausage ribbon","accountAddress":"0xd97afeffa7ce00aa489e5c88880e124fb75b8e05"}
-                const data = JSON.parse(res.data);
-                console.log(res);
                 if (data.status === "error") {
                     setPasswordFeedback(data.error);
                 }
