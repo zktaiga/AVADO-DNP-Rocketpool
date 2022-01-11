@@ -1,14 +1,32 @@
 import React from "react";
+import web3 from "web3";
 
 const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     const [buttonDisabled, setButtonDisabled] = React.useState(true);
+    const [transactionReceipt, setTransactionReceipt] = React.useState("");
 
     React.useEffect(() => {
         setButtonDisabled(true); //set default
-        if (nodeStatus && !nodeStatus.registered) {
-            setButtonDisabled(false);
+        if (nodeStatus && !nodeStatus.registered) { // TODO: needs gas mony too ()
+            rpdDaemon(`node can-register ${timeZone()}`, (res) => {
+                const data = JSON.parse(res.data);
+                if (data.canRegister)
+                    setButtonDisabled(false);
+            });
         }
     }, [nodeStatus]);
+
+
+    // experiment with transaction feedback: 
+    // The receipt is not available for pending transactions and returns null.
+    // -> launch timer?
+    React.useEffect(() => {
+        const w3 = new web3(web3.givenProvider || 'ws://my.goerli-geth.avado.dnp.dappnode.eth:8546');
+        w3.eth.getTransactionReceipt("0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381").then((receipt) => {
+            console.log(receipt);
+            setTransactionReceipt(JSON.stringify(receipt));
+        });
+    }, []);
 
     const timeZone = () => {
         try {
@@ -29,8 +47,12 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
         });
     }
 
+
     return (
         <div>
+            {transactionReceipt && (
+                <p>DEBUG: receipt for "0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381" : {transactionReceipt}</p>
+            )}
             {nodeStatus && !nodeStatus.registered && (
                 <>
                     <h2 className="title is-3 has-text-white">Register Node</h2>

@@ -38,13 +38,13 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     return (
         <div>
             <h2 className="title is-3 has-text-white">Withdrawal address</h2>
-            {nodeStatus && (
+            {nodeStatus && nodeStatus.withdrawalAddress !== nodeStatus.accountAddress &&(
                 <div>
                     <p><b>Hot wallet address:</b> {nodeStatus.accountAddress}</p>
                     <p><b>Withdrawal address:</b> {nodeStatus.withdrawalAddress}</p>
                 </div>
             )}
-            {nodeStatus && nodeStatus.withdrawalAddress == nodeStatus.accountAddress && (
+            {nodeStatus && nodeStatus.withdrawalAddress === nodeStatus.accountAddress && (
                 <>
                     <p>Hotwallet too risky ({nodeStatus.accountAddress}), so you must configure a withdrawal address. All gains will be deposited to this address.</p>
                     <p>TODO: extra info about procedure</p>

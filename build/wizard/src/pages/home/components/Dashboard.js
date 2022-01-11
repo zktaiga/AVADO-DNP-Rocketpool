@@ -150,6 +150,8 @@ const Comp = () => {
                 <BackupDashboard wampSession={wampSession} />
                 <br />
                 <LogView wampSession={wampSession} />
+                <br />
+                <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail">Avado Rocket Pool package details</a>
             </div>
 
         )
