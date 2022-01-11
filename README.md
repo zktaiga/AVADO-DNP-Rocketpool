@@ -39,6 +39,9 @@ npx release-it
 ```
 
 
+Add Goerli RPL to metamask: contract 0x5e932688e81a182e3de211db6544f98b8e4f89c7
+
+
 
 
 

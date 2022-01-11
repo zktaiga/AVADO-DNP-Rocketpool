@@ -18,6 +18,8 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
     // https://docs.rocketpool.net/guides/node/create-validator.html#depositing-eth-and-creating-a-minipool
     //minipool status: initialized -> prelaunch (currently 12 hours) -> staking
 
+    // https://kb.beaconcha.in/ethereum-2.0-depositing
+
     if (!minipoolStatus || !minipoolStatus.minipools)
         return (
             <>
@@ -30,7 +32,7 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
             {minipool0 && minipool0.status && (
                 <div>
                     <p><b>Status:</b>{minipool0.status.status}</p>
-                    <table>
+                    <table className="table">
                         <tbody>
                             <tr><td><b>Address</b></td><td>{etherscanUrl(minipool0.address)}</td></tr>
                             <tr><td><b>Status updated</b></td><td>{minipool0.status.statusTime}</td></tr>
@@ -38,7 +40,7 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
                             <tr><td><b>Node deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)}</td></tr>
                             <tr><td><b>RP ETH assigned</b></td><td>{minipool0.user.depositAssignedTime}</td></tr>
                             <tr><td><b>RP deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)}</td></tr>
-                            <tr><td><b>Validator pubkey</b></td><td>{beaconchainUrl(minipool0.validatorPubkey, minipool0.validatorPubkey.substring(0, 6) + "..." + minipool0.validatorPubkey.substring(90))}</td></tr>
+                            <tr><td><b>Validator pubkey</b></td><td>{beaconchainUrl(minipool0.validatorPubkey, "0x"+minipool0.validatorPubkey.substring(0, 20) + "..." + minipool0.validatorPubkey.substring(76))}</td></tr>
                             <tr><td><b>Validator index</b></td><td>{beaconchainUrl(minipool0.validator.index)}</td></tr>
                             <tr><td><b>Validator active</b></td><td>{minipool0.validator.active ? "yes" : "no"}</td></tr>
                             <tr><td><b>Validator balance</b></td><td>{displayAsETH(minipool0.validator.balance)}</td></tr>
@@ -46,7 +48,7 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
                         </tbody>
                     </table>
                     <br />
-                    <table>
+                    <table className="table">
                         <tbody>
                             <tr><td><b>Use latest delegate</b></td><td>{minipool0.useLatestDelegate ? "yes" : "no"}</td></tr>
                             <tr><td><b>Delegate address</b></td><td>{etherscanUrl(minipool0.delegate)}</td></tr>

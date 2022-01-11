@@ -63,7 +63,7 @@ const Comp = () => {
 
 
     React.useEffect(() => {
-        const url = "ws://my.wamp.dnp.dappnode.eth:8080/ws";
+        const url = "ws://wamp.my.ava.do:8080/ws";
         const realm = "dappnode_admin";
         const connection = new autobahn.Connection({
             url,

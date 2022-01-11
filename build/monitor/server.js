@@ -87,17 +87,12 @@ server.get("/restart-validator", (req, res) => {
 //backup
 const backupFileName = "rocket-pool-backup.zip";
 server.get("/" + backupFileName, (req, res) => {
-    // const archive = new AdmZip();
-    // archive.addLocalFolder("/rocketpool/data", "/data")
-    // const buffer = archive.toBuffer()
-    // buffer.pipe(res);
-
     res.setHeader("Content-Disposition", "attachment; " + backupFileName);
     res.setHeader("Content-Type", "application/zip");
 
     const archive = archiver('zip', { zlib: { level: 9 } });
     archive
-        .directory("/rocketpoo/datal", "data", true)
+        .directory("/rocketpoo/data", "data", true)
         .on('error', err => reject(err))
         .pipe(res)
         ;
