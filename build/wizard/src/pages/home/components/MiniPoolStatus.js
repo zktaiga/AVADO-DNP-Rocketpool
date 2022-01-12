@@ -3,7 +3,24 @@ import { beaconchainUrl, etherscanUrl, displayAsETH } from './utils.js';
 
 const MiniPoolStatus = ({ minipoolStatus }) => {
 
+    const miniPoolSteps = [
+        "Initializing",
+        "Prelaunch",
+        "Staking",
+        "Exited"
+    ];
 
+    const isHollow = (step, minipool) => {
+        if (step === "Staking")
+            return !minipool.validator.active;
+        return false;
+    
+    }
+    const miniPoolStepsComment = (step) => {
+        if (step === "Prelaunch") return "(~12 hours)";
+        else return "";
+    };
+    
     // https://docs.rocketpool.net/guides/node/create-validator.html#depositing-eth-and-creating-a-minipool
     //minipool status: initialized -> prelaunch (currently 12 hours) -> staking
 
@@ -19,8 +36,23 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
         <div>
             <h2 className="title is-3 has-text-white">Minipool status</h2>
             {minipool0 && minipool0.status && (
-                <div>
-                    <p><b>Status:</b>{minipool0.status.status}</p>
+                <div> {/* https://octoshrimpy.github.io/bulma-o-steps/ */}
+                    <div className="columns">
+                        <div className="column">
+                            <ul className="steps has-content-centered">
+                                {miniPoolSteps.map( (element) => 
+                                    <li className={"steps-segment" + (element === minipool0.status.status ? " is-active" : "")}>
+                                        <span className={"steps-marker"+ (isHollow(element, minipool0)?" is-hollow":"")}></span>
+                                        <div className="steps-content">
+                                            <p className="is-size-4 has-text-white">{element}</p>
+                                            <div className="extra-data has-text-white">{miniPoolStepsComment(element)}</div>
+                                        </div>
+                                    </li>
+                                )}
+                            </ul>
+                        </div>
+                    </div>
+
                     <table className="table">
                         <tbody>
                             <tr><td><b>Address</b></td><td>{etherscanUrl(minipool0.address)}</td></tr>
@@ -29,7 +61,7 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
                             <tr><td><b>Node deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)}</td></tr>
                             <tr><td><b>RP ETH assigned</b></td><td>{minipool0.user.depositAssignedTime}</td></tr>
                             <tr><td><b>RP deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)}</td></tr>
-                            <tr><td><b>Validator pubkey</b></td><td>{beaconchainUrl(minipool0.validatorPubkey, "0x"+minipool0.validatorPubkey.substring(0, 20) + "..." + minipool0.validatorPubkey.substring(76))}</td></tr>
+                            <tr><td><b>Validator pubkey</b></td><td>{beaconchainUrl(minipool0.validatorPubkey, "0x" + minipool0.validatorPubkey.substring(0, 20) + "..." + minipool0.validatorPubkey.substring(76))}</td></tr>
                             <tr><td><b>Validator index</b></td><td>{beaconchainUrl(minipool0.validator.index)}</td></tr>
                             <tr><td><b>Validator active</b></td><td>{minipool0.validator.active ? "yes" : "no"}</td></tr>
                             <tr><td><b>Validator balance</b></td><td>{displayAsETH(minipool0.validator.balance)}</td></tr>
