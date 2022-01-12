@@ -229,5 +229,12 @@
     "uploadedTo": {
       "dappnode": "Wed, 12 Jan 2022 18:51:23 GMT"
     }
+  },
+  "0.0.36": {
+    "hash": "/ipfs/QmRyLo18HCWoxmL48qD2F3x2YSKETAHb85Nvara9KNGMXL",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Wed, 12 Jan 2022 19:48:36 GMT"
+    }
   }
 }
