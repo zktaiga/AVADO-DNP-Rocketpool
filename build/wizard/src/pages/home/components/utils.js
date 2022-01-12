@@ -10,5 +10,7 @@ export function etherscanUrl(address, text) {
 }
 
 export function displayAsETH(number) {
+    if (!number)
+        return "---";
     return web3.utils.fromWei(String(number), 'ether');
 }
