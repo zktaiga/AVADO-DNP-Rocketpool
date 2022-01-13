@@ -34,12 +34,30 @@ const Comp = () => {
     const [wampSession, setWampSession] = React.useState();
     const [viewState, setViewState] = React.useState(states.WELCOME);
     const [navBarIsActive, setNavBarIsActive] = React.useState(false);
+    const [navBar, setNavBar] = React.useState();
 
     const stateName = (state) => Object.keys(states).find((k) => states[k] === state);
 
     React.useEffect(() => {
         console.log(`In state  ${stateName(viewState)}`);
     }, [viewState]);
+
+    React.useEffect(() => {
+        if (!navBar && walletStatus && minipoolStatus) {
+            if (minipoolStatus.status === "success") {
+                setNavBar("Status");
+                return;
+            }
+            if (!walletStatus.walletInitialized) {
+                setNavBar("Welcome");
+                return;
+            }
+            if (walletStatus.passwordSet) {
+                setNavBar("Setup");
+                return;
+            }
+        }
+    }, [walletStatus, minipoolStatus]);
 
     React.useEffect(() => {
         if (!nodeStatus) {
@@ -129,12 +147,12 @@ const Comp = () => {
                                 <p className="panel-heading">
                                     Status
                                 </p>
-                                <a className="panel-block">
+                                <p className="panel-block">
                                     ETH1
-                                </a>
-                                <a className="panel-block">
+                                </p>
+                                <p className="panel-block">
                                     ETH2
-                                </a>
+                                </p>
                                 <div className="panel-block">
                                     Foo
                                 </div>
@@ -166,21 +184,13 @@ const Comp = () => {
                     </div>
                     <div id="navMenu" className={`navbar-menu ${navBarIsActive ? "is-active" : ""}`}>
                         <div className="navbar-start">
-                            <a className="navbar-item">
-                                Welcome
-                            </a>
-                            <a className="navbar-item">
-                                Setup
-                            </a>
-                            <a className="navbar-item">
-                                Status
-                            </a>
+                            <a className={`navbar-item ${navBar === "Welcome" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Welcome") }} >Welcome</a>
+                            <a className={`navbar-item ${navBar === "Setup" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Setup") }} >Setup</a>
+                            <a className={`navbar-item ${navBar === "Status" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Status") }} >Status</a>
                         </div>
 
                         <div className="navbar-end">
-                            <a className="navbar-item">
-                                Admin
-                            </a>
+                            <a className={`navbar-item ${navBar === "Admin" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Admin") }} >Admin</a>
                         </div>
                     </div>
 
@@ -189,37 +199,52 @@ const Comp = () => {
                 <section className="is-medium has-text-white">
                     <div className="columns is-mobile">
                         <div className="column is-8-desktop is-10">
-                            <p>Todo...</p>
-                            <br />
-                            <div className="columns">
-                                <div className="column is-half ">
-                                    <h1 className="title is-3 has-text-white">How does this work?</h1>
-                                    <p>TODO.</p>
+                            {navBar === "Welcome" && (
+                                <div>
+                                    <p>Todo...</p>
+                                    <br />
+                                    <div className="columns">
+                                        <div className="column is-half ">
+                                            <h1 className="title is-3 has-text-white">How does this work?</h1>
+                                            <p>TODO.</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                {/* <div className="column is-half">
-                                    <img src={rocketpool} alt="Rocket Pool logo" />
-                                </div> */}
-                            </div>
+                            )}
 
-                            <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
-                            <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
-                            <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-                            <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-                            <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                            {navBar === "Setup" && (
+                                <div>
+                                    <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
+                                    <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
+                                    <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                                    <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                                    <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                                </div>
+                            )}
+
+                            {navBar === "Status" && (
+                                <div>
+                                    <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus} />
+                                    <br />
+                                    <MiniPoolStatus minipoolStatus={minipoolStatus} />
+                                    <br />
+                                </div>
+                            )}
+
+                            {navBar === "Admin" && (
+                                <div>
+                                    <BackupDashboard wampSession={wampSession} />
+                                    <br />
+                                    <LogView wampSession={wampSession} />
+                                    <br />
+                                    <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail">Avado Rocket Pool package details</a>
+                                </div>
+                            )}
+
                         </div>
                     </div>
                 </section>
 
-                <br />
-                <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus} />
-                <br />
-                <MiniPoolStatus minipoolStatus={minipoolStatus} />
-                <br />
-                <BackupDashboard wampSession={wampSession} />
-                <br />
-                <LogView wampSession={wampSession} />
-                <br />
-                <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail">Avado Rocket Pool package details</a>
             </div>
 
         )

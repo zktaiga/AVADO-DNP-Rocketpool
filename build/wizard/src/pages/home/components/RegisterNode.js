@@ -1,6 +1,9 @@
 import React from "react";
 import web3 from "web3";
 
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     const [buttonDisabled, setButtonDisabled] = React.useState(true);
     const [transactionReceipt, setTransactionReceipt] = React.useState("");
@@ -36,12 +39,27 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     }
 
     const registerNode = () => {
-        rpdDaemon(`node register ${timeZone()}`, (data) => {
-            updateNodeStatus();
-            // txHash = data.txHash;
-            // data.error
-            //     "data": "{\"status\":\"success\",\"error\":\"\",\"txHash\":\"0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381\"}\n",
+        confirmAlert({
+            title: 'Registering a node consumes gas (ETH).',
+            message: 'Are you sure you want to continue?',
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => rpdDaemon(`node register ${timeZone()}`, (data) => {
+                        updateNodeStatus();
+                        // txHash = data.txHash;
+                        // data.error
+                        //     "data": "{\"status\":\"success\",\"error\":\"\",\"txHash\":\"0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381\"}\n",
+                    })
+                },
+                {
+                    label: 'No',
+                    onClick: () => { }
+                }
+            ]
         });
+
+        
     }
 
 

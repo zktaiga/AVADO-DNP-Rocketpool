@@ -41,7 +41,7 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
                         <div className="column">
                             <ul className="steps has-content-centered">
                                 {miniPoolSteps.map( (element) => 
-                                    <li className={"steps-segment" + (element === minipool0.status.status ? " is-active" : "")}>
+                                    <li className={"steps-segment" + (element === minipool0.status.status ? " is-active" : "")} key={element}>
                                         <span className={"steps-marker"+ (isHollow(element, minipool0)?" is-hollow":"")}></span>
                                         <div className="steps-content">
                                             <p className="is-size-4 has-text-white">{element}</p>
