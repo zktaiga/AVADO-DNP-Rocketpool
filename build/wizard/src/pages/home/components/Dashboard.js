@@ -162,11 +162,6 @@ const Comp = () => {
                 </div>
                 <nav className="navbar" role="navigation" aria-label="main navigation">
                     <div className="navbar-brand">
-                        <a className="navbar-item">
-                            <figure className="image is-32x32">
-                                <img src={rocketpool} alt="Rocket Pool logo" />
-                            </figure>
-                        </a>
                         <a
                             onClick={() => {
                                 setNavBarIsActive(!navBarIsActive);
@@ -198,7 +193,7 @@ const Comp = () => {
 
                 <section className="is-medium has-text-white">
                     <div className="columns is-mobile">
-                        <div className="column is-8-desktop is-10">
+                        <div className="column">
                             {navBar === "Welcome" && (
                                 <div>
                                     <p>Todo...</p>

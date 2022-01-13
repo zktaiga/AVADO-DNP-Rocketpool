@@ -47,9 +47,6 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
     // Future improvement: allow recovery (`wallet recover mnemonic`)
 
     const initWallet = () => {
-        // TODO: /rocketpool/data needs to exist, before the "wallet set-password" works.
-        //       How to ensure this? Is this a potential issue?
-
         if (!walletStatus.passwordSet) {
             rpdDaemon("wallet set-password \"" + password + "\"", (data) => {
                 if (data.status === "error") {
