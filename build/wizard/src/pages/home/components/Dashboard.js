@@ -33,6 +33,7 @@ const Comp = () => {
     const [nodeSyncStatus, setNodeSyncStatus] = React.useState();
     const [wampSession, setWampSession] = React.useState();
     const [viewState, setViewState] = React.useState(states.WELCOME);
+    const [navBarIsActive, setNavBarIsActive] = React.useState(false);
 
     const stateName = (state) => Object.keys(states).find((k) => states[k] === state);
 
@@ -96,6 +97,9 @@ const Comp = () => {
     const updateNodeSyncStatus = () => rpdDaemon("node sync", (data) => setNodeSyncStatus(data));
     const updateWalletStatus = () => rpdDaemon("wallet status", (data) => setWalletStatus(data));
 
+
+
+
     React.useEffect(() => {
         updateMiniPoolStatus();
         updateNodeStatus();
@@ -106,12 +110,85 @@ const Comp = () => {
 
     const header = () => {
         return (
-            <div className="dashboard">
-                <section className="keygen is-medium has-text-white">
+            <div className="dashboard has-text-white">
+                <div className="hero-body is-small is-primary">
+                    <div className="columns">
+                        <div className="column is-narrow">
+                            <figure className="image is-64x64">
+                                <img src={rocketpool} alt="Rocket Pool logo" />
+                            </figure>
+                        </div>
+                        <div className="column">
+                            <div className="container">
+                                <h1 className="title is-1 is-spaced has-text-white">Avado Rocket Pool</h1>
+                            </div>
+                            <p>TODO catchy title</p>
+                        </div>
+                        <div className="column">
+                            <nav className="panel">
+                                <p className="panel-heading">
+                                    Status
+                                </p>
+                                <a className="panel-block">
+                                    ETH1
+                                </a>
+                                <a className="panel-block">
+                                    ETH2
+                                </a>
+                                <div className="panel-block">
+                                    Foo
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <nav className="navbar" role="navigation" aria-label="main navigation">
+                    <div className="navbar-brand">
+                        <a className="navbar-item">
+                            <figure className="image is-32x32">
+                                <img src={rocketpool} alt="Rocket Pool logo" />
+                            </figure>
+                        </a>
+                        <a
+                            onClick={() => {
+                                setNavBarIsActive(!navBarIsActive);
+                            }}
+                            role="button"
+                            className={`navbar-burger burger ${navBarIsActive ? "is-active" : ""}`}
+                            aria-label="menu"
+                            aria-expanded="false"
+                            data-target="navMenu"
+                        >
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </a>
+                    </div>
+                    <div id="navMenu" className={`navbar-menu ${navBarIsActive ? "is-active" : ""}`}>
+                        <div className="navbar-start">
+                            <a className="navbar-item">
+                                Welcome
+                            </a>
+                            <a className="navbar-item">
+                                Setup
+                            </a>
+                            <a className="navbar-item">
+                                Status
+                            </a>
+                        </div>
+
+                        <div className="navbar-end">
+                            <a className="navbar-item">
+                                Admin
+                            </a>
+                        </div>
+                    </div>
+
+                </nav>
+
+                <section className="is-medium has-text-white">
                     <div className="columns is-mobile">
                         <div className="column is-8-desktop is-10">
-
-                            <h1 className="title is-1 is-spaced has-text-white">Avado Rocket Pool</h1>
                             <p>Todo...</p>
                             <br />
                             <div className="columns">
@@ -119,13 +196,13 @@ const Comp = () => {
                                     <h1 className="title is-3 has-text-white">How does this work?</h1>
                                     <p>TODO.</p>
                                 </div>
-                                <div className="column is-half">
+                                {/* <div className="column is-half">
                                     <img src={rocketpool} alt="Rocket Pool logo" />
-                                </div>
+                                </div> */}
                             </div>
 
                             <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
-                            <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus}/>
+                            <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
                             <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
                             <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
                             <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
@@ -134,7 +211,7 @@ const Comp = () => {
                 </section>
 
                 <br />
-                <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus}/>
+                <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus} />
                 <br />
                 <MiniPoolStatus minipoolStatus={minipoolStatus} />
                 <br />
