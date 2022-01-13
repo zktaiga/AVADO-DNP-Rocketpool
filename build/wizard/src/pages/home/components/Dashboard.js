@@ -13,6 +13,7 @@ import FundWallet from "./FundWallet";
 import RegisterNode from "./RegisterNode";
 import SetWithdrawalAddress from "./SetWithdrawalAddress";
 import CreateMinipool from "./CreateMinipool";
+import NavigationBar from "./NavigationBar";
 
 // https://github.com/sponnet/avado-portal/blob/master/src/pages/Home.js#L4-L7
 const states = {
@@ -33,7 +34,6 @@ const Comp = () => {
     const [nodeSyncStatus, setNodeSyncStatus] = React.useState();
     const [wampSession, setWampSession] = React.useState();
     const [viewState, setViewState] = React.useState(states.WELCOME);
-    const [navBarIsActive, setNavBarIsActive] = React.useState(false);
     const [navBar, setNavBar] = React.useState();
 
     const stateName = (state) => Object.keys(states).find((k) => states[k] === state);
@@ -115,9 +115,6 @@ const Comp = () => {
     const updateNodeSyncStatus = () => rpdDaemon("node sync", (data) => setNodeSyncStatus(data));
     const updateWalletStatus = () => rpdDaemon("wallet status", (data) => setWalletStatus(data));
 
-
-
-
     React.useEffect(() => {
         updateMiniPoolStatus();
         updateNodeStatus();
@@ -160,36 +157,7 @@ const Comp = () => {
                         </div>
                     </div>
                 </div>
-                <nav className="navbar" role="navigation" aria-label="main navigation">
-                    <div className="navbar-brand">
-                        <a
-                            onClick={() => {
-                                setNavBarIsActive(!navBarIsActive);
-                            }}
-                            role="button"
-                            className={`navbar-burger burger ${navBarIsActive ? "is-active" : ""}`}
-                            aria-label="menu"
-                            aria-expanded="false"
-                            data-target="navMenu"
-                        >
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                            <span aria-hidden="true"></span>
-                        </a>
-                    </div>
-                    <div id="navMenu" className={`navbar-menu ${navBarIsActive ? "is-active" : ""}`}>
-                        <div className="navbar-start">
-                            <a className={`navbar-item ${navBar === "Welcome" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Welcome") }} >Welcome</a>
-                            <a className={`navbar-item ${navBar === "Setup" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Setup") }} >Setup</a>
-                            <a className={`navbar-item ${navBar === "Status" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Status") }} >Status</a>
-                        </div>
-
-                        <div className="navbar-end">
-                            <a className={`navbar-item ${navBar === "Admin" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Admin") }} >Admin</a>
-                        </div>
-                    </div>
-
-                </nav>
+                <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 
                 <section className="is-medium has-text-white">
                     <div className="columns is-mobile">
