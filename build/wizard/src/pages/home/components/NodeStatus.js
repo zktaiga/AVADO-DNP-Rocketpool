@@ -1,5 +1,5 @@
 import React from "react";
-import { beaconchainUrl, etherscanUrl, displayAsETH } from './utils.js';
+import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
 import SyncStatusTag from "./SyncStatusTag";
 
 
@@ -37,7 +37,7 @@ const NodeStatus = ({ nodeStatus, updateNodeStatus, nodeSyncStatus, updateNodeSy
                                                     {parseFloat(nodeSyncStatus.eth2Progress * 100).toFixed(2) + "% synced"}
                                                 </span>
                                             </td></tr>
-                                            <tr><td><b>Account Address</b></td><td>{etherscanUrl(nodeStatus.accountAddress)}</td></tr>
+                                            <tr><td><b>Account Address</b></td><td>{etherscanAddressUrl(nodeStatus.accountAddress)}</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -57,7 +57,7 @@ const NodeStatus = ({ nodeStatus, updateNodeStatus, nodeSyncStatus, updateNodeSy
                                 <td><b>Beacon chain node</b></td>
                                 <td><SyncStatusTag progress={nodeSyncStatus.eth2Progress} /></td>
                             </tr>
-                            <tr><td><b>Account Address</b></td><td>{etherscanUrl(nodeStatus.accountAddress)}</td></tr>
+                            <tr><td><b>Account Address</b></td><td>{etherscanAddressUrl(nodeStatus.accountAddress)}</td></tr>
                         </tbody>
                     </table>
                 </div>

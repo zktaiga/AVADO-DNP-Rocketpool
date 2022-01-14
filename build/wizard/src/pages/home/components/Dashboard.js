@@ -16,6 +16,7 @@ import CreateMinipool from "./CreateMinipool";
 import NavigationBar from "./NavigationBar";
 import Header from "./Header";
 import Welcome from "./Welcome";
+import WalletStatus from "./WalletStatus";
 
 // https://github.com/sponnet/avado-portal/blob/master/src/pages/Home.js#L4-L7
 const states = {
@@ -46,7 +47,7 @@ const Comp = () => {
 
     React.useEffect(() => {
         if (!navBar && walletStatus && minipoolStatus) {
-            if (minipoolStatus.status === "success") {
+            if (minipoolStatus.status === "success" && minipoolStatus.minipools.length > 0) {
                 setNavBar("Status");
                 return;
             }
@@ -128,7 +129,7 @@ const Comp = () => {
 
     return (
         <div className="dashboard has-text-white">
-            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus}/>
+            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 
             <section className="is-medium has-text-white">
@@ -150,10 +151,16 @@ const Comp = () => {
 
                         {navBar === "Status" && (
                             <div>
-                                <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus} />
+                                <div className="columns">
+                                    <div className="column is-half">
+                                        <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus} />
+                                    </div>
+                                    <div className="column is-half">
+                                        <WalletStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus}/>
+                                    </div>
+                                </div>
                                 <br />
                                 <MiniPoolStatus minipoolStatus={minipoolStatus} />
-                                <br />
                             </div>
                         )}
 

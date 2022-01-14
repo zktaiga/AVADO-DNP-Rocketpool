@@ -1,5 +1,6 @@
 import React from "react";
-import web3 from "web3";
+import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
+
 
 const FundWallet = ({ nodeStatus, updateNodeStatus }) => {
     // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
@@ -8,15 +9,15 @@ const FundWallet = ({ nodeStatus, updateNodeStatus }) => {
             <h2 className="title is-3 has-text-white">Fund wallet</h2>
             {nodeStatus && nodeStatus.accountAddress && nodeStatus.accountBalances.eth !== null && nodeStatus.accountBalances.rpl !== null && (
                 <>
-                    <p>Before you can... fund your wallet ({nodeStatus.accountAddress})</p>
+                    <p>Before you can... fund your wallet ({etherscanAddressUrl(nodeStatus.accountAddress)})</p>
                     <p>Node Funding:</p>
                     <ul>
-                        <li><b>ETH: </b>{web3.utils.fromWei(String(nodeStatus.accountBalances.eth), 'ether')} </li>
-                        <li><b>RPL: </b>{web3.utils.fromWei(String(nodeStatus.accountBalances.rpl), 'ether')} </li>
+                        <li><b>ETH: </b>{displayAsETH(nodeStatus.accountBalances.eth)} </li>
+                        <li><b>RPL: </b>{displayAsETH(nodeStatus.accountBalances.rpl)} </li>
                     </ul>
                 </>
             )}
-            <button onClick={updateNodeStatus}>Refresh</button>
+            <button className="button" onClick={updateNodeStatus}>Refresh</button>
         </div>
     );
 };

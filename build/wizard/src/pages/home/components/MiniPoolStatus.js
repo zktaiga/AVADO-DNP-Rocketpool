@@ -1,5 +1,5 @@
 import React from "react";
-import { beaconchainUrl, etherscanUrl, displayAsETH } from './utils.js';
+import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
 
 const MiniPoolStatus = ({ minipoolStatus }) => {
 
@@ -55,7 +55,7 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
 
                     <table className="table">
                         <tbody>
-                            <tr><td><b>Address</b></td><td>{etherscanUrl(minipool0.address)}</td></tr>
+                            <tr><td><b>Address</b></td><td>{etherscanAddressUrl(minipool0.address)}</td></tr>
                             <tr><td><b>Status updated</b></td><td>{minipool0.status.statusTime}</td></tr>
                             <tr><td><b>Node fee</b></td><td>{parseFloat(minipool0.node.fee * 100).toFixed(2) + "%"}</td></tr>
                             <tr><td><b>Node deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)}</td></tr>
@@ -72,8 +72,8 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
                     <table className="table">
                         <tbody>
                             <tr><td><b>Use latest delegate</b></td><td>{minipool0.useLatestDelegate ? "yes" : "no"}</td></tr>
-                            <tr><td><b>Delegate address</b></td><td>{etherscanUrl(minipool0.delegate)}</td></tr>
-                            <tr><td><b>Effective delegate</b></td><td>{etherscanUrl(minipool0.effectiveDelegate)}</td></tr>
+                            <tr><td><b>Delegate address</b></td><td>{etherscanAddressUrl(minipool0.delegate)}</td></tr>
+                            <tr><td><b>Effective delegate</b></td><td>{etherscanAddressUrl(minipool0.effectiveDelegate)}</td></tr>
                         </tbody>
                     </table>
                     <p>{beaconchainUrl(minipool0.validatorPubkey, "More validator info on the Ethereum 2.0 Beacon Chain Explorer")}</p>

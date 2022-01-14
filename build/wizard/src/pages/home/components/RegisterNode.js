@@ -5,13 +5,21 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import config from "../../../config";
 
+import spinner from "../../../assets/spinner.svg";
+
+import { etherscanTransactionUrl } from './utils.js';
+
 const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     const [buttonDisabled, setButtonDisabled] = React.useState(true);
     const [transactionReceipt, setTransactionReceipt] = React.useState("");
+    const [txHash, setTxHash] = React.useState();
+    const [waitingForTx, setWaitingForTx] = React.useState(false);
 
     React.useEffect(() => {
         setButtonDisabled(true); //set default
-        if (nodeStatus && !nodeStatus.registered) { // TODO: needs gas mony too ()
+        if (waitingForTx)
+            return;
+        if (nodeStatus && !nodeStatus.registered && nodeStatus.accountBalances.eth > 0) {
             rpdDaemon(`node can-register ${timeZone()}`, (data) => {
                 if (data.canRegister)
                     setButtonDisabled(false);
@@ -19,17 +27,19 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
         }
     }, [nodeStatus]);
 
-
-    // experiment with transaction feedback: 
-    // The receipt is not available for pending transactions and returns null.
-    // -> launch timer?
     React.useEffect(() => {
-        const w3 = new web3(config.wsProvider);
-        w3.eth.getTransactionReceipt("0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381").then((receipt) => {
-            console.log(receipt);
-            setTransactionReceipt(JSON.stringify(receipt));
-        });
-    },[]);
+        if (waitingForTx) {
+            rpdDaemon(`wait ${txHash}`, (data) => {
+                const w3 = new web3(config.wsProvider);
+                w3.eth.getTransactionReceipt(txHash).then((receipt) => {
+                    console.log(receipt);
+                    setTransactionReceipt(JSON.stringify(receipt));
+                    setWaitingForTx(false);
+                });
+            });
+        }
+
+    }, [waitingForTx]);
 
     const timeZone = () => {
         try {
@@ -47,10 +57,11 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                 {
                     label: 'Yes',
                     onClick: () => rpdDaemon(`node register ${timeZone()}`, (data) => {
+                        // "data": "{\"status\":\"success\",\"error\":\"\",\"txHash\":\"0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381\"}\n",
                         updateNodeStatus();
-                        // txHash = data.txHash;
-                        // data.error
-                        //     "data": "{\"status\":\"success\",\"error\":\"\",\"txHash\":\"0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381\"}\n",
+                        setTxHash(data.txHash);
+                        setWaitingForTx(true);
+                        setButtonDisabled(true);
                     })
                 },
                 {
@@ -59,20 +70,23 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                 }
             ]
         });
-
-        
     }
-
 
     return (
         <div>
-            {transactionReceipt && (
-                <p>DEBUG: receipt for "0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381" : {transactionReceipt}</p>
-            )}
             {nodeStatus && !nodeStatus.registered && (
                 <>
                     <h2 className="title is-3 has-text-white">Register Node</h2>
-                    <button onClick={registerNode} disabled={buttonDisabled}>Register Node</button>
+                    <button className="button" onClick={registerNode} disabled={buttonDisabled}>Register Node</button>
+                    {waitingForTx && (
+                        <p><span className="icon"><img alt="spinner" src={spinner} /></span></p>
+                    )}
+                    {txHash && (
+                        <p>{etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                    )}
+                    {transactionReceipt && (
+                        <p>Transaction receipt" : {transactionReceipt}</p>
+                    )}
                 </>
             )}
         </div>

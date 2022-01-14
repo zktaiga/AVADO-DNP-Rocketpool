@@ -59,7 +59,7 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                         )}
                     </div>
                     <div className="field">
-                        <button onClick={onClick} disabled={buttonDisabled}>Set withdrawal address</button>
+                        <button className="button" onClick={onClick} disabled={buttonDisabled}>Set withdrawal address</button>
                     </div>
                 </>
             )}

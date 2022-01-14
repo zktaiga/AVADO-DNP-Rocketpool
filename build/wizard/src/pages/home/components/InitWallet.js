@@ -37,7 +37,7 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
     React.useEffect(() => {
         if (!initialWalletStatus)
             setInitialWalletStatus(walletStatus);
-    }, [walletStatus,initialWalletStatus]);
+    }, [walletStatus, initialWalletStatus]);
 
     // Flow:
     // User picks password (twice)
@@ -51,36 +51,29 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
             rpdDaemon("wallet set-password \"" + password + "\"", (data) => {
                 if (data.status === "error") {
                     setPasswordFeedback(data.error);
+                    return;
                 }
-                updateWalletStatus();
+                rpdDaemon("wallet init", (data) => {
+                    //{"status":"success","error":"","mnemonic":"corn wool actor cable marine anger nothing return coast energy magnet evolve best lion dutch clerk visit begin agree about sing federal sausage ribbon","accountAddress":"0xd97afeffa7ce00aa489e5c88880e124fb75b8e05"}
+                    if (data.status === "error") {
+                        setPasswordFeedback(data.error);
+                    }
+                    setWalletAddress(data.accountAddress);
+                    setWalletMnemonic(data.mnemonic);
+                    setButtonDisabled(true);
+                    updateWalletStatus();
+                });
             });
         }
 
-        if (walletStatus.passwordSet) {
-            rpdDaemon("wallet init", (data) => {
-                //{"status":"success","error":"","mnemonic":"corn wool actor cable marine anger nothing return coast energy magnet evolve best lion dutch clerk visit begin agree about sing federal sausage ribbon","accountAddress":"0xd97afeffa7ce00aa489e5c88880e124fb75b8e05"}
-                if (data.status === "error") {
-                    setPasswordFeedback(data.error);
-                }
-                setWalletAddress(data.accountAddress);
-                setWalletMnemonic(data.mnemonic);
-                setButtonDisabled(true);
-                updateWalletStatus();
-            });
-        }
     }
 
 
     return (
         <div>
-            <h2 className="title is-3 has-text-white">Init wallet</h2>
-            {initialWalletStatus && initialWalletStatus.walletInitialized
-                ?
+            {initialWalletStatus && !initialWalletStatus.walletInitialized &&
                 <div>
-                    <p>Your Wallet is already initialized. <b>Account Address: </b>{initialWalletStatus.accountAddress}</p>
-                </div>
-                :
-                <div>
+                    <h2 className="title is-3 has-text-white">Init wallet</h2>
                     <div className="field">
                         <label className="label">Rocket pool node password</label>
                         <p className="help">This is the password that will encrypt your keystore - minimum length  =  12 characters</p>
@@ -110,7 +103,7 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
                     </div>
 
                     <div className="field">
-                        <button onClick={initWallet} disabled={buttonDisabled}>Init Wallet</button>
+                        <button className="button" onClick={initWallet} disabled={buttonDisabled}>Init Wallet</button>
                     </div>
 
                     {walletAddress && walletMnemonic && (

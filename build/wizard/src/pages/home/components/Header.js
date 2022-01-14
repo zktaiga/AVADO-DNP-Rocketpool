@@ -8,19 +8,21 @@ import config from "../../../config";
 const Header = ({ rocketpoollogo, nodeSyncStatus }) => {
 
     const [gasPrice, setGasPrice] = React.useState();
-    const w3 = new web3(config.wsProvider);
+    const eth = new web3(config.wsProvider).eth;
     
     React.useEffect(() => {
-        w3.eth.getGasPrice().then((result) => {
-            const currentPrice = 
-            parseFloat(web3.utils.fromWei(result, 'gwei')).toFixed(3)
-            console.log("Gas: " + currentPrice);
-            setGasPrice(currentPrice);
-        })
-    }, [5000]);
+        const interval = setInterval(() => {            
+            eth.getGasPrice().then((result) => {
+                const currentPrice =  parseFloat(web3.utils.fromWei(result, 'gwei')).toFixed(3);
+                console.log("Gas: " + currentPrice);
+                setGasPrice(currentPrice);
+            })
+          }, 15*1000);
+          return () => clearInterval(interval);
+    }, [eth]);
 
     return (
-        <div className="hero-body is-small is-primary">
+        <div className="hero-body is-small is-primary py-0">
             <div className="columns">
                 <div className="column is-narrow">
                     <figure className="image is-64x64">
@@ -28,28 +30,15 @@ const Header = ({ rocketpoollogo, nodeSyncStatus }) => {
                     </figure>
                 </div>
                 <div className="column">
-                    <div className="container">
-                        <h1 className="title is-1 is-spaced has-text-white">Avado Rocket Pool</h1>
-                    </div>
+                    <span>
+                        <h1 className="title is-1 has-text-white">Avado Rocket Pool</h1>
+                    </span>
                     <p>Rocket Pool without the command line</p>
-                </div>
-                <div className="column">
-                    <nav className="panel">
-                        <p className="panel-heading">
-                            Status
-                        </p>
-                        <p className="panel-block">
-                            ETH1
-                        </p>
-                        <p className="panel-block">
-                            ETH2
-                        </p>
-                    </nav>
                 </div>
             </div>
 
             {nodeSyncStatus && (
-                <p>
+                <p className="has-text-right">
                     Geth: <SyncStatusTag progress={nodeSyncStatus.eth1Progress} />, Prysm: <SyncStatusTag progress={nodeSyncStatus.eth2Progress} />, <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice} gwei
                 </p>
             )}
