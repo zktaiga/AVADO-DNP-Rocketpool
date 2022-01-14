@@ -3,6 +3,7 @@ import web3 from "web3";
 
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import config from "../../../config";
 
 const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     const [buttonDisabled, setButtonDisabled] = React.useState(true);
@@ -23,7 +24,7 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     // The receipt is not available for pending transactions and returns null.
     // -> launch timer?
     React.useEffect(() => {
-        const w3 = new web3('ws://goerli-geth.my.ava.do:8546');
+        const w3 = new web3(config.wsProvider);
         w3.eth.getTransactionReceipt("0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381").then((receipt) => {
             console.log(receipt);
             setTransactionReceipt(JSON.stringify(receipt));

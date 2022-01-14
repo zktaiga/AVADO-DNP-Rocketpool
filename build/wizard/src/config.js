@@ -4,7 +4,8 @@ const configs = {
         admin: true,
         api: {
             HTTP: "http://rocketpool.my.ava.do:9999",
-        }
+        },
+        wsProvider: "ws://goerli-geth.my.ava.do:8546"
     },
 
     production: {
@@ -12,7 +13,8 @@ const configs = {
         admin: true,
         api: {
             HTTP: "http://rocketpool.my.ava.do:9999",
-        }
+        },
+        wsProvider: "ws://goerli-geth.my.ava.do:8546"
     }
 };
 let config = process.env.REACT_APP_STAGE

@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import config from "../../../config";
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import rocketpool from "../../../assets/rocketpool.png";
+import rocketpoollogo from "../../../assets/rocketpool.png";
 import autobahn from "autobahn-browser";
 import MiniPoolStatus from "./MiniPoolStatus";
 import NodeStatus from "./NodeStatus";
@@ -14,6 +14,8 @@ import RegisterNode from "./RegisterNode";
 import SetWithdrawalAddress from "./SetWithdrawalAddress";
 import CreateMinipool from "./CreateMinipool";
 import NavigationBar from "./NavigationBar";
+import Header from "./Header";
+import Welcome from "./Welcome";
 
 // https://github.com/sponnet/avado-portal/blob/master/src/pages/Home.js#L4-L7
 const states = {
@@ -123,103 +125,56 @@ const Comp = () => {
     }, []); // eslint-disable-line
 
 
-    const header = () => {
-        return (
-            <div className="dashboard has-text-white">
-                <div className="hero-body is-small is-primary">
-                    <div className="columns">
-                        <div className="column is-narrow">
-                            <figure className="image is-64x64">
-                                <img src={rocketpool} alt="Rocket Pool logo" />
-                            </figure>
-                        </div>
-                        <div className="column">
-                            <div className="container">
-                                <h1 className="title is-1 is-spaced has-text-white">Avado Rocket Pool</h1>
-                            </div>
-                            <p>TODO catchy title</p>
-                        </div>
-                        <div className="column">
-                            <nav className="panel">
-                                <p className="panel-heading">
-                                    Status
-                                </p>
-                                <p className="panel-block">
-                                    ETH1
-                                </p>
-                                <p className="panel-block">
-                                    ETH2
-                                </p>
-                                <div className="panel-block">
-                                    Foo
-                                </div>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-                <NavigationBar navBar={navBar} setNavBar={setNavBar} />
-
-                <section className="is-medium has-text-white">
-                    <div className="columns is-mobile">
-                        <div className="column">
-                            {navBar === "Welcome" && (
-                                <div>
-                                    <p>Todo...</p>
-                                    <br />
-                                    <div className="columns">
-                                        <div className="column is-half ">
-                                            <h1 className="title is-3 has-text-white">How does this work?</h1>
-                                            <p>TODO.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {navBar === "Setup" && (
-                                <div>
-                                    <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
-                                    <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
-                                    <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-                                    <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-                                    <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-                                </div>
-                            )}
-
-                            {navBar === "Status" && (
-                                <div>
-                                    <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus} />
-                                    <br />
-                                    <MiniPoolStatus minipoolStatus={minipoolStatus} />
-                                    <br />
-                                </div>
-                            )}
-
-                            {navBar === "Admin" && (
-                                <div>
-                                    <BackupDashboard wampSession={wampSession} />
-                                    <br />
-                                    <LogView wampSession={wampSession} />
-                                    <br />
-                                    <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail">Avado Rocket Pool package details</a>
-                                </div>
-                            )}
-
-                        </div>
-                    </div>
-                </section>
-
-            </div>
-
-        )
-    }
 
     return (
-        <>
-            {header()}
-        </>
+        <div className="dashboard has-text-white">
+            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus}/>
+            <NavigationBar navBar={navBar} setNavBar={setNavBar} />
+
+            <section className="is-medium has-text-white">
+                <div className="columns is-mobile">
+                    <div className="column">
+                        {navBar === "Welcome" && (
+                            <Welcome />
+                        )}
+
+                        {navBar === "Setup" && (
+                            <div>
+                                <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
+                                <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
+                                <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                                <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                                <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                            </div>
+                        )}
+
+                        {navBar === "Status" && (
+                            <div>
+                                <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus} />
+                                <br />
+                                <MiniPoolStatus minipoolStatus={minipoolStatus} />
+                                <br />
+                            </div>
+                        )}
+
+                        {navBar === "Admin" && (
+                            <div>
+                                <BackupDashboard wampSession={wampSession} />
+                                <br />
+                                <LogView wampSession={wampSession} />
+                                <br />
+                                <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail">Avado Rocket Pool package details</a>
+                            </div>
+                        )}
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
     )
+}
 
-
-};
 
 export default Comp;
