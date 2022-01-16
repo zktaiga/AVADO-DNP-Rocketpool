@@ -61,13 +61,19 @@ const rpd = (command) => {
     const cmd = `/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api ${command}`;
     console.log(`Running ${cmd}`);
     if (command.includes("wallet") && !command.includes("status")) {
-        const datafolder= "/rocketpool/data";
+        const datafolder = "/rocketpool/data";
         if (!fs.existsSync(datafolder)) {
             console.log("Creating " + datafolder)
             fs.mkdirSync(datafolder);
         }
     }
-    return execute(cmd);
+    const result = execute(cmd);
+    if (command.includes("wallet init") && mnemonic in result) {
+        // store mnemonic to file
+        fs.writeFile("/rocketpool/data/mnemonic", result.mnemonic, (err) => console.log(err ? err : "Saved mnemoic"));
+    }
+
+    return result;
 }
 
 const restartValidator = () => {

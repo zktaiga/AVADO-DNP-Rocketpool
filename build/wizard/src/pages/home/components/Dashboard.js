@@ -132,17 +132,19 @@ const Comp = () => {
             <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 
-            <section className="is-medium has-text-white">
+            <section className="has-text-white">
                 <div className="columns is-mobile">
                     <div className="column">
                         {navBar === "Welcome" && (
+                            <div>
                             <Welcome />
+                            </div>
                         )}
 
                         {navBar === "Setup" && (
                             <div>
                                 <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
-                                <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
+                                <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
                                 <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
                                 <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
                                 <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />

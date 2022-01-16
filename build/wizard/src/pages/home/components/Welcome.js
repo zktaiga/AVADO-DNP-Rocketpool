@@ -5,6 +5,7 @@ const Welcome = ({ }) => {
         <div>
 
             <div className="content">
+                <div className="section-subtitle ">Welcome to Avado Rocket Pool</div>
                 <h3 className="title is-3 has-text-white">How does this work?</h3>
                 <p>TODO.</p>
 

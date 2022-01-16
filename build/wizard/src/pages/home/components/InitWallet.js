@@ -76,7 +76,7 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
                     <h2 className="title is-3 has-text-white">Init wallet</h2>
                     <div className="field">
                         <label className="label">Rocket pool node password</label>
-                        <p className="help">This is the password that will encrypt your keystore - minimum length  =  12 characters</p>
+                        <p className="help">This is the password that will encrypt your Rocket Pool (hot) wallet - minimum length  =  12 characters</p>
                     </div>
                     <div className="field has-addons">
                         <div className="control is-expanded">

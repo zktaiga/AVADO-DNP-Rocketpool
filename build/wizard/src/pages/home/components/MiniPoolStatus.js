@@ -1,5 +1,6 @@
 import React from "react";
 import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
+import beaconchainlogo from "../../../assets/beaconchain.png";
 
 const MiniPoolStatus = ({ minipoolStatus }) => {
 
@@ -52,6 +53,8 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
                             </ul>
                         </div>
                     </div>
+
+                    {beaconchainUrl(minipool0.validator.index, <img src={beaconchainlogo} alt="More info on beaconcha.in" />)}
 
                     <table className="table">
                         <tbody>

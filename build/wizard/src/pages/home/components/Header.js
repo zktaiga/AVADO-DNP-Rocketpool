@@ -2,7 +2,7 @@ import React from "react";
 import SyncStatusTag from "./SyncStatusTag";
 import web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGasPump } from "@fortawesome/free-solid-svg-icons";
+import { faGasPump, fas, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import config from "../../../config";
 
 const Header = ({ rocketpoollogo, nodeSyncStatus }) => {
@@ -39,7 +39,9 @@ const Header = ({ rocketpoollogo, nodeSyncStatus }) => {
 
             {nodeSyncStatus && (
                 <p className="has-text-right">
-                    Geth: <SyncStatusTag progress={nodeSyncStatus.eth1Progress} />, Prysm: <SyncStatusTag progress={nodeSyncStatus.eth2Progress} />, <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice} gwei
+                    Geth: <SyncStatusTag progress={nodeSyncStatus.eth1Progress} />,
+                    Prysm: <SyncStatusTag progress={nodeSyncStatus.eth2Progress} />,
+                    <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice?gasPrice:<FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />} gwei
                 </p>
             )}
         </div>
