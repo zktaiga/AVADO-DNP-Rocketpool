@@ -1,7 +1,7 @@
 import React from "react";
 import { saveAs } from "file-saver";
 import axios from "axios";
-import config from "../../../config";
+import config from "../config";
 
 
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css

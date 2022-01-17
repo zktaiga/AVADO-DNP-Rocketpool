@@ -1,24 +1,19 @@
 import React from 'react';
-import pages from "./pages";
+import Dashboard from "./components/Dashboard";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import "./css/style.sass";
 
 function App() {
     return (
         <div className="App">
-        {/* <AutoBahn/> */}
+            {/* <AutoBahn/> */}
             <BrowserRouter>
                 <Switch>
-                    {Object.values(pages).map(({ RootComponent, rootPath }) => (
-                        <Route
-                            key={rootPath}
-                            path={rootPath}
-                            exact={rootPath === "/"}
-                            render={props => (
-                                <RootComponent rootpath={rootPath} {...props} />
-                            )}
-                        />
-                    ))}
+                    <Route
+                        path="/"
+                        exact={true}
+                        render={props => (<Dashboard {...props} />)}
+                    />
                 </Switch>
             </BrowserRouter>
         </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
-import beaconchainlogo from "../../../assets/beaconchain.png";
+import beaconchainlogo from "../assets/beaconchain.png";
 
 const MiniPoolStatus = ({ minipoolStatus }) => {
 

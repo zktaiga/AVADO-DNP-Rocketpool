@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
-import config from "../../../config";
+import config from "../config";
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
-import rocketpoollogo from "../../../assets/rocketpool.png";
+import rocketpoollogo from "../assets/rocketpool.png";
 import autobahn from "autobahn-browser";
 import MiniPoolStatus from "./MiniPoolStatus";
 import NodeStatus from "./NodeStatus";
@@ -100,7 +100,7 @@ const Comp = () => {
 
     return (
         <div className="dashboard has-text-white">
-            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPrice={rplPrice} />
+            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPrice={rplPrice} minipoolStatus={minipoolStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 
             <section className="has-text-white">
