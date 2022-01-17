@@ -1,14 +1,25 @@
 import React from "react";
 import web3 from "web3";
 
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+import config from "../../../config";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { etherscanTransactionUrl } from './utils.js';
+
+
 const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     const [withdrawalAddress, setWithdrawalAddress] = React.useState("");
     const [addressFeedback, setAddressFeedback] = React.useState("");
     const [buttonDisabled, setButtonDisabled] = React.useState(false);
+    const [transactionReceipt, setTransactionReceipt] = React.useState("");
+    const [txHash, setTxHash] = React.useState();
+    const [waitingForTx, setWaitingForTx] = React.useState(false);
 
 
-    //web3.utils.isAddress(address)
-    //web3.eth.ens.getAddress(ENSName);
 
     React.useEffect(() => {
         //rpdDaemon(`node can-set-withdrawal-address ${withdrawalAddress} yes`)
@@ -19,15 +30,54 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
             setAddressFeedback("Invalid ETH address");
             setButtonDisabled(true);
         }
-    }, [withdrawalAddress]);
+        if (waitingForTx)
+            return;
+        if (nodeStatus) {
+            // rpdDaemon(`node can-set-withdrawal-address ${withdrawalAddress} yes`, (data) => {
+            //     if (data.canRegister)
+            //         setButtonDisabled(false);
+            // });
+        }
+    }, [nodeStatus, withdrawalAddress]);
+
+    React.useEffect(() => {
+        if (waitingForTx) {
+            rpdDaemon(`wait ${txHash}`, (data) => {
+                const w3 = new web3(config.wsProvider);
+                w3.eth.getTransactionReceipt(txHash).then((receipt) => {
+                    console.log(receipt);
+                    setTransactionReceipt(JSON.stringify(receipt));
+                    setWaitingForTx(false);
+                });
+            });
+        }
+
+    }, [waitingForTx]);
 
     const onClick = () => {
-        rpdDaemon(`node set-withdrawal-address ${withdrawalAddress} yes`, (data) => {
-            if (data.status === "error") {
-                setAddressFeedback(data.error);
-            }
-            //"{"status":"success","error":"","txHash":"0x27f5b5bb3905cd135cdef17e71f6f9ac70e3e95fd372999cb4eea918f3990310"}
-            updateNodeStatus();
+        confirmAlert({
+            title: 'Are you sure you want to continue?',
+            message: `Double check the withdrawal address (${withdrawalAddress}), if you make a mistake here, you loose control.
+             Note that this action consumes gas (ETH).`,
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => rpdDaemon(`node set-withdrawal-address ${withdrawalAddress} yes`, (data) => {
+                        if (data.status === "error") {
+                            setAddressFeedback(data.error);
+                        }
+                        //"{"status":"success","error":"","txHash":"0x27f5b5bb3905cd135cdef17e71f6f9ac70e3e95fd372999cb4eea918f3990310"}
+                        updateNodeStatus();
+                        setTxHash(data.txHash);
+                        setWaitingForTx(true);
+                        setButtonDisabled(true);
+                    })
+                },
+                {
+                    label: 'No',
+                    onClick: () => { }
+                }
+            ]
         });
     }
 
@@ -44,8 +94,18 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
             )}
             {nodeStatus && nodeStatus.withdrawalAddress === nodeStatus.accountAddress && (
                 <>
-                    <p>Hotwallet too risky ({nodeStatus.accountAddress}), so you must configure a withdrawal address. All gains will be deposited to this address.</p>
-                    <p>TODO: extra info about procedure</p>
+                    <p>For security reasons you need to set a <b>withdrawal address</b> for your node.
+                        This is the address that all of your RPL checkpoint rewards, your staked RPL, and your Beacon Chain ETH
+                        will be sent to when you claim your checkpoint rewards or exit your validator and withdraw from your minipool.
+                    </p>
+                    <p>This withdrawal address must be a cold wallet that you control, such as a MetaMask address or a hardware wallet.</p>
+                    <p>This way, if your node wallet is compromised, the attacker doesn't get access to your staked ETH and RPL by forcing
+                        you to exit because all of those funds will be sent to your separate cold wallet (which they hopefully do not have).</p>
+                    <p>Withdrawal addresses are set at a node operator level. If you create multiple minipools they will all refer to the same withdrawal address. So you only need to perform this setup once.
+                    </p>
+                    <p className="WARNING">Once you have set the withdrawal address, this rocket pool node can no longer change it.
+                        To change it, you will need to send a signed transaction from your active withdrawal address. The Rocket Pool website has a function to help you do this.
+                    </p>
                     <div>
                         <div className="field">
                             <label className="label">Withdrawal address</label>
@@ -59,8 +119,16 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                         )}
                     </div>
                     <div className="field">
-                        <button className="button" onClick={onClick} disabled={buttonDisabled}>Set withdrawal address</button>
+                        <button className="button" onClick={onClick} disabled={buttonDisabled}>
+                            {waitingForTx ? <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} /> : "Set withdrawal address"}
+                        </button>
                     </div>
+                    {txHash && (
+                        <p>{etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                    )}
+                    {transactionReceipt && (
+                        <p>Transaction receipt" : {transactionReceipt}</p>
+                    )}
                 </>
             )}
         </div>

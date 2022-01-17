@@ -134,13 +134,13 @@ const CreateMinipool = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                             <p><b>Current Node fee: </b>{currentNodeFee} (Minimum: {minNodeFee}, maximum: {maxNodeFee})</p>
                         </div>
                         <div className="field">
-                            <button onClick={approveRpl} disabled={rplApproveButtonDisabled}>Approve RPL</button>
+                            <button className="button" onClick={approveRpl} disabled={rplApproveButtonDisabled}>Approve RPL</button>
                         </div>
                         <div className="field">
-                            <button onClick={stakeRpl} disabled={rplStakeButtonDisabled}>Stake RPL</button>
+                            <button className="button" onClick={stakeRpl} disabled={rplStakeButtonDisabled}>Stake RPL</button>
                         </div>
                         <div className="field">
-                            <button onClick={depositEth} disabled={ethButtonDisabled}>Stake 16 ETH</button>
+                            <button className="button" onClick={depositEth} disabled={ethButtonDisabled}>Stake 16 ETH</button>
                         </div>
                         {feedback && (
                             <p className="help is-danger">{feedback}</p>

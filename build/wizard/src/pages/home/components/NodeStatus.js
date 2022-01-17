@@ -3,17 +3,9 @@ import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
 import SyncStatusTag from "./SyncStatusTag";
 
 
-const NodeStatus = ({ nodeStatus, updateNodeStatus, nodeSyncStatus, updateNodeSyncStatus }) => {
+const NodeStatus = ({ nodeStatus, updateNodeStatus, nodeSyncStatus}) => {
     // const [nodeSync, setNodeSync] = useState();
     //{"status":"success","error":"","eth1Progress":1,"eth2Progress":0.999965525074369,"eth1Synced":true,"eth2Synced":false,"eth1LatestBlockTime":1641917772}
-
-    // React.useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //         console.log("Trigger update");
-    //         updateNodeStatus();
-    //         updateNodeSyncStatus();
-    //     }, [5000]); //refresh every 5 seconds
-    // });
 
     return (
         <div>
@@ -57,7 +49,8 @@ const NodeStatus = ({ nodeStatus, updateNodeStatus, nodeSyncStatus, updateNodeSy
                                 <td><b>Beacon chain node</b></td>
                                 <td><SyncStatusTag progress={nodeSyncStatus.eth2Progress} /></td>
                             </tr>
-                            <tr><td><b>Account Address</b></td><td>{etherscanAddressUrl(nodeStatus.accountAddress)}</td></tr>
+                            <tr><td><b>Account address</b></td><td>{etherscanAddressUrl(nodeStatus.accountAddress)}</td></tr>
+                            <tr><td><b>Withdrawal address</b></td><td>{etherscanAddressUrl(nodeStatus.withdrawalAddress)}</td></tr>
                         </tbody>
                     </table>
                 </div>

@@ -39,11 +39,6 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
             setInitialWalletStatus(walletStatus);
     }, [walletStatus, initialWalletStatus]);
 
-    // Flow:
-    // User picks password (twice)
-    // -> check => enable init button
-    // -> force user to back up mnemonic -> download or write down? (Ask Stefaan)
-
     // Future improvement: allow recovery (`wallet recover mnemonic`)
 
     const initWallet = () => {
@@ -111,7 +106,7 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
                             <p className="help is-success"><b>address:</b> {walletAddress}</p>
                             <p className="help is-success"><b>mnemonic:</b> "{walletMnemonic}"</p>
 
-                            <p className="help is-danger"><b>Make sure to make a safe backup of this mnemonic!</b></p>
+                            <p className="help is-danger"><b>You can download a backup of your mnemonic in a later step.</b></p>
                         </div>
                     )}
                 </div>

@@ -1,9 +1,9 @@
 import React from "react";
 
-const SyncStatusTag = ({ progress }) => { // progress: a number between 0 and 1
+const SyncStatusTag = ({ progress, label }) => { // progress: a number between 0 and 1
     return (
         <span className={"tag" + (progress == 1 ? " is-success" : " is-warning")}>
-            {parseFloat(progress * 100).toFixed(2) + "% synced"}
+            {(label?`${label} `:"") + parseFloat(progress * 100).toFixed(2) + "% synced"}
         </span>
     );
 };

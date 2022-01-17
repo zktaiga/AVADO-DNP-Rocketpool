@@ -2,10 +2,12 @@ import React from "react";
 import SyncStatusTag from "./SyncStatusTag";
 import web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGasPump, fas, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faGasPump, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import config from "../../../config";
+import { displayAsETH } from './utils.js';
 
-const Header = ({ rocketpoollogo, nodeSyncStatus }) => {
+
+const Header = ({ rocketpoollogo, nodeSyncStatus, nodeFee, rplPrice }) => {
 
     const [gasPrice, setGasPrice] = React.useState();
     const eth = new web3(config.wsProvider).eth;
@@ -38,11 +40,18 @@ const Header = ({ rocketpoollogo, nodeSyncStatus }) => {
             </div>
 
             {nodeSyncStatus && (
-                <p className="has-text-right">
-                    Geth: <SyncStatusTag progress={nodeSyncStatus.eth1Progress} />,
-                    Prysm: <SyncStatusTag progress={nodeSyncStatus.eth2Progress} />,
-                    <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice?gasPrice:<FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />} gwei
+                <div>
+                 <p className="has-text-right">
+                    <SyncStatusTag progress={nodeSyncStatus.eth1Progress} label="Geth" />,
+                    <SyncStatusTag progress={nodeSyncStatus.eth2Progress} label="Prysm" />
+                    
                 </p>
+                <p className="has-text-right">
+                    <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice?gasPrice:<FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />} gwei,
+                    Node commision: {nodeFee ? parseFloat(nodeFee.nodeFee * 100).toFixed(2) : <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />}%,
+                    RPL: {rplPrice ? parseFloat(displayAsETH(rplPrice.rplPrice)).toFixed(5) : <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />} ETH
+                </p>
+                </div>
             )}
         </div>
     );

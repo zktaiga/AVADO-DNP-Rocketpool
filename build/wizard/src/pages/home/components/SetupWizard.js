@@ -1,0 +1,117 @@
+import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGasPump, fas, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import InitWallet from "./InitWallet";
+import FundWallet from "./FundWallet";
+import RegisterNode from "./RegisterNode";
+import SetWithdrawalAddress from "./SetWithdrawalAddress";
+import CreateMinipool from "./CreateMinipool";
+import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
+
+
+const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, updateNodeStatus, rpdDaemon }) => {
+
+    
+    
+    const initWallet = { name: "Init wallet" };
+    const fundNode = { name: "Fund Node", comment: "test" };
+    const registerNode = { name: "Register node" };
+    const setWithdrawalAddress = { name: "Set withdrawal address" };
+    const createMinipool = { name: "Create minipool" };
+
+    const [viewState, setViewState] = React.useState(initWallet);
+
+    const setupStates = [
+        initWallet,
+        fundNode,
+        registerNode,
+        setWithdrawalAddress,
+        createMinipool
+    ];
+
+    React.useEffect(() => {
+        if (nodeStatus.status === "error" && nodeStatus.error.includes("rocketpool wallet init")) {
+            setViewState(initWallet);
+            return;
+        }
+        if (nodeStatus.status === "success"
+            && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
+            && !nodeStatus.registered
+            && !nodeStatus.accountBalances.eth
+            //TODO : && displayAsETH(nodeStatus.accountBalances.rpl) < ???
+        ) {
+            setViewState(fundNode);
+            return;
+        }
+        if (nodeStatus.status === "success"
+            && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
+            && !nodeStatus.registered
+            && nodeStatus.accountBalances.eth > 0
+        ) {
+            setViewState(registerNode);
+            return;
+        }
+        if (nodeStatus.status === "success"
+            && nodeStatus.registered
+            && nodeStatus.withdrawalAddress === nodeStatus.accountAddress) {
+            setViewState(setWithdrawalAddress);
+            return;
+        }
+        if (nodeStatus.status === "success"
+            && nodeStatus.registered
+            && nodeStatus.withdrawalAddress !== nodeStatus.accountAddress) {
+            setViewState(createMinipool);
+            return;
+        }
+    }, [nodeStatus, walletStatus]);
+
+
+    const isActive = (element) => {
+        return element === viewState;
+
+    }
+    const isHollow = (element) => {
+        return false;
+
+    }
+
+    const stateComment = (element) => {
+        if ("comment" in element)
+            return element.comment;
+    }
+
+    React.useEffect(() => {
+
+    }, []);
+
+    return (
+        /* https://octoshrimpy.github.io/bulma-o-steps/ */
+        <div>
+            <br />
+            <div className="columns">
+                <div className="column">
+                    <ul className="steps has-content-centered">
+                        {setupStates.map((element) =>
+                            <li className={"steps-segment" + (isActive(element) ? " is-active" : "")} key={element.name}>
+                                <span className={"steps-marker" + (isHollow(element) ? " is-hollow" : "")}></span>
+                                <div className="steps-content">
+                                    <p className="is-size-4 has-text-white">{element.name}</p>
+                                    <div className="extra-data has-text-white">{stateComment(element)}</div>
+                                </div>
+                            </li>
+                        )}
+                    </ul>
+                </div>
+            </div>
+            <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
+            <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+            <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+            <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+            <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+        </div>
+    );
+};
+
+export default SetupWizard
+
+

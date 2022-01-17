@@ -8,42 +8,22 @@ import MiniPoolStatus from "./MiniPoolStatus";
 import NodeStatus from "./NodeStatus";
 import BackupDashboard from "./BackupDashboard";
 import LogView from "./LogView";
-import InitWallet from "./InitWallet";
-import FundWallet from "./FundWallet";
-import RegisterNode from "./RegisterNode";
-import SetWithdrawalAddress from "./SetWithdrawalAddress";
-import CreateMinipool from "./CreateMinipool";
 import NavigationBar from "./NavigationBar";
 import Header from "./Header";
 import Welcome from "./Welcome";
 import WalletStatus from "./WalletStatus";
-
-// https://github.com/sponnet/avado-portal/blob/master/src/pages/Home.js#L4-L7
-const states = {
-    WELCOME: Symbol("Welcome"),
-    CREATE_WALLET: Symbol("Create Wallet"),
-    FUND_NODE: Symbol("Fund Node"),
-    // CHECKINTERNET: 2,
-    // CHECKUPDATES: 3,
-    // PROVISIONING: 4,
-    // ENABLEAUTOUPDATES: 5,
-    FINISHED_STATUS: Symbol("Finished - Status")
-};
+import SetupWizard from "./SetupWizard";
 
 const Comp = () => {
     const [walletStatus, setWalletStatus] = React.useState();
     const [minipoolStatus, setMinipoolStatus] = React.useState();
     const [nodeStatus, setNodeStatus] = React.useState();
     const [nodeSyncStatus, setNodeSyncStatus] = React.useState();
+    const [nodeFee, setNodeFee] = React.useState();
+    const [rplPrice, setRplPrice] = React.useState();
+
     const [wampSession, setWampSession] = React.useState();
-    const [viewState, setViewState] = React.useState(states.WELCOME);
     const [navBar, setNavBar] = React.useState();
-
-    const stateName = (state) => Object.keys(states).find((k) => states[k] === state);
-
-    React.useEffect(() => {
-        console.log(`In state  ${stateName(viewState)}`);
-    }, [viewState]);
 
     React.useEffect(() => {
         if (!navBar && walletStatus && minipoolStatus) {
@@ -62,29 +42,7 @@ const Comp = () => {
         }
     }, [walletStatus, minipoolStatus]);
 
-    React.useEffect(() => {
-        if (!nodeStatus) {
-            setViewState(states.WELCOME);
-            return;
-        }
-        if (nodeStatus.status === "error" && nodeStatus.error.includes("rocketpool wallet init")) {
-            setViewState(states.CREATE_WALLET);
-            return;
-        }
-        if (nodeStatus.status === "success"
-            && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
-            && nodeStatus.registered === false
-        ) {
-            setViewState(states.FUND_NODE);
-            return;
-        }
-
-        if (nodeStatus.status === "success") {
-            setViewState(states.FINISHED_STATUS);
-            return;
-        }
-    }, [nodeStatus, walletStatus, minipoolStatus]);
-
+   
 
     React.useEffect(() => {
         const url = "ws://wamp.my.ava.do:8080/ws";
@@ -117,19 +75,32 @@ const Comp = () => {
     const updateNodeStatus = () => rpdDaemon("node status", (data) => setNodeStatus(data));
     const updateNodeSyncStatus = () => rpdDaemon("node sync", (data) => setNodeSyncStatus(data));
     const updateWalletStatus = () => rpdDaemon("wallet status", (data) => setWalletStatus(data));
+    const updateNodeFee = () => rpdDaemon("network node-fee", (data) => setNodeFee(data));
+    const updateRplPrice = () => rpdDaemon("network rpl-price", (data) => setRplPrice(data));
 
     React.useEffect(() => {
         updateMiniPoolStatus();
         updateNodeStatus();
         updateNodeSyncStatus();
         updateWalletStatus();
+        updateNodeFee();
+        updateRplPrice();
     }, []); // eslint-disable-line
+
+    React.useEffect(() => {
+        const interval = setInterval(() => {            
+            updateNodeFee();
+            updateNodeSyncStatus();
+            updateRplPrice();
+          }, 60*1000); // 60 seconds refresh
+          return () => clearInterval(interval);
+    }, []);
 
 
 
     return (
         <div className="dashboard has-text-white">
-            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} />
+            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPrice={rplPrice} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 
             <section className="has-text-white">
@@ -143,11 +114,9 @@ const Comp = () => {
 
                         {navBar === "Setup" && (
                             <div>
-                                <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
-                                <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-                                <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-                                <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-                                <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+                                <SetupWizard walletStatus={walletStatus}updateWalletStatus={updateWalletStatus}
+                                nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus}
+                                rpdDaemon={rpdDaemon} />                                
                             </div>
                         )}
 
@@ -155,7 +124,7 @@ const Comp = () => {
                             <div>
                                 <div className="columns">
                                     <div className="column is-half">
-                                        <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeSyncStatus={updateNodeSyncStatus} />
+                                        <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} />
                                     </div>
                                     <div className="column is-half">
                                         <WalletStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus}/>
