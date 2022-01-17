@@ -4,6 +4,7 @@ const exec = require("child_process").exec;
 const fs = require('fs');
 const archiver = require('archiver');
 const AdmZip = require("adm-zip");
+const jsonfile = require('jsonfile')
 
 console.log("Monitor starting...");
 
@@ -43,18 +44,44 @@ server.post("/rpd", (req, res, next) => {
 const execute = (cmd) => {
     return new Promise((resolve, reject) => {
         const child = exec(cmd, (error, stdout, stderr) => {
-            if (error) {
-                console.log(`error: ${error.message}`);
-                return reject(error.message);
+            const debug = false;
+            if (debug) {
+                switch(cmd) {
+                    case "wallet init":
+                        return resolve('{"status":"success","error":"","mnemonic":"corn wool actor cable marine anger nothing return coast energy magnet evolve best lion dutch clerk visit begin agree about sing federal sausage ribbon","accountAddress":"0xd97afeffa7ce00aa489e5c88880e124fb75b8e05"}');
+                    case "node register":
+                        return resolve('{"status":"success","error":"","txHash":"0x27f5b5bb3905cd135cdef17e71f6f9ac70e3e95fd372999cb4eea918f3990310"}');
+                    case "network rpl-price":
+                        return resolve('{"status":"success","error":"","rplPrice":11613106459524954,"rplPriceBlock":6199200,"minPerMinipoolRplStake":137775366614993524895,"maxPerMinipoolRplStake":2066630499224902873416}');
+                    default :
+                    return resolve('{"status":"success","error":""}');
+                }
+            } else {
+                if (error) {
+                    console.log(`error: ${error.message}`);
+                    return reject(error.message);
+                }
+                if (stderr) {
+                    console.log(`error: ${stderr}`);
+                    return reject(stderr);
+                }
+                return resolve(stdout);
             }
-            if (stderr) {
-                console.log(`error: ${stderr}`);
-                return reject(stderr);
-            }
-            return resolve(stdout);
         });
         child.stdout.on('data', (data) => console.log(data.toString()));
     });
+}
+
+const storeTxHash = (txHash) => {
+    const transactionsFile = "/rocketpool/data/transactions.json";
+    console.log(`Store hash ${txHash} to ${transactionsFile}`);
+    try {
+        const data = (fs.existsSync(transactionsFile)) ? jsonfile.readFileSync(transactionsFile) : { transactions: [] };
+        data.transactions.push(txHash);
+        jsonfile.writeFileSync(transactionsFile, data);
+    } catch (e) {
+        console.error(e)
+    }
 }
 
 const rpd = (command) => {
@@ -67,13 +94,20 @@ const rpd = (command) => {
             fs.mkdirSync(datafolder);
         }
     }
-    const result = execute(cmd);
-    if (command.includes("wallet init") && mnemonic in result) {
-        // store mnemonic to file
-        fs.writeFile("/rocketpool/data/mnemonic", result.mnemonic, (err) => console.log(err ? err : "Saved mnemoic"));
-    }
+    const executionPromise = execute(cmd);
 
-    return result;
+    executionPromise.then((result) => {
+        const data = JSON.parse(result);
+        if (command.includes("wallet init") && "mnemonic" in data) {
+            // store mnemonic to file
+            fs.writeFile("/rocketpool/data/mnemonic", data.mnemonic, (err) => console.log(err ? err : "Saved mnemoic"));
+        }
+        if ("txHash" in data) {
+            storeTxHash(data.txHash);
+        }
+    })
+
+    return executionPromise;
 }
 
 const restartValidator = () => {
