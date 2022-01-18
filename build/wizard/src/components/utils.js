@@ -13,10 +13,14 @@ export function etherscanTransactionUrl(txHash, text) {
     return <a href={"https://goerli.etherscan.io/tx/" + txHash}>{text ? text : txHash}</a>;
 }
 
-export function displayAsETH(number) {
+// https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
+export function displayAsETH(number, fractionDigits) {
     if (!number)
-        return "---";
-    return web3.utils.fromWei(String(number), 'ether');
+        return 0;
+    const result = web3.utils.fromWei(String(number), 'ether');
+    if  (fractionDigits)
+        return parseFloat(result).toFixed(fractionDigits)
+    return result
 }
 
 export function displayAsPercentage(number) {

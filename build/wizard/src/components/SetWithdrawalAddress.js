@@ -83,16 +83,9 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
 
 
     // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
-    return (
+    return (nodeStatus && nodeStatus.withdrawalAddress === nodeStatus.accountAddress && 
         <div>
             <h2 className="title is-3 has-text-white">Withdrawal address</h2>
-            {nodeStatus && nodeStatus.withdrawalAddress !== nodeStatus.accountAddress && (
-                <div>
-                    <p><b>Hot wallet address:</b> {nodeStatus.accountAddress}</p>
-                    <p><b>Withdrawal address:</b> {nodeStatus.withdrawalAddress}</p>
-                </div>
-            )}
-            {nodeStatus && nodeStatus.withdrawalAddress === nodeStatus.accountAddress && (
                 <>
                     <p>For security reasons you need to set a <b>withdrawal address</b> for your node.
                         This is the address that all of your RPL checkpoint rewards, your staked RPL, and your Beacon Chain ETH
@@ -126,9 +119,7 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                     {txHash && (
                         <p>{etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
                     )}
-                   
                 </>
-            )}
         </div>
     );
 };

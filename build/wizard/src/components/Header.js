@@ -55,8 +55,8 @@ const Header = ({ rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, minipoo
                     </p>
                     <p className="has-text-right">
                         <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice ? gasPrice : <Spinner/>} gwei,
-                        Node commision: {nodeFee ? parseFloat(nodeFee.nodeFee * 100).toFixed(2) : <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />}%,
-                        RPL: {rplPriceData ? parseFloat(displayAsETH(rplPriceData.rplPrice)).toFixed(5) : <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />} ETH
+                        Node commision: {nodeFee ? parseFloat(nodeFee.nodeFee * 100).toFixed(2)+"%" : <Spinner/>},
+                        RPL: {rplPriceData ? parseFloat(displayAsETH(rplPriceData.rplPrice)).toFixed(5) : <Spinner/>} ETH
                     </p>
                 </div>
             )}

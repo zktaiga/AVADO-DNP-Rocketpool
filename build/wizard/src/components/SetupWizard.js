@@ -1,13 +1,12 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGasPump, fas, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faGasPump, fas, faSpinner, faWallet } from "@fortawesome/free-solid-svg-icons";
 import InitWallet from "./InitWallet";
 import FundWallet from "./FundWallet";
 import RegisterNode from "./RegisterNode";
 import SetWithdrawalAddress from "./SetWithdrawalAddress";
 import CreateMinipool from "./CreateMinipool";
 import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
-
 
 const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon }) => {
 
@@ -103,6 +102,13 @@ const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceDat
                             </li>
                         )}
                     </ul>
+                </div>
+                <div className="column is-narrow">
+                    <div className="box">
+                    <p><FontAwesomeIcon className="icon" icon={faWallet} /></p>
+                    <p>{displayAsETH(nodeStatus.accountBalances.eth,5)} ETH</p>
+                    <p>{displayAsETH(nodeStatus.accountBalances.rpl,5)} RPL</p>
+                    </div>
                 </div>
             </div>
             <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />

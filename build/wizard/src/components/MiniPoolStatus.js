@@ -43,7 +43,7 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
                             <ul className="steps has-content-centered">
                                 {miniPoolSteps.map( (element) => 
                                     <li className={"steps-segment" + (element === minipool0.status.status ? " is-active" : "")} key={element}>
-                                        <span className={"steps-marker"+ (isHollow(element, minipool0)?" is-hollow":"")}></span>
+                                        <span className={"steps-marker"+ (element === minipool0.status.status && isHollow(element, minipool0)?" is-hollow":"")}></span>
                                         <div className="steps-content">
                                             <p className="is-size-4 has-text-white">{element}</p>
                                             <div className="extra-data has-text-white">{miniPoolStepsComment(element)}</div>
@@ -61,9 +61,9 @@ const MiniPoolStatus = ({ minipoolStatus }) => {
                             <tr><td><b>Address</b></td><td>{etherscanAddressUrl(minipool0.address)}</td></tr>
                             <tr><td><b>Status updated</b></td><td>{minipool0.status.statusTime}</td></tr>
                             <tr><td><b>Node fee</b></td><td>{parseFloat(minipool0.node.fee * 100).toFixed(2) + "%"}</td></tr>
-                            <tr><td><b>Node deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)}</td></tr>
+                            <tr><td><b>Node deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)} ETH</td></tr>
                             <tr><td><b>RP ETH assigned</b></td><td>{minipool0.user.depositAssignedTime}</td></tr>
-                            <tr><td><b>RP deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)}</td></tr>
+                            <tr><td><b>RP deposit</b></td><td>{displayAsETH(minipool0.node.depositBalance)} ETH</td></tr>
                             <tr><td><b>Validator pubkey</b></td><td>{beaconchainUrl(minipool0.validatorPubkey, "0x" + minipool0.validatorPubkey.substring(0, 20) + "..." + minipool0.validatorPubkey.substring(76))}</td></tr>
                             <tr><td><b>Validator index</b></td><td>{beaconchainUrl(minipool0.validator.index)}</td></tr>
                             <tr><td><b>Validator active</b></td><td>{minipool0.validator.active ? "yes" : "no"}</td></tr>

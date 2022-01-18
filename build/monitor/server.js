@@ -65,7 +65,8 @@ const execute = (cmd) => {
                         return resolve('{"status":"success","error":"","passwordSet":true,"walletInitialized":true,"accountAddress":"0xe28b9c4109a8ee3d70775a15ba219a140b06f22a"}');
                     case "node can-register Europe/Brussels":
                         return resolve('{"status":"success","error":"","canRegister":true,"alreadyRegistered":false,"registrationDisabled":false,"gasInfo":{"estGasLimit":247168,"safeGasLimit":370752}}');
-
+                    case "node deposit 16000000000000000000 0.1 0":
+                        return resolve('{"status":"success","error":"","txHash":"0x5d580b252d20265c2e7a17e90c5d40f11c452a1f52af40fb0f7eb8830ceb149c","minipoolAddress":"0x62c98ff0418c36768513ae1e6d4a6f197535e142","validatorPubkey":"b9916da8896ef44e230aac1cc496eef029cc207be2560ab5b1884719b5c56722c145d1acfd882ddbb162e3f4156ec716","scrubPeriod":3600000000000}')
 
                     default:
                         return resolve('{"status":"success","error":""}');

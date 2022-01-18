@@ -150,7 +150,7 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon 
                     <p>TODO: extra info about procedure</p>
                     <div>
                         <h4 className="title is-4 has-text-white">Parameters</h4>
-                        <p className="content">
+                        <div className="content">
                             <dl>
                                 <dt>Node commision fee</dt>
                                 <dd>As a node operator you earn half of the validator's total ETH rewards, plus an extra commission.
@@ -162,7 +162,7 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon 
                                 <dd>You can ... but it must be higher than {rplPriceData ? Math.ceil(displayAsETH(rplPriceData.minPerMinipoolRplStake)) : <Spinner />} RPL
                                 </dd>
                             </dl>
-                        </p>
+                        </div>
                         <div className="field">
                             <input id="sliderWithValue" className="slider has-output" step="0.01" min={minNodeFee} max={maxNodeFee} defaultValue={networkNodeFee} type="range" onChange={slider} />
                             {displayAsPercentage(selectedNodeFee * 100)}
