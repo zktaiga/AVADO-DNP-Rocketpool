@@ -28,6 +28,9 @@ const Welcome = () => {
 
 
                 </dl>
+
+                Required reading:
+                https://docs.rocketpool.net/guides/node/responsibilities.html
             </div>
         </div>
 

@@ -18,3 +18,9 @@ export function displayAsETH(number) {
         return "---";
     return web3.utils.fromWei(String(number), 'ether');
 }
+
+export function displayAsPercentage(number) {
+    if (!number)
+        return "- %";
+    return parseFloat(number).toFixed(2) + "%";
+}

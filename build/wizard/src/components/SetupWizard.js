@@ -9,15 +9,15 @@ import CreateMinipool from "./CreateMinipool";
 import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
 
 
-const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, updateNodeStatus, rpdDaemon }) => {
+const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon }) => {
 
     
     
     const initWallet = { name: "Init wallet" };
-    const fundNode = { name: "Fund Node", comment: "test" };
+    const fundNode = { name: "Fund Node" };
     const registerNode = { name: "Register node" };
-    const setWithdrawalAddress = { name: "Set withdrawal address" };
-    const createMinipool = { name: "Create minipool" };
+    const withdrawalAddress = { name: "Withdrawal address" };
+    const createMinipool = { name: "Add minipool" };
 
     const [viewState, setViewState] = React.useState(initWallet);
 
@@ -25,7 +25,7 @@ const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, updateNodeS
         initWallet,
         fundNode,
         registerNode,
-        setWithdrawalAddress,
+        withdrawalAddress,
         createMinipool
     ];
 
@@ -54,7 +54,7 @@ const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, updateNodeS
         if (nodeStatus.status === "success"
             && nodeStatus.registered
             && nodeStatus.withdrawalAddress === nodeStatus.accountAddress) {
-            setViewState(setWithdrawalAddress);
+            setViewState(withdrawalAddress);
             return;
         }
         if (nodeStatus.status === "success"
@@ -107,7 +107,7 @@ const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, updateNodeS
             <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
             <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
             <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-            <CreateMinipool nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+            <CreateMinipool nodeStatus={nodeStatus} rplPriceData={rplPriceData} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
         </div>
     );
 };

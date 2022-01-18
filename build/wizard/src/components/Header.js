@@ -5,9 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGasPump, faSpinner, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
 import config from "../config";
 import { displayAsETH, beaconchainUrl } from './utils.js';
+import Spinner from "./Spinner";
 
 
-const Header = ({ rocketpoollogo, nodeSyncStatus, nodeFee, rplPrice, minipoolStatus }) => {
+const Header = ({ rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, minipoolStatus }) => {
 
     const [gasPrice, setGasPrice] = React.useState();
     const eth = new web3(config.wsProvider).eth;
@@ -53,9 +54,9 @@ const Header = ({ rocketpoollogo, nodeSyncStatus, nodeFee, rplPrice, minipoolSta
 
                     </p>
                     <p className="has-text-right">
-                        <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice ? gasPrice : <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />} gwei,
+                        <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice ? gasPrice : <Spinner/>} gwei,
                         Node commision: {nodeFee ? parseFloat(nodeFee.nodeFee * 100).toFixed(2) : <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />}%,
-                        RPL: {rplPrice ? parseFloat(displayAsETH(rplPrice.rplPrice)).toFixed(5) : <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />} ETH
+                        RPL: {rplPriceData ? parseFloat(displayAsETH(rplPriceData.rplPrice)).toFixed(5) : <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} />} ETH
                     </p>
                 </div>
             )}

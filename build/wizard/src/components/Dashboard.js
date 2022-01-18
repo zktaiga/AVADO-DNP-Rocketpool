@@ -20,7 +20,7 @@ const Comp = () => {
     const [nodeStatus, setNodeStatus] = React.useState();
     const [nodeSyncStatus, setNodeSyncStatus] = React.useState();
     const [nodeFee, setNodeFee] = React.useState();
-    const [rplPrice, setRplPrice] = React.useState();
+    const [rplPriceData, setRplPriceData] = React.useState();
 
     const [wampSession, setWampSession] = React.useState();
     const [navBar, setNavBar] = React.useState();
@@ -76,7 +76,7 @@ const Comp = () => {
     const updateNodeSyncStatus = () => rpdDaemon("node sync", (data) => setNodeSyncStatus(data));
     const updateWalletStatus = () => rpdDaemon("wallet status", (data) => setWalletStatus(data));
     const updateNodeFee = () => rpdDaemon("network node-fee", (data) => setNodeFee(data));
-    const updateRplPrice = () => rpdDaemon("network rpl-price", (data) => setRplPrice(data));
+    const updateRplPriceData = () => rpdDaemon("network rpl-price", (data) => setRplPriceData(data));
 
     React.useEffect(() => {
         updateMiniPoolStatus();
@@ -84,14 +84,14 @@ const Comp = () => {
         updateNodeSyncStatus();
         updateWalletStatus();
         updateNodeFee();
-        updateRplPrice();
+        updateRplPriceData();
     }, []); // eslint-disable-line
 
     React.useEffect(() => {
         const interval = setInterval(() => {            
             updateNodeFee();
             updateNodeSyncStatus();
-            updateRplPrice();
+            updateRplPriceData();
           }, 60*1000); // 60 seconds refresh
           return () => clearInterval(interval);
     }, []);
@@ -100,7 +100,7 @@ const Comp = () => {
 
     return (
         <div className="dashboard has-text-white">
-            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPrice={rplPrice} minipoolStatus={minipoolStatus} />
+            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 
             <section className="has-text-white">
@@ -115,7 +115,7 @@ const Comp = () => {
                         {navBar === "Setup" && (
                             <div>
                                 <SetupWizard walletStatus={walletStatus}updateWalletStatus={updateWalletStatus}
-                                nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus}
+                                nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rplPriceData={rplPriceData}
                                 rpdDaemon={rpdDaemon} />                                
                             </div>
                         )}
