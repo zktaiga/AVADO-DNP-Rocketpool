@@ -10,13 +10,14 @@
     "autobahn-browser": "^19.7.3",
     "axios": "^0.19.0",
     "bulma": "^0.7.5",
+    "bulma-o-steps": "^1.1.0",
+    "bulma-slider": "^2.0.5",
     "bulma-switch": "^2.0.0",
-    "bulma-slider": "",
-    "bulma-o-steps": "",
     "classnames": "^2.2.6",
     "ethereum-private-key-to-address": "^0.0.3",
     "file-saver": "^2.0.5",
     "formik": "^1.5.8",
+    "json-bignum": "^0.0.3",
     "react": "^16.12.0",
     "react-confirm-alert": "^2.6.1",
     "react-dom": "^16.9.0",
@@ -25,8 +26,8 @@
     "react-scripts": "3.1.0",
     "restify-cors-middleware": "^1.1.1",
     "sass": "^1.45.0",
-    "web3": "",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "web3": "^1.6.1"
   },
   "scripts": {
     "start": "react-scripts start",

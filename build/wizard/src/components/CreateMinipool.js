@@ -2,6 +2,10 @@ import React from "react";
 import web3 from "web3";
 import Spinner from "./Spinner";
 import { displayAsPercentage, displayAsETH } from "./utils";
+import BN from "bn.js"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+
 
 const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon }) => {
     const minNodeFee = 0.05;
@@ -14,6 +18,7 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon 
     const [networkNodeFee, setNetworkNodeFee] = React.useState();
     const [selectedNodeFee, setSelectedNodeFee] = React.useState();
     const [selectedRplStake, setSelectedRplStake] = React.useState();
+    const [rplAllowanceOK, setRplAllowanceOK] = React.useState();
 
     const ETHDepositAmmount = 16000000000000000000;
 
@@ -42,24 +47,12 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon 
     }, [nodeStatus]);
 
     React.useEffect(() => {
-        setRplApproveButtonDisabled(false); // -> `node stake-rpl-allowance` ?
+        setRplApproveButtonDisabled(false);
         setRplStakeButtonDisabled(true); //set default
         setEthButtonDisabled(true); //set default
         if (nodeStatus && rplPriceData) {
 
-            if (nodeStatus.accountBalances.eth / 1000000000000000000 >= 16)
-                rpdDaemon(`node can-deposit ${ETHDepositAmmount} ${selectedNodeFee} 0`, (data) => {
-                    //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
-                    if (data.status === "error") {
-                        setFeedback(data.error);
-                    } else {
-                        setEthButtonDisabled(false);
-                    }
-                });
-
-            //node can-stake-rpl 199 ???
-
-            if (nodeStatus.accountBalances.rpl  >= rplPriceData.minPerMinipoolRplStake) 
+            if (nodeStatus.accountBalances.rpl >= rplPriceData.minPerMinipoolRplStake)
                 if (nodeStatus.rplStake === 0) {
                     rpdDaemon(`node can-stake-rpl ${selectedRplStake}`, (data) => {
                         //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
@@ -71,7 +64,36 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon 
                         }
                     });
                 }
+
+            if (nodeStatus.rplStake >= rplPriceData.minPerMinipoolRplStake) {
+                if (nodeStatus.accountBalances.eth / 1000000000000000000 >= 16)
+                    rpdDaemon(`node can-deposit ${ETHDepositAmmount} ${selectedNodeFee} 0`, (data) => {
+                        if (data.status === "error") {
+                            setFeedback(data.error);
+                        } else {
+                            setFeedback("");
+                            setEthButtonDisabled(false);
+                        }
+                    });
+            }
+
         }
+
+        rpdDaemon(`node stake-rpl-allowance`, (data) => {
+            if (data.status === "error") {
+                setFeedback(data.error);
+
+            } else {
+                const allowance = new BN(data.allowance.toString())
+                if (allowance.gt(new BN(0))) {
+                    setRplApproveButtonDisabled(true);
+                    setRplAllowanceOK(true);
+                } else {
+                    setRplApproveButtonDisabled(false);
+                    setRplAllowanceOK(false);
+                }
+            }
+        });
 
         if (networkNodeFee && !selectedNodeFee) {
             setSelectedNodeFee(networkNodeFee * 0.97); // allow 3% slippage by default
@@ -81,12 +103,16 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon 
             setSelectedRplStake(nodeStatus.accountBalances.rpl); // TODO:  what if bigger than maximum? Allow user to change?
         }
 
-        
+
     }, [nodeStatus, networkNodeFee]);
 
     const approveRpl = () => {
-        rpdDaemon(`node stake-rpl-approve-rpl ${rplPriceData.maxPerMinipoolRplStake}`, (data) => { // set the maximum RPL stake as approval limit
-            // the RP cli uses value "2**256-1"
+        //2**256-1
+        var maxApproval = new BN(2)
+        maxApproval = maxApproval.pow(new BN(256))
+        maxApproval = maxApproval.sub(new BN(1))
+
+        rpdDaemon(`node stake-rpl-approve-rpl ${maxApproval}`, (data) => {
             if (data.status === "error") {
                 setFeedback(data.error);
             }
@@ -144,9 +170,12 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon 
                         </div>
 
                         <p>Before staking RPL, you must first give the staking contract approval to interact with your RPL.
-                        This only needs to be done once for your node.</p>
+                            This only needs to be done once for your node.</p>
                         <div className="field">
                             <button className="button" onClick={approveRpl} disabled={rplApproveButtonDisabled}>Approve RPL</button>
+                            {rplAllowanceOK && (
+                                <span className="tag is-success">Approved <FontAwesomeIcon className="icon" icon={faCheck} /></span>
+                            )}
                         </div>
                         <div className="field">
                             <button className="button" onClick={stakeRpl} disabled={rplStakeButtonDisabled}>Stake RPL</button>

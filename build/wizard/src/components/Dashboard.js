@@ -13,6 +13,7 @@ import Header from "./Header";
 import Welcome from "./Welcome";
 import WalletStatus from "./WalletStatus";
 import SetupWizard from "./SetupWizard";
+import bignumJSON from "json-bignum"
 
 const Comp = () => {
     const [walletStatus, setWalletStatus] = React.useState();
@@ -65,8 +66,9 @@ const Comp = () => {
 
     const rpdDaemon = async (command, callback) => {
         await axios.post(`${config.api.HTTP}/rpd`, { command: command }, { timeout: 5 * 60 * 1000 }).then((res) => {
-            const data = JSON.parse(res.data);
+            const data = bignumJSON.parse(res.data);
             console.log(`rocketpoold api ${command}: ` + res.data);
+            // console.log('JSON: ' + bignumJSON.stringify(data))
             callback(data);
         })
     }
