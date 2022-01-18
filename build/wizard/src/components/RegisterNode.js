@@ -4,16 +4,15 @@ import web3 from "web3";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import config from "../config";
-
-import spinner from "../assets/spinner.svg";
-
 import { etherscanTransactionUrl } from './utils.js';
+import Spinner from "./Spinner";
 
 const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     const [buttonDisabled, setButtonDisabled] = React.useState(true);
-    const [transactionReceipt, setTransactionReceipt] = React.useState("");
     const [txHash, setTxHash] = React.useState();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
+    const [error, setError] = React.useState();
+    const [gasInfo, setGasInfo] = React.useState();
 
     React.useEffect(() => {
         setButtonDisabled(true); //set default
@@ -21,8 +20,13 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
             return;
         if (nodeStatus && !nodeStatus.registered && nodeStatus.accountBalances.eth > 0) {
             rpdDaemon(`node can-register ${timeZone()}`, (data) => {
+                if (data.status === "error") {                    
+                    setError("Error running can-register: " + data.error + (data.registrationDisabled?" Node registrations are currently disabled.":""));
+                    return;
+                }
                 if (data.canRegister)
                     setButtonDisabled(false);
+                setGasInfo(data.gasInfo);
             });
         }
     }, [nodeStatus]);
@@ -33,7 +37,6 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                 const w3 = new web3(config.wsProvider);
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
-                    setTransactionReceipt(JSON.stringify(receipt));
                     setWaitingForTx(false);
                 });
             });
@@ -51,8 +54,8 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
 
     const registerNode = () => {
         confirmAlert({
-            title: 'Registering a node consumes gas (ETH).',
-            message: 'Are you sure you want to continue?',
+            title: 'Are you sure you want to register this node?',
+            message: 'Registering a node consumes gas (ETH)',
             buttons: [
                 {
                     label: 'Yes',
@@ -72,20 +75,21 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
         });
     }
 
+    const toGwei = (wei) => parseFloat(web3.utils.fromWei(wei.toString(), 'gwei')).toFixed(4)
+
     return (
         <div>
             {nodeStatus && !nodeStatus.registered && (
                 <>
                     <h2 className="title is-3 has-text-white">Register Node</h2>
-                    <button className="button" onClick={registerNode} disabled={buttonDisabled}>Register Node</button>
-                    {waitingForTx && (
+                    {/* {gasInfo && <p className="help is-help">Estimated gas limit {toGwei(gasInfo.estGasLimit)} gwei, Safe gas limit {toGwei(gasInfo.safeGasLimit)} gwei</p>} */}
+                    <button className="button" onClick={registerNode} disabled={buttonDisabled}>Register Node{waitingForTx? <Spinner/>:""}</button>
+                    {/* {waitingForTx && (
                         <p><span className="icon"><img alt="spinner" src={spinner} /></span></p>
-                    )}
+                    )} */}
+                    {error && (<p className="help is-danger">{error}</p>)}
                     {txHash && (
                         <p>{etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
-                    )}
-                    {transactionReceipt && (
-                        <p>Transaction receipt" : {transactionReceipt}</p>
                     )}
                 </>
             )}

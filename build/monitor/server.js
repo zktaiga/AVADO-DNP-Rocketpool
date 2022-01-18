@@ -49,7 +49,7 @@ const execute = (cmd) => {
                 switch (cmd) {
                     case "wallet init":
                         return resolve('{"status":"success","error":"","mnemonic":"corn wool actor cable marine anger nothing return coast energy magnet evolve best lion dutch clerk visit begin agree about sing federal sausage ribbon","accountAddress":"0xd97afeffa7ce00aa489e5c88880e124fb75b8e05"}');
-                    case "node register":
+                    case "node register Europe/Brussels":
                         return resolve('{"status":"success","error":"","txHash":"0x27f5b5bb3905cd135cdef17e71f6f9ac70e3e95fd372999cb4eea918f3990310"}');
                     case "network node-fee":
                         return resolve(`{"status":"success","error":"","nodeFee":0.10941535273234365,"minNodeFee":0.05,"targetNodeFee":0.1,"maxNodeFee":0.2}`);
@@ -63,6 +63,10 @@ const execute = (cmd) => {
                         return resolve('{"status":"success","error":"","minipools":[{"address":"0x972550d31e363cb3e08f3ecf8493c67a7ef87548","validatorPubkey":"85c9488dd77302b11d1b752869a89c9a080fce47ae71d5c80dc894528453756df2fb6c2d85d9e3edae2645967e74f6dd","status":{"status":"Staking","statusBlock":6198207,"statusTime":"2022-01-14T08:44:28Z"},"depositType":"Half","node":{"address":"0xe28b9c4109a8ee3d70775a15ba219a140b06f22a","fee":0.1578276031321713,"depositBalance":16000000000000000000,"refundBalance":0,"depositAssigned":true},"user":{"depositBalance":16000000000000000000,"depositAssigned":true,"depositAssignedTime":"2022-01-10T16:36:35Z"},"balances":{"eth":0,"reth":0,"rpl":0,"fixedSupplyRpl":0},"validator":{"exists":true,"active":true,"index":271936,"balance":32007591077000000000,"nodeBalance":16004394579244050876},"refundAvailable":false,"withdrawalAvailable":false,"closeAvailable":false,"finalised":false,"useLatestDelegate":false,"delegate":"0xc6b40c1a317144a09c303c504cb525ee68ab8c8e","previousDelegate":"0x0000000000000000000000000000000000000000","effectiveDelegate":"0xc6b40c1a317144a09c303c504cb525ee68ab8c8e"}],"latestDelegate":"0xc6b40c1a317144a09c303c504cb525ee68ab8c8e"}');
                     case "wallet status":
                         return resolve('{"status":"success","error":"","passwordSet":true,"walletInitialized":true,"accountAddress":"0xe28b9c4109a8ee3d70775a15ba219a140b06f22a"}');
+                    case "node can-register Europe/Brussels":
+                        return resolve('{"status":"success","error":"","canRegister":true,"alreadyRegistered":false,"registrationDisabled":false,"gasInfo":{"estGasLimit":247168,"safeGasLimit":370752}}');
+
+
                     default:
                         return resolve('{"status":"success","error":""}');
                 }

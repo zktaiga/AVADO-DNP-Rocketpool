@@ -11,13 +11,13 @@ import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
 
 const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon }) => {
 
-    
-    
-    const initWallet = { name: "Init wallet" };
-    const fundNode = { name: "Fund Node" };
-    const registerNode = { name: "Register node" };
-    const withdrawalAddress = { name: "Withdrawal address" };
-    const createMinipool = { name: "Add minipool" };
+
+
+    const initWallet = { id: Symbol("Init wallet").toString(), name: "Init wallet" };
+    const fundNode = { id: Symbol("Fund Node").toString(), name: "Fund Node" };
+    const registerNode = { id: Symbol("Register node").toString(), name: "Register node" };
+    const withdrawalAddress = { id: Symbol("Withdrawal address").toString(), name: "Withdrawal address" };
+    const createMinipool = { id: Symbol("Add minipool").toString(), name: "Add minipool" };
 
     const [viewState, setViewState] = React.useState(initWallet);
 
@@ -30,44 +30,46 @@ const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceDat
     ];
 
     React.useEffect(() => {
-        if (nodeStatus.status === "error" && nodeStatus.error.includes("rocketpool wallet init")) {
-            setViewState(initWallet);
-            return;
-        }
-        if (nodeStatus.status === "success"
-            && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
-            && !nodeStatus.registered
-            && !nodeStatus.accountBalances.eth
-            //TODO : && displayAsETH(nodeStatus.accountBalances.rpl) < ???
-        ) {
-            setViewState(fundNode);
-            return;
-        }
-        if (nodeStatus.status === "success"
-            && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
-            && !nodeStatus.registered
-            && nodeStatus.accountBalances.eth > 0
-        ) {
-            setViewState(registerNode);
-            return;
-        }
-        if (nodeStatus.status === "success"
-            && nodeStatus.registered
-            && nodeStatus.withdrawalAddress === nodeStatus.accountAddress) {
-            setViewState(withdrawalAddress);
-            return;
-        }
-        if (nodeStatus.status === "success"
-            && nodeStatus.registered
-            && nodeStatus.withdrawalAddress !== nodeStatus.accountAddress) {
-            setViewState(createMinipool);
-            return;
+        if (nodeStatus && walletStatus) {
+            if (nodeStatus.status === "error" && nodeStatus.error.includes("rocketpool wallet init")) {
+                setViewState(initWallet);
+                return;
+            }
+            if (nodeStatus.status === "success"
+                && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
+                && !nodeStatus.registered
+                && !nodeStatus.accountBalances.eth
+                //TODO : && displayAsETH(nodeStatus.accountBalances.rpl) < ???
+            ) {
+                setViewState(fundNode);
+                return;
+            }
+            if (nodeStatus.status === "success"
+                && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
+                && !nodeStatus.registered
+                && nodeStatus.accountBalances.eth > 0
+            ) {
+                setViewState(registerNode);
+                return;
+            }
+            if (nodeStatus.status === "success"
+                && nodeStatus.registered
+                && nodeStatus.withdrawalAddress === nodeStatus.accountAddress) {
+                setViewState(withdrawalAddress);
+                return;
+            }
+            if (nodeStatus.status === "success"
+                && nodeStatus.registered
+                && nodeStatus.withdrawalAddress !== nodeStatus.accountAddress) {
+                setViewState(createMinipool);
+                return;
+            }
         }
     }, [nodeStatus, walletStatus]);
 
 
     const isActive = (element) => {
-        return element === viewState;
+        return element.id == viewState.id;
 
     }
     const isHollow = (element) => {

@@ -9,17 +9,17 @@ import config from "../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { etherscanTransactionUrl } from './utils.js';
+import Spinner from "./Spinner";
 
+//TODO: make safer with Rocket Pool procedure
+//https://github.com/rocket-pool/smartnode/blob/cf50c3c83e19b56f1bbc6d8f404a704f457821cc/rocketpool-cli/node/withdrawal-address.go
 
 const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     const [withdrawalAddress, setWithdrawalAddress] = React.useState("");
     const [addressFeedback, setAddressFeedback] = React.useState("");
     const [buttonDisabled, setButtonDisabled] = React.useState(false);
-    const [transactionReceipt, setTransactionReceipt] = React.useState("");
     const [txHash, setTxHash] = React.useState();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
-
-
 
     React.useEffect(() => {
         //rpdDaemon(`node can-set-withdrawal-address ${withdrawalAddress} yes`)
@@ -37,6 +37,7 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
             //     if (data.canRegister)
             //         setButtonDisabled(false);
             // });
+            //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Only a tx from a node's withdrawal address can update it","canSet":false,"gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
         }
     }, [nodeStatus, withdrawalAddress]);
 
@@ -46,8 +47,8 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                 const w3 = new web3(config.wsProvider);
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
-                    setTransactionReceipt(JSON.stringify(receipt));
                     setWaitingForTx(false);
+                    updateNodeStatus();
                 });
             });
         }
@@ -67,7 +68,6 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                             setAddressFeedback(data.error);
                         }
                         //"{"status":"success","error":"","txHash":"0x27f5b5bb3905cd135cdef17e71f6f9ac70e3e95fd372999cb4eea918f3990310"}
-                        updateNodeStatus();
                         setTxHash(data.txHash);
                         setWaitingForTx(true);
                         setButtonDisabled(true);
@@ -115,20 +115,18 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                             <input className="input" onChange={(e) => { setWithdrawalAddress(e.target.value) }} />
                         </div>
                         {withdrawalAddress && (
-                            <p className="help is-danger">{addressFeedback}</p>
+                            <p className="help is-help">{addressFeedback}</p>
                         )}
                     </div>
                     <div className="field">
                         <button className="button" onClick={onClick} disabled={buttonDisabled}>
-                            {waitingForTx ? <FontAwesomeIcon className="icon fa-spin" icon={faSpinner} /> : "Set withdrawal address"}
+                            {waitingForTx ? <Spinner /> : "Set withdrawal address"}
                         </button>
                     </div>
                     {txHash && (
                         <p>{etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
                     )}
-                    {transactionReceipt && (
-                        <p>Transaction receipt" : {transactionReceipt}</p>
-                    )}
+                   
                 </>
             )}
         </div>

@@ -86,6 +86,7 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon 
 
     const approveRpl = () => {
         rpdDaemon(`node stake-rpl-approve-rpl ${rplPriceData.maxPerMinipoolRplStake}`, (data) => { // set the maximum RPL stake as approval limit
+            // the RP cli uses value "2**256-1"
             if (data.status === "error") {
                 setFeedback(data.error);
             }
@@ -142,7 +143,8 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon 
 
                         </div>
 
-                        <p>Before your rocket pool contract can spend the RPL tokens, you need to approve first</p>
+                        <p>Before staking RPL, you must first give the staking contract approval to interact with your RPL.
+                        This only needs to be done once for your node.</p>
                         <div className="field">
                             <button className="button" onClick={approveRpl} disabled={rplApproveButtonDisabled}>Approve RPL</button>
                         </div>
