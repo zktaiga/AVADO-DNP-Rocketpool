@@ -43,7 +43,7 @@ const Comp = () => {
         }
     }, [walletStatus, minipoolStatus]);
 
-   
+
 
     React.useEffect(() => {
         const url = "ws://wamp.my.ava.do:8080/ws";
@@ -90,12 +90,12 @@ const Comp = () => {
     }, []); // eslint-disable-line
 
     React.useEffect(() => {
-        const interval = setInterval(() => {            
+        const interval = setInterval(() => {
             updateNodeFee();
             updateNodeSyncStatus();
             updateRplPriceData();
-          }, 60*1000); // 60 seconds refresh
-          return () => clearInterval(interval);
+        }, 60 * 1000); // 60 seconds refresh
+        return () => clearInterval(interval);
     }, []);
 
     return (
@@ -108,16 +108,16 @@ const Comp = () => {
                     <div className="column">
                         {navBar === "Welcome" && (
                             <div>
-                            <Welcome />
+                                <Welcome />
                             </div>
                         )}
 
                         {navBar === "Setup" && (
                             <div>
-                                <SetupWizard walletStatus={walletStatus}updateWalletStatus={updateWalletStatus}
-                                nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rplPriceData={rplPriceData}
-                                minipoolStatus={minipoolStatus} nodeFee={nodeFee}
-                                rpdDaemon={rpdDaemon} />                                
+                                <SetupWizard walletStatus={walletStatus} updateWalletStatus={updateWalletStatus}
+                                    nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rplPriceData={rplPriceData}
+                                    minipoolStatus={minipoolStatus} nodeFee={nodeFee}
+                                    rpdDaemon={rpdDaemon} />
                             </div>
                         )}
 
@@ -128,13 +128,33 @@ const Comp = () => {
                                         <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} />
                                     </div>
                                     <div className="column is-half">
-                                        <WalletStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus}/>
+                                        <WalletStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
                                     </div>
                                 </div>
                                 <br />
                                 <MiniPoolStatus minipoolStatus={minipoolStatus} />
                             </div>
                         )}
+
+                        {navBar === "BeaconChain" && (
+                            <div>
+                                <div className="columns">
+                                    <div className="column is-full">
+
+                                        <iframe
+                                            className="onboardinwizard"
+                                            frameBorder="0"
+                                            width="100%"
+                                            style={{height: 800}}
+                                            title="Beacon Chain"
+                                            src="https://prater.beaconcha.in/dashboard" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+
 
                         {navBar === "Admin" && (
                             <div>
