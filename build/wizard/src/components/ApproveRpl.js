@@ -42,7 +42,7 @@ const ApproveRpl = ({ rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => {
 
         confirmAlert({
             title: 'Are you sure you want to approve RPL for your wallet now?',
-            message: 'Registering a node consumes gas (ETH)',
+            message: 'Aprroving RPL consumes gas (ETH)',
             buttons: [
                 {
                     label: 'Yes',
@@ -73,7 +73,6 @@ const ApproveRpl = ({ rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => {
                 });
             });
         }
-
     }, [waitingForTx]);
 
     return (
@@ -84,7 +83,11 @@ const ApproveRpl = ({ rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => {
                     <p>Before staking RPL, you must first give the staking contract approval to interact with your RPL.
                         This only needs to be done once for your node.</p>
                     <div className="field">
-                        <button className="button" onClick={approveRpl} disabled={rplApproveButtonDisabled}>Approve RPL{waitingForTx ? <Spinner /> : ""}</button>
+                        <button className="button"
+                            onClick={approveRpl}
+                            disabled={rplApproveButtonDisabled}>
+                            Approve RPL{waitingForTx ? <Spinner /> : ""}
+                        </button>
                     </div>
                 </>
             )}

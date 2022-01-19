@@ -6,17 +6,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import MiniPoolStatus from "./MiniPoolStatus";
 import ApproveRpl from "./ApproveRpl";
+import StakeRPL from "./StakeRPL";
 
 
 const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, nodeFee, rpdDaemon }) => {
     const minNodeFee = 0.05;
     const maxNodeFee = 0.2;
 
-    const [rplStakeButtonDisabled, setRplStakeButtonDisabled] = React.useState(true);
     const [ethButtonDisabled, setEthButtonDisabled] = React.useState(true);
     const [feedback, setFeedback] = React.useState("");
     const [selectedNodeFee, setSelectedNodeFee] = React.useState();
-    const [selectedRplStake, setSelectedRplStake] = React.useState();
     const [networkNodeFee, setNetworkNodeFee] = React.useState();
 
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
@@ -42,23 +41,8 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolSt
     }, [nodeFee]);
 
     React.useEffect(() => {
-        setRplStakeButtonDisabled(true); //set default
         setEthButtonDisabled(true); //set default
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
-
-            if (nodeStatus.accountBalances.rpl >= rplPriceData.minPerMinipoolRplStake)
-                if (nodeStatus.rplStake === 0) {
-                    rpdDaemon(`node can-stake-rpl ${selectedRplStake}`, (data) => {
-                        //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
-                        if (data.status === "error") {
-                            setFeedback(data.error);
-
-                        } else {
-                            setRplStakeButtonDisabled(false);
-                        }
-                    });
-                }
-
             if (nodeStatus.rplStake >= rplPriceData.minPerMinipoolRplStake) {
                 if (nodeStatus.accountBalances.eth / 1000000000000000000 >= 16)
                     rpdDaemon(`node can-deposit ${ETHDepositAmmount} ${selectedNodeFee} 0`, (data) => {
@@ -76,22 +60,9 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolSt
         if (networkNodeFee && !selectedNodeFee) {
             setSelectedNodeFee(networkNodeFee * 0.97); // allow 3% slippage by default
         }
-
-        if (nodeStatus) {
-            setSelectedRplStake(nodeStatus.accountBalances.rpl); // TODO:  what if bigger than maximum? Allow user to change?
-        }
-
-
     }, [nodeStatus, networkNodeFee, rplAllowanceOK]);
 
-    const stakeRpl = () => {
-        rpdDaemon(`node stake-rpl ${selectedRplStake}`, (data) => {
-            if (data.status === "error") {
-                setFeedback(data.error);
-            }
-            updateNodeStatus();
-        });
-    }
+
 
     const depositEth = () => {
         rpdDaemon(`node deposit ${ETHDepositAmmount} ${selectedNodeFee} 0`, (data) => {  //   rocketpool api node deposit amount min-fee salt
@@ -111,7 +82,7 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolSt
             {nodeStatus && (
                 <>
                     <h3 className="title is-3 has-text-white">Create minipool</h3>
-                    {(false /*debug*/&& minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) ? (
+                    {(false /*debug*/ && minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) ? (
                         <div className="content">
                             <p>Congratulations the minipool on your node has been created. Now, you have to wait for the other half to be deposited (after a 12 hour safety period).</p>
                             <p>Depositing this second half will require gas, so leave some ETH in your wallet for now.</p>
@@ -143,10 +114,14 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolSt
                                 </div>
 
                                 <ApproveRpl rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />
+                                <StakeRPL
+                                    nodeStatus={nodeStatus}
+                                    rplPriceData={rplPriceData}
+                                    rplAllowanceOK={rplAllowanceOK}
+                                    updateNodeStatus={updateNodeStatus}
+                                    rpdDaemon={rpdDaemon}
+                                />
 
-                                <div className="field">
-                                    <button className="button" onClick={stakeRpl} disabled={rplStakeButtonDisabled}>Stake RPL</button>
-                                </div>
                                 <div className="field">
                                     <button className="button" onClick={depositEth} disabled={ethButtonDisabled}>Stake 16 ETH</button>
                                 </div>
