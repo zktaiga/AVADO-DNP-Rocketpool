@@ -7,81 +7,26 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import MiniPoolStatus from "./MiniPoolStatus";
 import ApproveRpl from "./ApproveRpl";
 import StakeRPL from "./StakeRPL";
+import DepositETH from "./DepositETH";
 
 
-const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, nodeFee, rpdDaemon }) => {
+const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon }) => {
     const minNodeFee = 0.05;
     const maxNodeFee = 0.2;
-
-    const [ethButtonDisabled, setEthButtonDisabled] = React.useState(true);
-    const [feedback, setFeedback] = React.useState("");
-    const [selectedNodeFee, setSelectedNodeFee] = React.useState();
-    const [networkNodeFee, setNetworkNodeFee] = React.useState();
-
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
 
-    const ETHDepositAmmount = 16000000000000000000;
-
-    // can-stake-rpl                   Check whether the node can stake RPL
-    // stake-rpl-approve-rpl, k1       Approve RPL for staking against the node
-    // wait-and-stake-rpl, k2          Stake RPL against the node, waiting for approval tx-hash to be mined first
-    // get-stake-rpl-approval-gas      Estimate the gas cost of new RPL interaction approval
-    // stake-rpl-allowance             Get the node's RPL allowance for the staking contract
-    // stake-rpl, k3                   Stake RPL against the node
-
-    // can-deposit                     Check whether the node can make a deposit
-    // deposit, d                      Make a deposit and create a minipool
-
     React.useEffect(() => {
-        setNetworkNodeFee(nodeFee.nodeFee);
         if (nodeFee) {
             console.assert(nodeFee.minNodeFee, minNodeFee);
             console.assert(nodeFee.maxNodeFee, maxNodeFee);
         }
     }, [nodeFee]);
 
-    React.useEffect(() => {
-        setEthButtonDisabled(true); //set default
-        if (nodeStatus && rplPriceData && rplAllowanceOK) {
-            if (nodeStatus.rplStake >= rplPriceData.minPerMinipoolRplStake) {
-                if (nodeStatus.accountBalances.eth / 1000000000000000000 >= 16)
-                    rpdDaemon(`node can-deposit ${ETHDepositAmmount} ${selectedNodeFee} 0`, (data) => {
-                        if (data.status === "error") {
-                            setFeedback(data.error);
-                        } else {
-                            setFeedback("");
-                            setEthButtonDisabled(false);
-                        }
-                    });
-            }
-
-        }
-
-        if (networkNodeFee && !selectedNodeFee) {
-            setSelectedNodeFee(networkNodeFee * 0.97); // allow 3% slippage by default
-        }
-    }, [nodeStatus, networkNodeFee, rplAllowanceOK]);
-
-
-
-    const depositEth = () => {
-        rpdDaemon(`node deposit ${ETHDepositAmmount} ${selectedNodeFee} 0`, (data) => {  //   rocketpool api node deposit amount min-fee salt
-            if (data.status === "error") {
-                setFeedback(data.error);
-            }
-            updateNodeStatus();
-        });
-    }
-
-    const slider = (e) => {
-        setSelectedNodeFee(e.target.value);
-    }
-
     return (
         <div>
             {nodeStatus && (
                 <>
-                    <h3 className="title is-3 has-text-white">Create minipool</h3>
+                    <h3 className="title is-3 has-text-white">Add minipool</h3>
                     {(false /*debug*/ && minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) ? (
                         <div className="content">
                             <p>Congratulations the minipool on your node has been created. Now, you have to wait for the other half to be deposited (after a 12 hour safety period).</p>
@@ -101,17 +46,14 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolSt
                                         <dd>As a node operator you earn half of the validator's total ETH rewards, plus an extra commission.
                                             The commission rate is based on how many minipools are in the queue and how much rETH is available in the staking pool, waiting to be staked. The lowest it can go is 5%, and the highest it can go is 20%. Once your minipool is created, its commission rate will be locked until you exit the validator and close the minipool. If you specify a commision that is higher than the current network's commision, ...<br />
                                             TODO: replace with fixed slippage setting and just inform user.<br />
-                                            <b>Current Node commision fee: (Rocket Pool network)</b>{networkNodeFee} (Minimum: {minNodeFee}, maximum: {maxNodeFee})
+                                            <b>Current Node commision fee: (Rocket Pool network)</b>{nodeFee.nodeFee} (Minimum: {minNodeFee}, maximum: {maxNodeFee})
                                         </dd>
                                         <dt>RPL</dt>
                                         <dd>You can ... but it must be higher than {rplPriceData ? Math.ceil(displayAsETH(rplPriceData.minPerMinipoolRplStake)) : <Spinner />} RPL
                                         </dd>
                                     </dl>
                                 </div>
-                                <div className="field">
-                                    <input id="sliderWithValue" className="slider has-output" step="0.01" min={minNodeFee} max={maxNodeFee} defaultValue={networkNodeFee} type="range" onChange={slider} />
-                                    {displayAsPercentage(selectedNodeFee * 100)}
-                                </div>
+
 
                                 <ApproveRpl rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />
                                 <StakeRPL
@@ -122,12 +64,15 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolSt
                                     rpdDaemon={rpdDaemon}
                                 />
 
-                                <div className="field">
-                                    <button className="button" onClick={depositEth} disabled={ethButtonDisabled}>Stake 16 ETH</button>
-                                </div>
-                                {feedback && (
-                                    <p className="help is-danger">{feedback}</p>
-                                )}
+                                <DepositETH  
+                                nodeStatus={nodeStatus}
+                                nodeFee={nodeFee}
+                                    rplPriceData={rplPriceData}
+                                    rplAllowanceOK={rplAllowanceOK}
+                                    nodeStatus={nodeStatus}
+                                    updateNodeStatus={updateNodeStatus}
+                                    rpdDaemon={rpdDaemon}
+                                />
                             </div>
                         </div>
                     )}

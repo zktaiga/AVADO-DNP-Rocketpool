@@ -30,6 +30,7 @@ const StakeRPL = ({ nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, 
                         if (data.status === "error") {
                             setFeedback(data.error);
                         } else {
+                            setFeedback("");
                             setRplStakeButtonDisabled(false);
                         }
                     });

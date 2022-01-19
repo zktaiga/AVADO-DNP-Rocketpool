@@ -114,9 +114,15 @@ const Comp = () => {
 
                         {navBar === "Setup" && (
                             <div>
-                                <SetupWizard walletStatus={walletStatus} updateWalletStatus={updateWalletStatus}
-                                    nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rplPriceData={rplPriceData}
-                                    minipoolStatus={minipoolStatus} nodeFee={nodeFee}
+                                <SetupWizard
+                                    walletStatus={walletStatus}
+                                    updateWalletStatus={updateWalletStatus}
+                                    nodeStatus={nodeStatus}
+                                    updateNodeStatus={updateNodeStatus}
+                                    rplPriceData={rplPriceData}
+                                    minipoolStatus={minipoolStatus}
+                                    updateMiniPoolStatus={updateMiniPoolStatus}
+                                    nodeFee={nodeFee}
                                     rpdDaemon={rpdDaemon} />
                             </div>
                         )}
@@ -145,7 +151,7 @@ const Comp = () => {
                                             className="onboardinwizard"
                                             frameBorder="0"
                                             width="100%"
-                                            style={{height: 800}}
+                                            style={{ height: 800 }}
                                             title="Beacon Chain"
                                             src="https://prater.beaconcha.in/dashboard" />
 
