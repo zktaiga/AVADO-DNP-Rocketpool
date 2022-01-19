@@ -13,28 +13,32 @@ const FundWallet = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     }, []); // eslint-disable-line
 
 
-    return (nodeStatus && nodeStatus.accountAddress && nodeStatus.accountBalances.eth !== null && nodeStatus.accountBalances.eth <= 0 &&
+    return (
         <div>
-            <h2 className="title is-3 has-text-white">Fund wallet</h2>
-            { nodeStatus.accountBalances.rpl !== null && rplPriceData && (
+            {nodeStatus && nodeStatus.accountAddress && nodeStatus.accountBalances.eth !== null && nodeStatus.accountBalances.eth <= 0 && (
                 <>
-                    <p>Before you can... fund your wallet ({etherscanAddressUrl(nodeStatus.accountAddress)})</p>
-                    <p>Requirements:</p>
-                    <ul>
-                        <li>ETH: minimum 16 ETH (+ gas money)</li>
-                        <li>RPL: minimum {Math.ceil(displayAsETH(rplPriceData.minPerMinipoolRplStake))} RPL,
-                                 maximium {Math.floor(displayAsETH(rplPriceData.maxPerMinipoolRplStake))}
-                        </li>
+                    <h2 className="title is-3 has-text-white">Fund wallet</h2>
+                    {rplPriceData && (
+                        <>
+                            <p>Before you can... fund your wallet ({etherscanAddressUrl(nodeStatus.accountAddress)})</p>
+                            <p>Requirements:</p>
+                            <ul>
+                                <li>ETH: minimum 16 ETH (+ gas money)</li>
+                                <li>RPL: minimum {Math.ceil(displayAsETH(rplPriceData.minPerMinipoolRplStake))} RPL,
+                                    maximium {Math.floor(displayAsETH(rplPriceData.maxPerMinipoolRplStake))}
+                                </li>
 
-                    </ul>
-                    <p>Node Funding:</p>
-                    <ul>
-                        <li><b>ETH: </b>{displayAsETH(nodeStatus.accountBalances.eth)} </li>
-                        <li><b>RPL: </b>{displayAsETH(nodeStatus.accountBalances.rpl)} </li>
-                    </ul>
+                            </ul>
+                            <p>Node Funding:</p>
+                            <ul>
+                                <li><b>ETH: </b>{displayAsETH(nodeStatus.accountBalances.eth)} </li>
+                                <li><b>RPL: </b>{displayAsETH(nodeStatus.accountBalances.rpl)} </li>
+                            </ul>
+                        </>
+                    )}
+                    <button className="button" onClick={updateNodeStatus}>Refresh</button>
                 </>
             )}
-            <button className="button" onClick={updateNodeStatus}>Refresh</button>
         </div>
     );
 };

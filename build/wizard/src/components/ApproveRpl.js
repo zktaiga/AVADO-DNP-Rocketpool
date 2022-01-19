@@ -50,7 +50,7 @@ const ApproveRpl = ({ rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => {
                         if (data.status === "error") {
                             setFeedback(data.error);
                         }
-                        setTxHash(data.txHash);
+                        setTxHash(data.approveTxHash);
                         setWaitingForTx(true);
                         setRplApproveButtonDisabled(true);
                     })

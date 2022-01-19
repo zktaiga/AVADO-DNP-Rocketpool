@@ -82,8 +82,10 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     }
 
 
-    // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
-    return (nodeStatus && nodeStatus.withdrawalAddress === nodeStatus.accountAddress && 
+    if (!(nodeStatus && nodeStatus.withdrawalAddress === nodeStatus.accountAddress)) {
+        return <></>
+    }
+    return (
         <div>
             <h2 className="title is-3 has-text-white">Withdrawal address</h2>
                 <>

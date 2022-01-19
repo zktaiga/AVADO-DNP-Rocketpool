@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 
-const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
+const InitWallet = ({ walletStatus, updateWalletStatus, updateNodeStatus, rpdDaemon }) => {
     const [password, setPassword] = React.useState("");
     const [verifyPassword, setVerifyPassword] = React.useState();
     const [passwordFeedback, setPasswordFeedback] = React.useState("");
@@ -57,6 +57,7 @@ const InitWallet = ({ walletStatus, updateWalletStatus, rpdDaemon }) => {
                     setWalletMnemonic(data.mnemonic);
                     setButtonDisabled(true);
                     updateWalletStatus();
+                    updateNodeStatus();
                 });
             });
         }

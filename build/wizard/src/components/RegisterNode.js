@@ -38,6 +38,7 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
+                    updateNodeStatus();
                 });
             });
         }

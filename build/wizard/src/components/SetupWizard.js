@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGasPump, fas, faSpinner, faWallet } from "@fortawesome/free-solid-svg-icons";
+import { faGasPump, fas, faSpinner, faWallet, faSync, faClipboard } from "@fortawesome/free-solid-svg-icons";
 import InitWallet from "./InitWallet";
 import FundWallet from "./FundWallet";
 import RegisterNode from "./RegisterNode";
@@ -69,8 +69,10 @@ const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceDat
 
     }
     const isHollow = (element) => {
-        return false;
-
+        if (element.id == createMinipool.id)
+            return !nodeStatus.minipoolCounts || nodeStatus.minipoolCounts.total == 0;
+        else
+            return element.id == viewState.id;
     }
 
     const stateComment = (element) => {
@@ -100,15 +102,24 @@ const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceDat
                         )}
                     </ul>
                 </div>
-                <div className="column is-narrow">
-                    <div className="box">
-                        <p><FontAwesomeIcon className="icon" icon={faWallet} /></p>
-                        <p>{displayAsETH(nodeStatus.accountBalances.eth, 5)} ETH</p>
-                        <p>{displayAsETH(nodeStatus.accountBalances.rpl, 5)} RPL</p>
+                {nodeStatus && (
+                    <div className="column is-narrow">
+                        <div className="box">
+                            <div className="columns">
+                                <div className="column">
+                                    <FontAwesomeIcon className="icon" icon={faWallet} title="Wallet" />
+                                </div>
+                                <div className="column">
+                                    <div className="has-text-right"><a onClick={updateNodeStatus}><FontAwesomeIcon className="icon" icon={faSync} title="Refresh wallet" /></a>    <a onClick={() => navigator.clipboard.writeText(nodeStatus.accountAddress)}><FontAwesomeIcon className="icon" icon={faClipboard} title="Copy address to clipboard" /></a></div>
+                                </div>
+                            </div>
+                            <p>{displayAsETH(nodeStatus.accountBalances.eth, 5)} ETH</p>
+                            <p>{displayAsETH(nodeStatus.accountBalances.rpl, 5)} RPL</p>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
-            <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} rpdDaemon={rpdDaemon} />
+            <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
             <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
             <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
             <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />

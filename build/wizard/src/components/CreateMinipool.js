@@ -27,7 +27,7 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolSt
             {nodeStatus && (
                 <>
                     <h3 className="title is-3 has-text-white">Add minipool</h3>
-                    {(false /*debug*/ && minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) ? (
+                    {(minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) ? (
                         <div className="content">
                             <p>Congratulations the minipool on your node has been created. Now, you have to wait for the other half to be deposited (after a 12 hour safety period).</p>
                             <p>Depositing this second half will require gas, so leave some ETH in your wallet for now.</p>

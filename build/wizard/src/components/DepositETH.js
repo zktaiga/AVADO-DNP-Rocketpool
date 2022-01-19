@@ -72,6 +72,9 @@ const DepositETH = ({ nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateN
                             setFeedback(data.error);
                         }
                         updateNodeStatus();
+                        setTxHash(data.approveTxHash);
+                        setWaitingForTx(true);
+                        setEthButtonDisabled(true);
                     })
                 },
                 {

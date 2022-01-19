@@ -37,11 +37,15 @@ const StakeRPL = ({ nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, 
                 }
             }
         }
-        if (nodeStatus) {
+        if (nodeStatus && nodeStatus.accountBalances && nodeStatus.accountBalances.rpl > 0 && rplPriceData) {
+            // console.dir(nodeStatus.accountBalances.rpl)
+            // console.dir(rplPriceData.maxPerMinipoolRplStake)
+
             // Use the deposited RPL amount (within limits)
-            const selectedRplStake = BN.min(new BN(nodeStatus.accountBalances.rpl), rplPriceData.maxPerMinipoolRplStake);
+            const selectedRplStake = BN.min(new BN(nodeStatus.accountBalances.rpl.toString()), new BN(rplPriceData.maxPerMinipoolRplStake.toString()));
+            console.dir(selectedRplStake);
             // const selectedRplStake = nodeStatus.accountBalances.rpl;
-            setSelectedRplStake(selectedRplStake);
+            setSelectedRplStake(selectedRplStake.toString());
         }
 
 
@@ -54,12 +58,19 @@ const StakeRPL = ({ nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, 
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => rpdDaemon(`node stake-rpl ${selectedRplStake}`, (data) => {
-                        if (data.status === "error") {
-                            setFeedback(data.error);
-                        }
-                        updateNodeStatus();
-                    })
+                    onClick: () => {
+                        setRplStakeButtonDisabled(true);
+                        rpdDaemon(`node stake-rpl ${selectedRplStake}`, (data) => {
+                            //{"status":"success","error":"","txHash":"0xcaeb805e3bbbc1f8c5334b595656c0d5b156a7e02d841ca14edfe3ff5983e349","minipoolAddress":"0xeb631532a78aa8abb3f3e2e5aab2c5e3025d0197","validatorPubkey":"80cf7ed9577f2cf860f0f03a6de4cae14a1b9f244e83ccaabf752c3a56c9a13c59e99566fe502dfa5fb95c22bc6de060","scrubPeriod":3600000000000}
+
+                            if (data.status === "error") {
+                                setFeedback(data.error);
+                            }
+                            updateNodeStatus();
+                            setTxHash(data.txHash);
+                            setWaitingForTx(true);
+                        })
+                    }
                 },
                 {
                     label: 'No',
@@ -96,7 +107,7 @@ const StakeRPL = ({ nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, 
                         className="button"
                         onClick={stakeRpl}
                         disabled={rplStakeButtonDisabled}>
-                        Stake RPL{waitingForTx ? <Spinner /> : ""}
+                        Stake {selectedRplStake ? displayAsETH(selectedRplStake) + " " : ""}RPL{waitingForTx ? <Spinner /> : ""}
                     </button>
                     {feedback && (
                         <p className="help is-danger">{feedback}</p>
