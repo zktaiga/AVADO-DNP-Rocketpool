@@ -8,10 +8,7 @@ import SetWithdrawalAddress from "./SetWithdrawalAddress";
 import CreateMinipool from "./CreateMinipool";
 import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
 
-const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, rpdDaemon }) => {
-
-
-
+const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, nodeFee, rpdDaemon }) => {
     const initWallet = { id: Symbol("Init wallet").toString(), name: "Init wallet" };
     const fundNode = { id: Symbol("Fund Node").toString(), name: "Fund Node" };
     const registerNode = { id: Symbol("Register node").toString(), name: "Register node" };
@@ -115,7 +112,7 @@ const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceDat
             <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
             <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
             <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-            <CreateMinipool nodeStatus={nodeStatus} rplPriceData={rplPriceData} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+            <CreateMinipool nodeStatus={nodeStatus} rplPriceData={rplPriceData} updateNodeStatus={updateNodeStatus} minipoolStatus={minipoolStatus} nodeFee={nodeFee} rpdDaemon={rpdDaemon} />
         </div>
     );
 };

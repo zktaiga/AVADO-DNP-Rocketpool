@@ -1,5 +1,5 @@
 import React from "react";
-import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
+import { etherscanAddressUrl, displayAsETH } from './utils.js';
 
 import web3 from "web3";
 const BN = web3.utils.BN;

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const NavigationBar = ({ navBar, setNavBar }) => {
 
@@ -7,7 +8,8 @@ const NavigationBar = ({ navBar, setNavBar }) => {
     return (
         <nav className="navbar" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
-                <a
+                <Link
+                    to="/"
                     onClick={() => {
                         setNavBarIsActive(!navBarIsActive);
                     }}
@@ -20,17 +22,17 @@ const NavigationBar = ({ navBar, setNavBar }) => {
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
-                </a>
+                </Link>
             </div>
             <div id="navMenu" className={`navbar-menu ${navBarIsActive ? "is-active" : ""}`}>
                 <div className="navbar-start">
-                    <a className={`navbar-item ${navBar === "Welcome" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Welcome") }} >Welcome</a>
-                    <a className={`navbar-item ${navBar === "Setup" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Setup") }} >Setup</a>
-                    <a className={`navbar-item ${navBar === "Status" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Status") }} >Status</a>
+                    <Link className={`navbar-item ${navBar === "Welcome" ? "is-active has-text-weight-bold" : ""}`} to="/" onClick={() => { setNavBar("Welcome") }} >Welcome</Link>
+                    <Link className={`navbar-item ${navBar === "Setup" ? "is-active has-text-weight-bold" : ""}`} to="/" onClick={() => { setNavBar("Setup") }} >Setup</Link>
+                    <Link className={`navbar-item ${navBar === "Status" ? "is-active has-text-weight-bold" : ""}`} to="/" onClick={() => { setNavBar("Status") }} >Status</Link>
                 </div>
 
                 <div className="navbar-end">
-                    <a className={`navbar-item ${navBar === "Admin" ? "is-active has-text-weight-bold" : ""}`} onClick={() => { setNavBar("Admin") }} >Admin</a>
+                    <Link className={`navbar-item ${navBar === "Admin" ? "is-active has-text-weight-bold" : ""}`} to="/" onClick={() => { setNavBar("Admin") }} >Admin</Link>
                 </div>
             </div>
 

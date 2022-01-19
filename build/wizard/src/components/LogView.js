@@ -8,7 +8,7 @@ const LogView = ({ wampSession }) => {
 
     React.useEffect(() => {
         getLog();
-    }, [wampSession])
+    }, [wampSession]) // eslint-disable-line
     
     async function getLog() {
         if (wampSession) {

@@ -98,8 +98,6 @@ const Comp = () => {
           return () => clearInterval(interval);
     }, []);
 
-
-
     return (
         <div className="dashboard has-text-white">
             <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
@@ -118,6 +116,7 @@ const Comp = () => {
                             <div>
                                 <SetupWizard walletStatus={walletStatus}updateWalletStatus={updateWalletStatus}
                                 nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rplPriceData={rplPriceData}
+                                minipoolStatus={minipoolStatus} nodeFee={nodeFee}
                                 rpdDaemon={rpdDaemon} />                                
                             </div>
                         )}
