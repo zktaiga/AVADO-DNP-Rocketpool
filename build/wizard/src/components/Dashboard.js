@@ -47,16 +47,15 @@ const Comp = () => {
         }
     }, [walletStatus, minipoolStatus]);
 
-
     React.useEffect(() => {
-        // axios.get(`${config.api.HTTP}/network`).then((res) => {
-            const res="prater";
-            setNetwork(res);
-            console.log(`Using the ${res} network`);
-            
+        axios.get(`${config.api.HTTP}/network`).then((res) => {
+            const network = res.data;
+            setNetwork(network);
+            console.log(`Using the ${network} network`);
+
             const utils = new Utils(network);
             setUtils(utils);
-        // })
+        })
     }, []);
 
     React.useEffect(() => {
@@ -114,7 +113,7 @@ const Comp = () => {
 
     return (
         <div className="dashboard has-text-white">
-            <NetworkBanner network={network}  />
+            <NetworkBanner network={network} />
             <Header utils={utils} rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 

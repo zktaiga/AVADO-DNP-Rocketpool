@@ -62,11 +62,11 @@ const MiniPoolStatus = ({ utils, minipoolStatus }) => {
                         <tbody>
                             <tr><td><b>Address</b></td><td>{utils.etherscanAddressUrl(minipool0.address)}</td></tr>
                             <tr><td><b>Status updated</b></td><td>{minipool0.status.statusTime}</td></tr>
-                            <tr><td><b>Node fee</b></td><td>{utils.displayAsPercentage(minipool0.node.fee * 100).toFixed(2) + "%"}</td></tr>
+                            <tr><td><b>Node fee</b></td><td>{utils.displayAsPercentage(minipool0.node.fee)}</td></tr>
                             <tr><td><b>Node deposit</b></td><td>{utils.displayAsETH(minipool0.node.depositBalance)} ETH</td></tr>
                             <tr><td><b>RP ETH assigned</b></td><td>{minipool0.user.depositAssignedTime}</td></tr>
                             <tr><td><b>RP deposit</b></td><td>{utils.displayAsETH(minipool0.user.depositBalance)} ETH</td></tr>
-                            <tr><td><b>Validator pubkey</b></td><td>{utils.eaconchainUrl(minipool0.validatorPubkey, "0x" + minipool0.validatorPubkey.substring(0, 20) + "..." + minipool0.validatorPubkey.substring(76))}</td></tr>
+                            <tr><td><b>Validator pubkey</b></td><td>{utils.beaconchainUrl(minipool0.validatorPubkey, "0x" + minipool0.validatorPubkey.substring(0, 20) + "..." + minipool0.validatorPubkey.substring(76))}</td></tr>
                             <tr><td><b>Validator index</b></td><td>{utils.beaconchainUrl(minipool0.validator.index)}</td></tr>
                             <tr><td><b>Validator active</b></td><td>{minipool0.validator.active ? "yes" : "no"}</td></tr>
                             <tr><td><b>Validator balance</b></td><td>{utils.displayAsETH(minipool0.validator.balance)}</td></tr>
