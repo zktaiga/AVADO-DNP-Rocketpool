@@ -141,26 +141,6 @@ const Comp = () => {
                             </div>
                         )}
 
-                        {navBar === "BeaconChain" && (
-                            <div>
-                                <div className="columns">
-                                    <div className="column is-full">
-
-                                        <iframe
-                                            className="onboardinwizard"
-                                            frameBorder="0"
-                                            width="100%"
-                                            style={{ height: 800 }}
-                                            title="Beacon Chain"
-                                            src="https://prater.beaconcha.in/dashboard" />
-
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-
-
                         {navBar === "Admin" && (
                             <AdminPage wampSession={wampSession} />
                         )}

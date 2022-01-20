@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+import {beaconChainBaseUrl} from "./utils"
 
 function url(validatorPubkey) {
-    return "https://prater.beaconcha.in/validator/" + validatorPubkey + "#rocketpool";
+    return beaconChainBaseUrl + "/validator/" + validatorPubkey + "#rocketpool";
 }
 
 const BeaconchainLink = ({ validator }) => {

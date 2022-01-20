@@ -12,6 +12,9 @@
     "volumes": [
       "rocketpool:/rocketpool"
     ],
+    "environment": [
+      "NETWORK=prater"
+    ],
     "restart": "always",
     "path": "rocketpool.avado.dnp.dappnode.eth_0.0.42.tar.xz",
     "hash": "/ipfs/QmcqVLjYe313pxT33BeZZh1kpUnPCoXWGgwauBQmHCL3eU",
@@ -20,8 +23,6 @@
   "author": "heeckhau",
   "license": "Apache(c)",
   "dependencies": {
-    "goerli-geth.avado.dnp.dappnode.eth": "",
-    "prysm-beacon-chain-prater.avado.dnp.dappnode.eth": ""
   },
   "links": {
     "OnboardingWizard": "http://rocketpool.my.ava.do",

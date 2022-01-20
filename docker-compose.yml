@@ -5,11 +5,12 @@ services:
     build:
       context: ./build
       args:
-        RP_VERSION: v1.1.2
+        RP_VERSION: v1.2.1
         PRYSM_VERSION: v2.0.5
     volumes:
       - 'rocketpool:/rocketpool'
     environment:
+      - NETWORK=prater
       - EXTRA_OPTS=
 volumes:
   rocketpool: {}

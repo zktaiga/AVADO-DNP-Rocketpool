@@ -4,7 +4,7 @@ import web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGasPump, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
 import config from "../config";
-import { displayAsETH, beaconchainUrl } from './utils.js';
+import { displayAsETH, beaconChainBaseUrl } from './utils.js';
 import Spinner from "./Spinner";
 
 
@@ -25,7 +25,7 @@ const Header = ({ rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, minipoo
     }, [eth]);
 
 
-    const beaconChainDashboard = (indexes) => indexes ? (<a href={"https://prater.beaconcha.in/dashboard?validators=" + indexes.join(",")}><FontAwesomeIcon className="icon" icon={faSatelliteDish} /></a>) : "";
+    const beaconChainDashboard = (indexes) => indexes ? (<a href={`${beaconChainBaseUrl}/dashboard?validators=` + indexes.join(",")}><FontAwesomeIcon className="icon" icon={faSatelliteDish} /></a>) : "";
 
     return (
         <div className="hero-body is-small is-primary py-0">

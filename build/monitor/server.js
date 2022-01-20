@@ -22,6 +22,8 @@ const cors = corsMiddleware({
     ]
 });
 
+export const network = process.env.NETWORK; // either "prater" or "mainnet"
+
 server.pre(cors.preflight);
 server.use(cors.actual);
 server.use(restify.plugins.bodyParser());
@@ -100,7 +102,7 @@ const storeTxHash = (txHash) => {
 }
 
 const rpd = (command) => {
-    const cmd = `/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api ${command}`;
+    const cmd = `/usr/local/bin/rocketpoold --config /srv/rocketpool/config-${network}.yml --settings /srv/rocketpool/settings.yml api ${command}`;
     console.log(`Running ${cmd}`);
     if (command.includes("wallet") && !command.includes("status")) {
         const datafolder = "/rocketpool/data";
@@ -224,7 +226,7 @@ server.post('/upload-test', (req, res, next) => {
     res.send({
         code: 'success',
         info: req.info,
-        message: 'Backup file is not implemented yet, but thanks for trying (TODO)',
+        message: '"Restore backup" is not implemented yet, but thanks for trying (TODO)',
     });
     next();
 });
@@ -233,4 +235,5 @@ server.post('/upload-test', (req, res, next) => {
 
 server.listen(9999, function () {
     console.log("%s listening at %s", server.name, server.url);
+    console.assert(network=="prater" || network=="mainnet", 'Wrongly configured NETWORK environment variable! Use either "prater" or "mainnet"');
 });

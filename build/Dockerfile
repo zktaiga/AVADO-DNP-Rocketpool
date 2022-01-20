@@ -1,4 +1,5 @@
 ARG PRYSM_VERSION
+ARG RP_VERSION
 FROM  gcr.io/prysmaticlabs/prysm/validator:${PRYSM_VERSION} as validator
 
 FROM node:16.13.1 as builder
@@ -16,10 +17,11 @@ FROM alpine:latest
 RUN mkdir -p /srv/rocketpool
 
 #TODO
-#RUN wget https://github.com/rocket-pool/smartnode-install/releases/download/${RP_VERSION}/rocketpool-cli-linux-amd64 -O /usr/local/bin/rocketpool
-RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rocketpool-cli-linux-amd64 -O /usr/local/bin/rocketpool
+RUN wget https://github.com/rocket-pool/smartnode-install/releases/download/${RP_VERSION}/rocketpool-cli-linux-amd64 -O /usr/local/bin/rocketpool
+# RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rocketpool-cli-linux-amd64 -O /usr/local/bin/rocketpool
 
-RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rocketpool-daemon-linux-amd64 -O /usr/local/bin/rocketpoold
+RUN wget https://github.com/rocket-pool/smartnode-install/releases/download/${RP_VERSION}/rocketpool-daemon-linux-amd64 -O /usr/local/bin/rocketpoold
+# RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rocketpool-daemon-linux-amd64 -O /usr/local/bin/rocketpoold
 
 RUN chmod +x /usr/local/bin/rocketpool /usr/local/bin/rocketpoold
 
@@ -34,7 +36,8 @@ WORKDIR /usr/src/monitor
 COPY monitor .
 RUN npm i --production
 
-COPY config.yml /srv/rocketpool
+COPY config-mainnet.yml /srv/rocketpool
+COPY config-prater.yml /srv/rocketpool
 COPY restart-validator.sh /srv/rocketpool
 COPY settings.yml /srv/rocketpool
 
@@ -43,7 +46,8 @@ COPY nginx.conf /etc/nginx/
 
 # For testing
 RUN echo 'alias rp="rocketpool -d /usr/local/bin/rocketpoold -c /srv/rocketpool --allow-root"' >> ~/.bashrc
-RUN echo 'alias rpd="/usr/local/bin/rocketpoold --config /srv/rocketpool/config.yml --settings /srv/rocketpool/settings.yml api"' >> ~/.bashrc
+RUN echo 'alias rpdp="/usr/local/bin/rocketpoold --config /srv/rocketpool/config-prater.yml --settings /srv/rocketpool/settings.yml api"' >> ~/.bashrc
+RUN echo 'alias rpdm="/usr/local/bin/rocketpoold --config /srv/rocketpool/config-mainnet.yml --settings /srv/rocketpool/settings.yml api"' >> ~/.bashrc
 
 # TODO?
 # RUN useradd nginx
