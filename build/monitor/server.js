@@ -147,7 +147,7 @@ server.get("/" + backupFileName, (req, res) => {
 
     const archive = archiver('zip', { zlib: { level: 9 } });
     archive
-        .directory("/rocketpoo/data", "data", true)
+        .directory("/rocketpool/data", "data", true)
         .on('error', err => reject(err))
         .pipe(res)
         ;

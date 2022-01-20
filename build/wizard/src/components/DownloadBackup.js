@@ -9,7 +9,7 @@ const DownloadBackup = () => {
 
 
     return (
-        <button className="button" onClick={downloadBackup}>Download Node Keys backup</button>
+        <button className="button" onClick={downloadBackup}>Download Rocket Pool Data Backup</button>
     );
 
 }
