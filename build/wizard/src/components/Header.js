@@ -14,7 +14,8 @@ const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, 
     React.useEffect(() => {
         if (!utils)
             return;
-        const eth = new web3(utils.wsProvider).eth;
+        console.log("Using: " + utils.wsProvider());
+        const eth = new web3(utils.wsProvider()).eth;
         const interval = setInterval(() => {
             eth.getGasPrice().then((result) => {
                 const currentPrice = parseFloat(web3.utils.fromWei(result, 'gwei')).toFixed(3);

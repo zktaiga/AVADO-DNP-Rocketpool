@@ -112,7 +112,7 @@ chains:
           env: WS_PROVIDER_URL
           required: true
   eth2:
-    provider: http://prysm-beacon-chain.avadopackage.com:3500
+    provider: http://prysm-beacon-chain-mainnet.my.ava.do:3500
     client:
       options:
       - id: lighthouse

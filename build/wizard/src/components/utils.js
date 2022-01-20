@@ -44,11 +44,12 @@ class Utils {
         return parseFloat(number).toFixed(2) + "%";
     }
 
-    wsProvider = ({
-        "prater": 'ws://goerli-geth.my.ava.do:8546',
-        "mainnet": 'ws://geth.my.ava.do:8546',
-    })[this.network] || 'ws://goerli-geth.my.ava.do:8546' // use prater as default (TODO change to mainnet for release)
-
+    wsProvider() {
+        return ({
+            "prater": 'ws://goerli-geth.my.ava.do:8546',
+            "mainnet": 'ws://ethchain-geth.my.ava.do:8546',
+        })[this.network] || 'ws://goerli-geth.my.ava.do:8546' // use prater as default (TODO change to mainnet for release)
+    }
 }
 
 export default Utils

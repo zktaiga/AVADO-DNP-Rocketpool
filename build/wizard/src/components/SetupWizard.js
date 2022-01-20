@@ -68,7 +68,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
 
     }
     const isHollow = (element) => {
-        if (element.id == createMinipool.id)
+        if (isActive(element) && element.id == createMinipool.id)
             return !nodeStatus.minipoolCounts || nodeStatus.minipoolCounts.total == 0;
         else
             return element.id == viewState.id;
@@ -106,12 +106,13 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                         <div className="box">
                             <div className="columns">
                                 <div className="column">
-                                    <FontAwesomeIcon className="icon" icon={faWallet} title="Wallet" />
+                                    <FontAwesomeIcon className="icon" icon={faWallet} title="Wallet (click icon to copy address)" onClick={() => navigator.clipboard.writeText(nodeStatus.accountAddress)}/>
                                 </div>
                                 <div className="column">
-                                    <div className="has-text-right"><a onClick={updateNodeStatus}><FontAwesomeIcon className="icon" icon={faSync} title="Refresh wallet" /></a>    <a onClick={() => navigator.clipboard.writeText(nodeStatus.accountAddress)}><FontAwesomeIcon className="icon" icon={faClipboard} title="Copy address to clipboard" /></a></div>
+                                    <div className="has-text-right"><a onClick={updateNodeStatus}><FontAwesomeIcon className="icon" icon={faSync} title="Refresh wallet" /></a></div>
                                 </div>
                             </div>
+                            {/* <p><a onClick={() => navigator.clipboard.writeText(nodeStatus.accountAddress)}><FontAwesomeIcon className="icon" icon={faClipboard} title="Copy address to clipboard" /> copy address</a></p> */}
                             <p>{utils.displayAsETH(nodeStatus.accountBalances.eth, 5)} ETH</p>
                             <p>{utils.displayAsETH(nodeStatus.accountBalances.rpl, 5)} RPL</p>
                         </div>

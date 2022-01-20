@@ -48,7 +48,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     React.useEffect(() => {
         if (waitingForTx) {
             rpdDaemon(`wait ${txHash}`, (data) => {
-                const w3 = new web3(utils.wsProvider);
+                const w3 = new web3(utils.wsProvider());
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);

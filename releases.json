@@ -306,5 +306,26 @@
     "uploadedTo": {
       "dappnode": "Thu, 20 Jan 2022 20:56:02 GMT"
     }
+  },
+  "0.0.53": {
+    "hash": "/ipfs/QmNMsMa6VnC3D3aiSaDUpFGWXGYA2UHXhyvSUipXytyhpJ",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Thu, 20 Jan 2022 22:19:43 GMT"
+    }
+  },
+  "0.0.54": {
+    "hash": "/ipfs/QmPQHW6EzZcCP4Vp9B1DvUgPi8TVp7TTpCH2ifmw7SMbVZ",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Thu, 20 Jan 2022 22:35:55 GMT"
+    }
+  },
+  "0.0.55": {
+    "hash": "/ipfs/QmWxswkLRqUordui4tN7znjty4BN31NUanBSs68u21ktPd",
+    "type": "manifest",
+    "uploadedTo": {
+      "dappnode": "Thu, 20 Jan 2022 22:49:07 GMT"
+    }
   }
 }
