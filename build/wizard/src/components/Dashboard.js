@@ -13,6 +13,7 @@ import WalletStatus from "./WalletStatus";
 import SetupWizard from "./SetupWizard";
 import bignumJSON from "json-bignum"
 import AdminPage from "./AdminPage";
+import NetworkBanner from "./NetworkBanner";
 
 const Comp = () => {
     const [walletStatus, setWalletStatus] = React.useState();
@@ -99,6 +100,7 @@ const Comp = () => {
 
     return (
         <div className="dashboard has-text-white">
+            <NetworkBanner />
             <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 
