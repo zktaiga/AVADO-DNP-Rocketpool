@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGasPump, fas, faSpinner, faWallet, faSync, faClipboard } from "@fortawesome/free-solid-svg-icons";
+import { faWallet, faSync, faClipboard } from "@fortawesome/free-solid-svg-icons";
 import InitWallet from "./InitWallet";
 import FundWallet from "./FundWallet";
 import RegisterNode from "./RegisterNode";

@@ -1,8 +1,8 @@
 import React from "react";
 import { etherscanAddressUrl, displayAsETH } from './utils.js';
 
-import web3 from "web3";
-const BN = web3.utils.BN;
+// import web3 from "web3";
+// const BN = web3.utils.BN;
 
 const FundWallet = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
 

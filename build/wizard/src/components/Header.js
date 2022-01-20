@@ -2,7 +2,7 @@ import React from "react";
 import SyncStatusTag from "./SyncStatusTag";
 import web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGasPump, faSpinner, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
+import { faGasPump, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
 import config from "../config";
 import { displayAsETH, beaconchainUrl } from './utils.js';
 import Spinner from "./Spinner";
