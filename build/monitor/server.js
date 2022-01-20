@@ -125,14 +125,23 @@ const rpd = (command) => {
     return executionPromise;
 }
 
-const restartValidator = () => {
+//restartValidator
+server.get("/restart-validator", (req, res) => {
     console.log(`Restart validator`);
     const cmd = "sh /srv/rocketpool/restart-validator.sh";
-    return execute(cmd);
-}
+    execute(cmd).then((stdout) => {
+        res.send(200, stdout);
+    }).catch((e) => {
+        res.send(500, e);
+    })
+});
 
-server.get("/restart-validator", (req, res) => {
-    restartValidator().then((stdout) => {
+
+//restart Rocket Pool smartnode
+server.get("/restart-rocketpool-node", (req, res) => {
+    console.log(`Restart Rocket Pool smartnode`);
+    const cmd = "supervisorctl  restart rocketpool-node";
+    execute(cmd).then((stdout) => {
         res.send(200, stdout);
     }).catch((e) => {
         res.send(500, e);
@@ -145,13 +154,29 @@ server.get("/" + backupFileName, (req, res) => {
     res.setHeader("Content-Disposition", "attachment; " + backupFileName);
     res.setHeader("Content-Type", "application/zip");
 
-    const archive = archiver('zip', { zlib: { level: 9 } });
-    archive
-        .directory("/rocketpool/data", "data", true)
-        .on('error', err => reject(err))
-        .pipe(res)
-        ;
-    archive.finalize();
+    if (false) {
+        const archive = archiver('zip', { zlib: { level: 9 } });
+        archive
+            .directory("/rocketpool/data", "data", true)
+            .on('error', err => reject(err))
+            .pipe(res)
+            ;
+        archive.finalize();
+
+    } else {
+        const zip = new AdmZip();
+        zip.addLocalFolder("/rocketpool/data", "data");
+        zip.toBuffer(    
+            (buffer, err) =>  {
+              if (err)  {
+                reject(err);
+              } else {
+                  res.setHeader("Content-Length", buffer.length);
+                  res.end(buffer, "binary");
+              }
+            }
+        )
+    }
 });
 
 //restore

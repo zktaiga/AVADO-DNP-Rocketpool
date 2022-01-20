@@ -6,14 +6,13 @@ import rocketpoollogo from "../assets/rocketpool.png";
 import autobahn from "autobahn-browser";
 import MiniPoolStatus from "./MiniPoolStatus";
 import NodeStatus from "./NodeStatus";
-import BackupDashboard from "./BackupDashboard";
-import LogView from "./LogView";
 import NavigationBar from "./NavigationBar";
 import Header from "./Header";
 import Welcome from "./Welcome";
 import WalletStatus from "./WalletStatus";
 import SetupWizard from "./SetupWizard";
 import bignumJSON from "json-bignum"
+import AdminPage from "./AdminPage";
 
 const Comp = () => {
     const [walletStatus, setWalletStatus] = React.useState();
@@ -163,15 +162,8 @@ const Comp = () => {
 
 
                         {navBar === "Admin" && (
-                            <div>
-                                <BackupDashboard wampSession={wampSession} />
-                                <br />
-                                <LogView wampSession={wampSession} />
-                                <br />
-                                <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail">Avado Rocket Pool package details</a>
-                            </div>
+                            <AdminPage wampSession={wampSession} />
                         )}
-
                     </div>
                 </div>
             </section>

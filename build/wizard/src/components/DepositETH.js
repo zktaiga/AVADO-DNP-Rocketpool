@@ -105,7 +105,7 @@ const DepositETH = ({ nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateN
                         {displayAsPercentage(selectedNodeFee * 100)}
                     </div>
                     <div className="field">
-                        <button className="button" onClick={depositEth} disabled={ethButtonDisabled}>Stake 16 ETH</button>
+                        <button className="button" onClick={depositEth} disabled={ethButtonDisabled}>Deposit 16 ETH{waitingForTx ? <Spinner /> : ""}</button>
                     </div>
                     {feedback && (
                         <p className="help is-danger">{feedback}</p>
