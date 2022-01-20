@@ -1,41 +1,54 @@
 import React from 'react';
 import web3 from "web3";
-import config from "../config";
 
-export const beaconChainBaseUrl = ({
-    "prater": "https://prater.beaconcha.in/",
-    "mainnet": "https://beaconcha.in/",
-})[process.env.NETWORK] || "https://prater.beaconcha.in/"
+class Utils {
+    constructor(network) {
+        this.network = network;
+    }
 
-export const etherscanBaseUrl = ({
-    "prater": "https://goerli.etherscan.io",
-    "mainnet": "https://etherscan.io",
-})[process.env.NETWORK] || "https://goerli.etherscan.io"
+    beaconChainBaseUrl = ({
+        "prater": "https://prater.beaconcha.in/",
+        "mainnet": "https://beaconcha.in/",
+    })[this.network] || "https://prater.beaconcha.in/"
 
-export function beaconchainUrl(validatorPubkey, text) {
-    return <a href={beaconChainBaseUrl + "/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
+    etherscanBaseUrl = ({
+        "prater": "https://goerli.etherscan.io",
+        "mainnet": "https://etherscan.io",
+    })[this.network] || "https://goerli.etherscan.io"
+
+    beaconchainUrl(validatorPubkey, text) {
+        return <a href={this.beaconChainBaseUrl + "/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
+    }
+
+    etherscanAddressUrl(address, text) {
+        return <a href={this.etherscanBaseUrl + "/address/" + address}>{text ? text : address}</a>;
+    }
+
+    etherscanTransactionUrl(txHash, text) {
+        return <a href={this.etherscanBaseUrl + "/tx/" + txHash}>{text ? text : txHash}</a>;
+    }
+
+    displayAsETH(number, fractionDigits) {
+        if (!number)
+            return 0;
+        // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
+        const result = web3.utils.fromWei(String(number), 'ether');
+        if (fractionDigits)
+            return parseFloat(result).toFixed(fractionDigits)
+        return result
+    }
+
+    displayAsPercentage(number) {
+        if (!number)
+            return "- %";
+        return parseFloat(number).toFixed(2) + "%";
+    }
+
+    wsProvider=({
+        "prater": 'ws://goerli-geth.my.ava.do:8546',
+        "mainnet": 'ws://geth.my.ava.do:8546',
+      })[process.env.NETWORK] || 'ws://goerli-geth.my.ava.do:8546' // use prater as default (TODO change to mainnet for release)
+    
 }
 
-export function etherscanAddressUrl(address, text) {
-    return <a href={etherscanBaseUrl+"/address/" + address}>{text ? text : address}</a>;
-}
-
-export function etherscanTransactionUrl(txHash, text) {
-    return <a href={etherscanBaseUrl+"/tx/" + txHash}>{text ? text : txHash}</a>;
-}
-
-// https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
-export function displayAsETH(number, fractionDigits) {
-    if (!number)
-        return 0;
-    const result = web3.utils.fromWei(String(number), 'ether');
-    if (fractionDigits)
-        return parseFloat(result).toFixed(fractionDigits)
-    return result
-}
-
-export function displayAsPercentage(number) {
-    if (!number)
-        return "- %";
-    return parseFloat(number).toFixed(2) + "%";
-}
+export default Utils

@@ -4,10 +4,9 @@ import web3 from "web3";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import config from "../config";
-import { etherscanTransactionUrl } from './utils.js';
 import Spinner from "./Spinner";
 
-const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
+const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
     const [buttonDisabled, setButtonDisabled] = React.useState(true);
     const [txHash, setTxHash] = React.useState();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
@@ -34,7 +33,7 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     React.useEffect(() => {
         if (waitingForTx) {
             rpdDaemon(`wait ${txHash}`, (data) => {
-                const w3 = new web3(config.wsProvider);
+                const w3 = new web3(utils.wsProvider);
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
@@ -43,7 +42,7 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
             });
         }
 
-    }, [waitingForTx]);
+    }, [waitingForTx,utils]);
 
     const timeZone = () => {
         try {
@@ -90,7 +89,7 @@ const RegisterNode = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                     )} */}
                     {error && (<p className="help is-danger">{error}</p>)}
                     {txHash && (
-                        <p>{etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                        <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
                     )}
                 </>
             )}

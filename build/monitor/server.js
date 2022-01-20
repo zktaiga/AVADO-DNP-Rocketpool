@@ -22,7 +22,7 @@ const cors = corsMiddleware({
     ]
 });
 
-export const network = process.env.NETWORK; // either "prater" or "mainnet"
+const network = process.env.NETWORK; // either "prater" or "mainnet"
 
 server.pre(cors.preflight);
 server.use(cors.actual);
@@ -126,6 +126,11 @@ const rpd = (command) => {
 
     return executionPromise;
 }
+
+//restart Rocket Pool smartnode
+server.get("/network", (req, res) => {
+    res.send(200, network);
+});
 
 //restartValidator
 server.get("/restart-validator", (req, res) => {

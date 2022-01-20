@@ -1,17 +1,17 @@
 import React from "react";
 
-const NetworkBanner = () => {
+const NetworkBanner = ({network}) => {
     return (
         <>
-            {process.env.NETWORK === "prater" && (
-                <section class="hero is-warning">
+            {network === "prater" && (
+                <section className="hero is-warning">
                     <div className="hero-body is-small">
                         <p className="has-text-centered">Using the Prater Test Network</p>
                     </div>
                 </section>
             )}
-            {process.env.NETWORK !== "prater" && process.env.NETWORK !== "mainnet" && (
-                <section class="hero is-danger">
+            {network && network !== "prater" && network !== "mainnet" && (
+                <section className="hero is-danger">
                     <div className="hero-body is-small">
                         <p className="has-text-centered">Wrongly configured NETWORK environment variable: Using the Prater Test Network</p>
                     </div>

@@ -6,9 +6,8 @@ import FundWallet from "./FundWallet";
 import RegisterNode from "./RegisterNode";
 import SetWithdrawalAddress from "./SetWithdrawalAddress";
 import CreateMinipool from "./CreateMinipool";
-import { beaconchainUrl, etherscanAddressUrl, displayAsETH } from './utils.js';
 
-const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon }) => {
+const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon }) => {
     const initWallet = { id: Symbol("Init wallet").toString(), name: "Init wallet" };
     const fundNode = { id: Symbol("Fund Node").toString(), name: "Fund Node" };
     const registerNode = { id: Symbol("Register node").toString(), name: "Register node" };
@@ -113,17 +112,18 @@ const SetupWizard = ({ walletStatus, updateWalletStatus, nodeStatus, rplPriceDat
                                     <div className="has-text-right"><a onClick={updateNodeStatus}><FontAwesomeIcon className="icon" icon={faSync} title="Refresh wallet" /></a>    <a onClick={() => navigator.clipboard.writeText(nodeStatus.accountAddress)}><FontAwesomeIcon className="icon" icon={faClipboard} title="Copy address to clipboard" /></a></div>
                                 </div>
                             </div>
-                            <p>{displayAsETH(nodeStatus.accountBalances.eth, 5)} ETH</p>
-                            <p>{displayAsETH(nodeStatus.accountBalances.rpl, 5)} RPL</p>
+                            <p>{utils.displayAsETH(nodeStatus.accountBalances.eth, 5)} ETH</p>
+                            <p>{utils.displayAsETH(nodeStatus.accountBalances.rpl, 5)} RPL</p>
                         </div>
                     </div>
                 )}
             </div>
             <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-            <FundWallet nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-            <RegisterNode nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-            <SetWithdrawalAddress nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+            <FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+            <RegisterNode utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
+            <SetWithdrawalAddress utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
             <CreateMinipool
+                utils={utils}
                 nodeStatus={nodeStatus}
                 rplPriceData={rplPriceData}
                 updateNodeStatus={updateNodeStatus}

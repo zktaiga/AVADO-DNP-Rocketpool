@@ -1,15 +1,12 @@
 import React from "react";
 import BN from "bn.js"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Spinner from "./Spinner";
 import config from "../config";
-import { etherscanTransactionUrl, displayAsETH } from './utils.js';
 import web3 from "web3";
 
-const StakeRPL = ({ nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon }) => {
+const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon }) => {
 
     const [rplStakeButtonDisabled, setRplStakeButtonDisabled] = React.useState(true);
     const [feedback, setFeedback] = React.useState("");
@@ -22,7 +19,7 @@ const StakeRPL = ({ nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, 
 
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
             if (nodeStatus.accountBalances.rpl < rplPriceData.minPerMinipoolRplStake) {
-                setFeedback(`Not enough RPL in your wallet (${displayAsETH(nodeStatus.accountBalances.rpl, 4)} RPL). Must be more than ${displayAsETH(rplPriceData.minPerMinipoolRplStake, 4)} RPL before you can stake`);
+                setFeedback(`Not enough RPL in your wallet (${utils.displayAsETH(nodeStatus.accountBalances.rpl, 4)} RPL). Must be more than ${utils.displayAsETH(rplPriceData.minPerMinipoolRplStake, 4)} RPL before you can stake`);
             } else {
                 if (nodeStatus.rplStake === 0) {
                     rpdDaemon(`node can-stake-rpl ${selectedRplStake}`, (data) => {
@@ -83,21 +80,21 @@ const StakeRPL = ({ nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, 
     React.useEffect(() => {
         if (waitingForTx) {
             rpdDaemon(`wait ${txHash}`, (data) => {
-                const w3 = new web3(config.wsProvider);
+                const w3 = new web3(utils.wsProvider);
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
                 });
             });
         }
-    }, [waitingForTx]);
+    }, [waitingForTx,utils]);
 
     return (
         <div className="">
             <h4 className="title is-4 has-text-white">Stake RPL</h4>
             {nodeStatus.rplStake > 0 && (
                 <p>
-                    {displayAsETH(nodeStatus.rplStake, 4)} RPL successfully staked.
+                    {utils.displayAsETH(nodeStatus.rplStake, 4)} RPL successfully staked.
 
                 </p>
             )}
@@ -107,7 +104,7 @@ const StakeRPL = ({ nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, 
                         className="button"
                         onClick={stakeRpl}
                         disabled={rplStakeButtonDisabled}>
-                        Stake {selectedRplStake ? displayAsETH(selectedRplStake) + " " : ""}RPL{waitingForTx ? <Spinner /> : ""}
+                        Stake {selectedRplStake ? utils.displayAsETH(selectedRplStake) + " " : ""}RPL{waitingForTx ? <Spinner /> : ""}
                     </button>
                     {feedback && (
                         <p className="help is-danger">{feedback}</p>
@@ -115,7 +112,7 @@ const StakeRPL = ({ nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, 
                 </div>
             )}
             {txHash && (
-                <p>{etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
             )}
         </div>);
 }

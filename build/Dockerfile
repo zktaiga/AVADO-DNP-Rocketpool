@@ -1,5 +1,4 @@
 ARG PRYSM_VERSION
-ARG RP_VERSION
 FROM  gcr.io/prysmaticlabs/prysm/validator:${PRYSM_VERSION} as validator
 
 FROM node:16.13.1 as builder
@@ -10,18 +9,13 @@ COPY wizard .
 RUN yarn
 RUN rm -Rf build && yarn run build
 
-
-
 FROM alpine:latest
+ARG RP_VERSION
 
 RUN mkdir -p /srv/rocketpool
 
-#TODO
-RUN wget https://github.com/rocket-pool/smartnode-install/releases/download/${RP_VERSION}/rocketpool-cli-linux-amd64 -O /usr/local/bin/rocketpool
-# RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rocketpool-cli-linux-amd64 -O /usr/local/bin/rocketpool
-
-RUN wget https://github.com/rocket-pool/smartnode-install/releases/download/${RP_VERSION}/rocketpool-daemon-linux-amd64 -O /usr/local/bin/rocketpoold
-# RUN wget https://github.com/rocket-pool/smartnode-install/releases/latest/download/rocketpool-daemon-linux-amd64 -O /usr/local/bin/rocketpoold
+RUN wget "https://github.com/rocket-pool/smartnode-install/releases/download/${RP_VERSION}/rocketpool-cli-linux-amd64" -O /usr/local/bin/rocketpool
+RUN wget "https://github.com/rocket-pool/smartnode-install/releases/download/${RP_VERSION}/rocketpool-daemon-linux-amd64" -O /usr/local/bin/rocketpoold
 
 RUN chmod +x /usr/local/bin/rocketpool /usr/local/bin/rocketpoold
 

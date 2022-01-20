@@ -1,16 +1,12 @@
 import React from "react";
 import web3 from "web3";
 import Spinner from "./Spinner";
-import { displayAsPercentage, displayAsETH } from "./utils";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import MiniPoolStatus from "./MiniPoolStatus";
 import ApproveRpl from "./ApproveRpl";
 import StakeRPL from "./StakeRPL";
 import DepositETH from "./DepositETH";
 
 
-const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon }) => {
+const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon }) => {
     const minNodeFee = 0.05;
     const maxNodeFee = 0.2;
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
@@ -49,14 +45,15 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolSt
                                             <b>Current Node commision fee: (Rocket Pool network)</b>{nodeFee.nodeFee} (Minimum: {minNodeFee}, maximum: {maxNodeFee})
                                         </dd>
                                         <dt>RPL</dt>
-                                        <dd>You can ... but it must be higher than {rplPriceData ? Math.ceil(displayAsETH(rplPriceData.minPerMinipoolRplStake)) : <Spinner />} RPL
+                                        <dd>You can ... but it must be higher than {rplPriceData ? Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake)) : <Spinner />} RPL
                                         </dd>
                                     </dl>
                                 </div>
 
 
-                                <ApproveRpl rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />
+                                <ApproveRpl utils={utils} rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />
                                 <StakeRPL
+                                    utils={utils}
                                     nodeStatus={nodeStatus}
                                     rplPriceData={rplPriceData}
                                     rplAllowanceOK={rplAllowanceOK}
@@ -64,9 +61,10 @@ const CreateMinipool = ({ nodeStatus, rplPriceData, updateNodeStatus, minipoolSt
                                     rpdDaemon={rpdDaemon}
                                 />
 
-                                <DepositETH  
-                                nodeStatus={nodeStatus}
-                                nodeFee={nodeFee}
+                                <DepositETH
+                                    utils={utils}
+                                    nodeStatus={nodeStatus}
+                                    nodeFee={nodeFee}
                                     rplPriceData={rplPriceData}
                                     rplAllowanceOK={rplAllowanceOK}
                                     nodeStatus={nodeStatus}

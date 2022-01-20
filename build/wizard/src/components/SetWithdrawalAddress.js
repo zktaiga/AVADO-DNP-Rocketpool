@@ -8,13 +8,12 @@ import config from "../config";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { etherscanTransactionUrl } from './utils.js';
 import Spinner from "./Spinner";
 
 //TODO: make safer with Rocket Pool procedure
 //https://github.com/rocket-pool/smartnode/blob/cf50c3c83e19b56f1bbc6d8f404a704f457821cc/rocketpool-cli/node/withdrawal-address.go
 
-const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
+const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
     const [withdrawalAddress, setWithdrawalAddress] = React.useState("");
     const [addressFeedback, setAddressFeedback] = React.useState("");
     const [buttonDisabled, setButtonDisabled] = React.useState(false);
@@ -44,7 +43,7 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
     React.useEffect(() => {
         if (waitingForTx) {
             rpdDaemon(`wait ${txHash}`, (data) => {
-                const w3 = new web3(config.wsProvider);
+                const w3 = new web3(utils.wsProvider);
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
@@ -53,7 +52,7 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
             });
         }
 
-    }, [waitingForTx]);
+    }, [waitingForTx,utils]);
 
     const onClick = () => {
         confirmAlert({
@@ -119,7 +118,7 @@ const SetWithdrawalAddress = ({ nodeStatus, updateNodeStatus, rpdDaemon }) => {
                         </button>
                     </div>
                     {txHash && (
-                        <p>{etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                        <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
                     )}
                 </>
         </div>

@@ -14,8 +14,12 @@ import SetupWizard from "./SetupWizard";
 import bignumJSON from "json-bignum"
 import AdminPage from "./AdminPage";
 import NetworkBanner from "./NetworkBanner";
+import Utils from "./utils";
 
 const Comp = () => {
+    const [network, setNetwork] = React.useState();
+    const [utils, setUtils] = React.useState();
+
     const [walletStatus, setWalletStatus] = React.useState();
     const [minipoolStatus, setMinipoolStatus] = React.useState();
     const [nodeStatus, setNodeStatus] = React.useState();
@@ -44,6 +48,16 @@ const Comp = () => {
     }, [walletStatus, minipoolStatus]);
 
 
+    React.useEffect(() => {
+        // axios.get(`${config.api.HTTP}/network`).then((res) => {
+            const res="prater";
+            setNetwork(res);
+            console.log(`Using the ${res} network`);
+            
+            const utils = new Utils(network);
+            setUtils(utils);
+        // })
+    }, []);
 
     React.useEffect(() => {
         const url = "ws://wamp.my.ava.do:8080/ws";
@@ -100,8 +114,8 @@ const Comp = () => {
 
     return (
         <div className="dashboard has-text-white">
-            <NetworkBanner />
-            <Header rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
+            <NetworkBanner network={network}  />
+            <Header utils={utils} rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 
             <section className="has-text-white">
@@ -116,6 +130,7 @@ const Comp = () => {
                         {navBar === "Setup" && (
                             <div>
                                 <SetupWizard
+                                    utils={utils}
                                     walletStatus={walletStatus}
                                     updateWalletStatus={updateWalletStatus}
                                     nodeStatus={nodeStatus}
@@ -132,19 +147,19 @@ const Comp = () => {
                             <div>
                                 <div className="columns">
                                     <div className="column is-half">
-                                        <NodeStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} />
+                                        <NodeStatus utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} />
                                     </div>
                                     <div className="column is-half">
-                                        <WalletStatus nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
+                                        <WalletStatus utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
                                     </div>
                                 </div>
                                 <br />
-                                <MiniPoolStatus minipoolStatus={minipoolStatus} />
+                                <MiniPoolStatus utils={utils} minipoolStatus={minipoolStatus} />
                             </div>
                         )}
 
                         {navBar === "Admin" && (
-                            <AdminPage wampSession={wampSession} />
+                            <AdminPage utils={utils} wampSession={wampSession} />
                         )}
                     </div>
                 </div>

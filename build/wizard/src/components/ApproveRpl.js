@@ -9,7 +9,7 @@ import config from "../config";
 import { etherscanTransactionUrl } from './utils.js';
 import web3 from "web3";
 
-const ApproveRpl = ({ rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => {
+const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => {
     const [rplApproveButtonDisabled, setRplApproveButtonDisabled] = React.useState(true);
     const [txHash, setTxHash] = React.useState();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
@@ -66,14 +66,14 @@ const ApproveRpl = ({ rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => {
     React.useEffect(() => {
         if (waitingForTx) {
             rpdDaemon(`wait ${txHash}`, (data) => {
-                const w3 = new web3(config.wsProvider);
+                const w3 = new web3(utils.wsProvider);
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
                 });
             });
         }
-    }, [waitingForTx]);
+    }, [waitingForTx,utils]);
 
     return (
         <div className="">
@@ -98,7 +98,7 @@ const ApproveRpl = ({ rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => {
                 <span className="tag is-success">Approved <span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span>
             )}
             {txHash && (
-                <p>{etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
             )}
         </div>);
 }
