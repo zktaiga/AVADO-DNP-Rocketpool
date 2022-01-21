@@ -16,6 +16,10 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
     const [feedback, setFeedback] = React.useState("");
 
     React.useEffect(() => {
+        checkAllowance();
+    }, []);
+
+    const checkAllowance = () => {
         setRplApproveButtonDisabled(false);
 
         rpdDaemon(`node stake-rpl-allowance`, (data) => {
@@ -32,7 +36,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
                 }
             }
         });
-    }, []);
+    }
 
     const approveRpl = () => {
         //2**256-1
@@ -70,6 +74,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
+                    checkAllowance();
                 });
             });
         }

@@ -42,7 +42,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
         }
 
 
-    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, rplAllowanceOK]);
+    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee]);
 
 
     React.useEffect(() => {
@@ -52,6 +52,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
+                    updateNodeStatus();
                 });
             });
         }
@@ -65,11 +66,11 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                 {
                     label: 'Yes',
                     onClick: () => rpdDaemon(`node deposit ${ETHDepositAmmount} ${selectedNodeFee} 0`, (data) => {  //   rocketpool api node deposit amount min-fee salt
+                        //{"status":"success","error":"","txHash":"0x6c8958917414479763aaa65dbff4b00e52d9ef699d64dbd0827a45e1fe8aee38","minipoolAddress":"0xc43a2d435bd48bde1e000c07e89f3e6ebe9161d4","validatorPubkey":"ac9cb87a11fd8c55a9529108964786f11623717a6e3af0db3cd5fde2da5c6a7a4f89e52d13770ad6bc080de1b63427a1","scrubPeriod":3600000000000}
                         if (data.status === "error") {
                             setFeedback(data.error);
                         }
-                        updateNodeStatus();
-                        setTxHash(data.approveTxHash);
+                        setTxHash(data.txHash);
                         setWaitingForTx(true);
                         setEthButtonDisabled(true);
                     })

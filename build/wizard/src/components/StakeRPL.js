@@ -58,13 +58,12 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
                     onClick: () => {
                         setRplStakeButtonDisabled(true);
                         rpdDaemon(`node stake-rpl ${selectedRplStake}`, (data) => {
-                            //{"status":"success","error":"","txHash":"0xcaeb805e3bbbc1f8c5334b595656c0d5b156a7e02d841ca14edfe3ff5983e349","minipoolAddress":"0xeb631532a78aa8abb3f3e2e5aab2c5e3025d0197","validatorPubkey":"80cf7ed9577f2cf860f0f03a6de4cae14a1b9f244e83ccaabf752c3a56c9a13c59e99566fe502dfa5fb95c22bc6de060","scrubPeriod":3600000000000}
+                            //{"status":"success","error":"","stakeTxHash":"0x41a93be5b4fb06e819975acc0cdb91c1084e4c1943d625a3a5f96d823842d0e8"}
 
                             if (data.status === "error") {
                                 setFeedback(data.error);
-                            }
-                            updateNodeStatus();
-                            setTxHash(data.txHash);
+                            }                            
+                            setTxHash(data.stakeTxHash);
                             setWaitingForTx(true);
                         })
                     }
@@ -84,6 +83,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
+                    updateNodeStatus();
                 });
             });
         }
