@@ -10,7 +10,7 @@ import Spinner from "./Spinner";
 const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, minipoolStatus }) => {
 
     const [gasPrice, setGasPrice] = React.useState();
-    
+
     React.useEffect(() => {
         if (!utils)
             return;
@@ -51,14 +51,14 @@ const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, 
                         <SyncStatusTag progress={nodeSyncStatus.eth1Progress} label="Geth" />,
                         <SyncStatusTag progress={nodeSyncStatus.eth2Progress} label="Prysm" />
                         {minipoolStatus && minipoolStatus.minipools && (
-                            beaconChainDashboard(minipoolStatus.minipools.filter((minipool) => "validator" in minipool).map((minipool)=>minipool.validator.index))
+                            beaconChainDashboard(minipoolStatus.minipools.filter((minipool) => "validator" in minipool).map((minipool) => minipool.validator.index))
                         )}
 
                     </p>
                     <p className="has-text-right">
-                        <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice ? gasPrice : <Spinner/>} gwei,
-                        Node commision: {nodeFee ? utils.displayAsPercentage(nodeFee.nodeFee * 100) : <Spinner/>},
-                        RPL: {rplPriceData ? utils.displayAsETH(rplPriceData.rplPrice,5) : <Spinner/>} ETH
+                        <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice ? gasPrice : <Spinner />} gwei,
+                        Node commision: {nodeFee && utils ? utils.displayAsPercentage(nodeFee.nodeFee * 100) : <Spinner />},
+                        RPL: {rplPriceData && utils ? utils.displayAsETH(rplPriceData.rplPrice, 5) : <Spinner />} ETH
                     </p>
                 </div>
             )}

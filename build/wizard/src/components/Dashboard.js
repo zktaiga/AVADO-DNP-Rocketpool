@@ -117,6 +117,10 @@ const Comp = () => {
             <Header utils={utils} rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 
+            {!wampSession && (
+                <p>Avado Connection problem. Check your browser's console log for more details.</p>
+            )}
+
             <section className="has-text-white">
                 <div className="columns is-mobile">
                     <div className="column">
