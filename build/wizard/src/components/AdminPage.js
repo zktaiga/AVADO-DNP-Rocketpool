@@ -3,10 +3,16 @@ import config from "../config";
 import BackupDashboard from "./BackupDashboard";
 import LogView from "./LogView";
 import Spinner from "./Spinner";
+const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
 const AdminPage = ({ wampSession }) => {
     const [isRestartValidator, setIsRestartValidator] = React.useState(false);
     const [isRestartRpNode, setIsRestartRpNode] = React.useState(false);
+    const [network, setNetwork] = React.useState("");
+
+    React.useEffect(() => {
+        getNetwork();
+    }, [wampSession]) // eslint-disable-line
 
     const restartValidator = () => {
         setIsRestartValidator(true);
@@ -30,6 +36,26 @@ const AdminPage = ({ wampSession }) => {
             );
     }
 
+    const testEnv = async () => {
+        const newNetwork = (network === "prater") ? "mainnet" : "prater";
+
+        // updatePackageEnv: {
+        await wampSession.call("updatePackageEnv.dappmanager.dnp.dappnode.eth", [], {
+                id: packageName,
+                envs: { NETWORK: newNetwork },
+                restart: true
+            });
+        
+    }
+
+    const getNetwork = async () => {
+        const packagesRaw = await wampSession.call("listPackages.dappmanager.dnp.dappnode.eth", [],);
+        const packages = JSON.parse(packagesRaw);
+        if (packages.success) {
+            setNetwork(packages.result.find(r => r.name === packageName).envs.NETWORK)
+        }
+    }
+
     return (
         <div>
             <h2>Debug</h2>
@@ -38,6 +64,13 @@ const AdminPage = ({ wampSession }) => {
             </div>
             <div className="field">
                 <button className="button" onClick={restartRpNode} disabled={isRestartRpNode}>Restart Rocket Pool Node{isRestartRpNode ? <Spinner /> : ""}</button>
+            </div>
+            <br />
+            {network && (
+                <p><b>Network: </b>{network}</p>
+            )}
+            <div className="field">
+                <button className="button" onClick={testEnv}>Experiment</button>
             </div>
             <br />
             <BackupDashboard wampSession={wampSession} />
