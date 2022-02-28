@@ -17,6 +17,9 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
     React.useEffect(() => {
         setRplStakeButtonDisabled(true); //set default
 
+        if (waitingForTx)
+            return;
+
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
             if (nodeStatus.accountBalances.rpl < rplPriceData.minPerMinipoolRplStake) {
                 setFeedback(`Not enough RPL in your wallet (${utils.displayAsETH(nodeStatus.accountBalances.rpl, 4)} RPL). Must be more than ${utils.displayAsETH(rplPriceData.minPerMinipoolRplStake, 4)} RPL before you can stake`);
@@ -46,7 +49,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
         }
 
 
-    }, [nodeStatus, rplPriceData, rplAllowanceOK]);
+    }, [nodeStatus, rplPriceData, rplAllowanceOK, waitingForTx]);
 
     const stakeRpl = () => {
         confirmAlert({
@@ -77,7 +80,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
     }
 
     React.useEffect(() => {
-        if (waitingForTx) {
+        if (waitingForTx && txHash) {
             rpdDaemon(`wait ${txHash}`, (data) => {
                 const w3 = new web3(utils.wsProvider());
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
@@ -87,7 +90,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
                 });
             });
         }
-    }, [waitingForTx,utils]);
+    }, [waitingForTx,txHash,utils]);
 
     return (
         <div className="">

@@ -68,7 +68,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
     }
 
     React.useEffect(() => {
-        if (waitingForTx) {
+        if (waitingForTx && txHash) {
             rpdDaemon(`wait ${txHash}`, (data) => {
                 const w3 = new web3(utils.wsProvider());
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
@@ -78,7 +78,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
                 });
             });
         }
-    }, [waitingForTx,utils]);
+    }, [waitingForTx,txHash,utils]);
 
     return (
         <div className="">

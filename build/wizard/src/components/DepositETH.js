@@ -17,6 +17,9 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     const ETHDepositAmmount = 16000000000000000000;
 
     React.useEffect(() => {
+        if (waitingForTx)
+            return;
+
         setEthButtonDisabled(true); //set default
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
             if (nodeStatus.rplStake < rplPriceData.minPerMinipoolRplStake) {
@@ -42,11 +45,11 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
         }
 
 
-    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee]);
+    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, waitingForTx]);
 
 
     React.useEffect(() => {
-        if (waitingForTx) {
+        if (waitingForTx && txHash) {
             rpdDaemon(`wait ${txHash}`, (data) => {
                 const w3 = new web3(utils.wsProvider());
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
@@ -56,12 +59,12 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                 });
             });
         }
-    }, [waitingForTx,utils]);
+    }, [waitingForTx,txHash,utils]);
 
     const depositEth = () => {
         confirmAlert({
             title: 'Are you sure you want to deposit your 16 ETH now?',
-            message: 'Staking RPL consumes gas (ETH)',
+            message: 'Depositing ETH consumes gas (ETH)',
             buttons: [
                 {
                     label: 'Yes',
@@ -96,7 +99,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                 </>
             )}
 
-            {nodeStatus && nodeStatus.minipoolCounts.total == 0 && (
+            {nodeStatus && nodeStatus.minipoolCounts.total === 0 && (
                 <>
                     <div className="field">
                         Your minimal nodeFee: <input id="sliderWithValue" className="slider has-output" step="0.01" min={nodeFee.minNodeFee} max={nodeFee.maxNodeFee} defaultValue={nodeFee.nodeFee} type="range" onChange={slider} />
