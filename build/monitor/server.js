@@ -2,7 +2,6 @@ const restify = require("restify");
 const corsMiddleware = require("restify-cors-middleware2");
 const exec = require("child_process").exec;
 const fs = require('fs');
-const archiver = require('archiver');
 const AdmZip = require("adm-zip");
 const jsonfile = require('jsonfile')
 
@@ -161,84 +160,80 @@ server.get("/" + backupFileName, (req, res) => {
     res.setHeader("Content-Disposition", "attachment; " + backupFileName);
     res.setHeader("Content-Type", "application/zip");
 
-    if (false) {
-        const archive = archiver('zip', { zlib: { level: 9 } });
-        archive
-            .directory("/rocketpool/data", "data", true)
-            .on('error', err => reject(err))
-            .pipe(res)
-            ;
-        archive.finalize();
-
-    } else {
-        const zip = new AdmZip();
-        zip.addLocalFolder("/rocketpool/data", "data");
-        zip.toBuffer(    
-            (buffer, err) =>  {
-              if (err)  {
+    const zip = new AdmZip();
+    zip.addLocalFolder("/rocketpool/data", "data");
+    zip.toBuffer(
+        (buffer, err) => {
+            if (err) {
                 reject(err);
-              } else {
-                  res.setHeader("Content-Length", buffer.length);
-                  res.end(buffer, "binary");
-              }
+            } else {
+                res.setHeader("Content-Length", buffer.length);
+                res.end(buffer, "binary");
             }
-        )
-    }
+        }
+    )
+
 });
 
 //restore
 //TODO: 2 separate methods for validate and restore
-server.post('/upload-test', (req, res, next) => {
-    console.log("upload test");
+server.post('/restore-backup', (req, res, next) => {
+    console.log("upload backup zip file");
     if (req.files.file) {
         const file = req.files.file;
         req.info = file.name;
         const zipfilePath = "/tmp/" + file.name;
-        fs.rename(file.path, zipfilePath, (err) => { if (err) console.log('ERROR: ' + err) });
-        console.log("received " + file.name);
+        fs.renameSync(file.path, zipfilePath, (err) => { if (err) console.log('ERROR: ' + err) });
+        console.log("received backup file " + file.name);
         try {
             validateZipFile(zipfilePath);
+
+            // delete existing data folder (if it exists)
+            fs.rmSync("/rocketpool/data", { recursive: true, force: true /* ignore if not exists */ });
+            
+            // unzip
+            const zip = new AdmZip(zipfilePath);
+            zip.extractAllTo("/rocketpool/", /*overwrite*/ true);
+
+            res.send({
+                code: 200,
+                message: "Successfully uploaded the Rocket Pool backup. Click restart to complete the restore.",
+            });
+            return next();
         } catch (e) {
+            console.dir(e);
             console.log(e);
             res.send({
                 code: 400,
                 message: e.message,
             });
-            next();
-            return;
+            return next();
         }
-
-        // delete existing data folder (if it exists)
-        fs.unlink("/rocketpool/data", (err) => { });
-        // unzip
-        const zip = new AdmZip(zipfilePath);
-        zip.extractAllTo("/rocketpool/data", /*overwrite*/ true);
     }
 
     function validateZipFile(zipfilePath) {
+        console.log("Validating " + zipfilePath);
         const zip = new AdmZip(zipfilePath);
         const zipEntries = zip.getEntries();
 
-        const containsDataFolder = zipEntries.some((entry) => entry.isDirectory && entry.entryName == "data");
-        // if (!containsDataFolder) return error...
-
+        checkFileExistsInZipFile(zipEntries, "data/password")
+        checkFileExistsInZipFile(zipEntries, "data/mnemonic")
+        checkFileExistsInZipFile(zipEntries, "data/wallet")
+        checkFileExistsInZipFile(zipEntries, "data/validators/prysm-non-hd/direct/accounts/all-accounts.keystore.json")
+        checkFileExistsInZipFile(zipEntries, "data/validators/prysm-non-hd/direct/accounts/secret")
+        checkFileExistsInZipFile(zipEntries, "data/validators/prysm-non-hd/direct/keymanageropts.json")
     }
 
-
-
-    //     and actually restore
-
-    res.send({
-        code: 'success',
-        info: req.info,
-        message: '"Restore backup" is not implemented yet, but thanks for trying (TODO)',
-    });
-    next();
+    function checkFileExistsInZipFile(zipEntries, expectedPath) {
+        const containsFile = zipEntries.some((entry) => entry.entryName == expectedPath);
+        if (!containsFile)
+            throw {message:`Invalid backup file. The zip file must contain "${expectedPath}"`}
+    }
 });
 
 
 
 server.listen(9999, function () {
     console.log("%s listening at %s", server.name, server.url);
-    console.assert(network=="prater" || network=="mainnet", 'Wrongly configured NETWORK environment variable! Use either "prater" or "mainnet"');
+    console.assert(network == "prater" || network == "mainnet", 'Wrongly configured NETWORK environment variable! Use either "prater" or "mainnet"');
 });

@@ -11,7 +11,8 @@ const AdminPage = ({ wampSession }) => {
     const [network, setNetwork] = React.useState("");
 
     React.useEffect(() => {
-        getNetwork();
+        if (wampSession)
+            getNetwork();
     }, [wampSession]) // eslint-disable-line
 
     const restartValidator = () => {
