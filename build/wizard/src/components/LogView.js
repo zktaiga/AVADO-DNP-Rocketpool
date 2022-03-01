@@ -9,7 +9,7 @@ const LogView = ({ wampSession }) => {
     React.useEffect(() => {
         getLog();
     }, [wampSession]) // eslint-disable-line
-    
+
     async function getLog() {
         if (wampSession) {
             const x = await wampSession.call("logPackage.dappmanager.dnp.dappnode.eth", [],
@@ -22,14 +22,16 @@ const LogView = ({ wampSession }) => {
             setLog(res.result);
         }
     }
-    
+
     return (
         <div>
             <h2 className="title is-3 has-text-white">Latest log entries</h2>
-            <pre className="transcript">
-                {log}
-            </pre>
-            <button onClick={getLog}>Refresh log</button>
+            <div className="container">
+                <pre className="transcript">
+                    {log}
+                </pre>
+            </div>
+            <button className="button" onClick={getLog}>Refresh log</button>
         </div>
     );
 };

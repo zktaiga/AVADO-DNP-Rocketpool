@@ -36,16 +36,16 @@ const AdminPage = ({ wampSession }) => {
             );
     }
 
-    const testEnv = async () => {
+    const toggleNetwork = async () => {
         const newNetwork = (network === "prater") ? "mainnet" : "prater";
 
         // updatePackageEnv: {
         await wampSession.call("updatePackageEnv.dappmanager.dnp.dappnode.eth", [], {
-                id: packageName,
-                envs: { NETWORK: newNetwork },
-                restart: true
-            });
-        
+            id: packageName,
+            envs: { NETWORK: newNetwork },
+            restart: true
+        });
+
     }
 
     const getNetwork = async () => {
@@ -58,6 +58,11 @@ const AdminPage = ({ wampSession }) => {
 
     return (
         <div>
+            <p>
+                <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail">Avado Rocket Pool package details</a>
+            </p>
+            <BackupDashboard wampSession={wampSession} />
+            <LogView wampSession={wampSession} />
             <h2>Debug</h2>
             <div className="field">
                 <button className="button" onClick={restartValidator} disabled={isRestartValidator}>Restart validator{isRestartValidator ? <Spinner /> : ""}</button>
@@ -65,19 +70,10 @@ const AdminPage = ({ wampSession }) => {
             <div className="field">
                 <button className="button" onClick={restartRpNode} disabled={isRestartRpNode}>Restart Rocket Pool Node{isRestartRpNode ? <Spinner /> : ""}</button>
             </div>
-            <br />
-            {network && (
-                <p><b>Network: </b>{network}</p>
-            )}
+            {network && (<p><b>Network: </b>{network}</p>)}
             <div className="field">
-                <button className="button" onClick={testEnv}>Experiment</button>
+                <button className="button" onClick={toggleNetwork}>Toggle network</button>
             </div>
-            <br />
-            <BackupDashboard wampSession={wampSession} />
-            <br />
-            <LogView wampSession={wampSession} />
-            <br />
-            <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail">Avado Rocket Pool package details</a>
         </div>
     );
 };
