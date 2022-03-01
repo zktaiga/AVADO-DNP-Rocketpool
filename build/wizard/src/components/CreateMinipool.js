@@ -4,7 +4,7 @@ import Spinner from "./Spinner";
 import ApproveRpl from "./ApproveRpl";
 import StakeRPL from "./StakeRPL";
 import DepositETH from "./DepositETH";
-
+import DownloadBackup from "./DownloadBackup";
 
 const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon }) => {
     const minNodeFee = 0.05;
@@ -30,6 +30,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                             <p>You can follow the status on the <b>Status</b> page</p>
                             <br />
                             <p>Don't forget to download a backup once your validator is active.</p>
+                            <DownloadBackup />
                         </div>
                     ) : (
                         <div>
