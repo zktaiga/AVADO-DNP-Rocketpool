@@ -60,7 +60,7 @@ const AdminPage = ({ wampSession }) => {
     return (
         <div>
             <p>
-                <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail">Avado Rocket Pool package details</a>
+                <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail" target="_blank">Avado Rocket Pool package details</a>
             </p>
             <BackupDashboard wampSession={wampSession} />
             <LogView wampSession={wampSession} />
