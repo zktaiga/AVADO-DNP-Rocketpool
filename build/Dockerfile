@@ -21,7 +21,8 @@ RUN chmod +x /usr/local/bin/rocketpool /usr/local/bin/rocketpoold
 
 COPY --from=validator /app/cmd/validator/validator /usr/local/bin/validator
 
-RUN apk add supervisor gcompat nginx nodejs npm
+RUN apk add --no-cache supervisor gcompat nginx nodejs npm
+RUN apk upgrade
 
 COPY --from=builder /usr/src/app/wizard/build /usr/local/wizard
 
