@@ -1,7 +1,7 @@
 ARG PRYSM_VERSION
 FROM  gcr.io/prysmaticlabs/prysm/validator:${PRYSM_VERSION} as validator
 
-FROM node:16.13.1 as builder
+FROM node:16.14.0 as builder
 
 # build wizard
 WORKDIR /usr/src/app/wizard

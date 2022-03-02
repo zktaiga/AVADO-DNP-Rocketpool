@@ -12,7 +12,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
 
     React.useEffect(() => {
-        if (nodeFee) {
+        if (nodeFee && nodeFee.status === "success") {
             console.assert(nodeFee.minNodeFee, minNodeFee);
             console.assert(nodeFee.maxNodeFee, maxNodeFee);
         }
@@ -20,7 +20,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
 
     return (
         <div>
-            {nodeStatus && (
+            {nodeStatus && nodeFee?.status === "success" && (
                 <>
                     <h3 className="title is-3 has-text-white">Add minipool</h3>
                     {(minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) ? (
@@ -43,7 +43,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                         <dd>As a node operator you earn half of the validator's total ETH rewards, plus an extra commission.
                                             The commission rate is based on how many minipools are in the queue and how much rETH is available in the staking pool, waiting to be staked. The lowest it can go is 5%, and the highest it can go is 20%. Once your minipool is created, its commission rate will be locked until you exit the validator and close the minipool. If you specify a commision that is higher than the current network's commision, ...<br />
                                             TODO: replace with fixed slippage setting and just inform user.<br />
-                                            <b>Current Node commision fee: (Rocket Pool network)</b>{nodeFee.nodeFee} (Minimum: {minNodeFee}, maximum: {maxNodeFee})
+                                            <b>Current Node commision fee: (Rocket Pool network)</b>{nodeFee?.nodeFee} (Minimum: {minNodeFee}, maximum: {maxNodeFee})
                                         </dd>
                                         <dt>RPL</dt>
                                         <dd>You can ... but it must be higher than {rplPriceData ? Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake)) : <Spinner />} RPL
