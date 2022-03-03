@@ -24,14 +24,14 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
             if (nodeStatus.accountBalances.rpl < rplPriceData.minPerMinipoolRplStake) {
                 setFeedback(`Not enough RPL in your wallet (${utils.displayAsETH(nodeStatus.accountBalances.rpl, 4)} RPL). Must be more than ${utils.displayAsETH(rplPriceData.minPerMinipoolRplStake, 4)} RPL before you can stake`);
             } else {
-                if (nodeStatus.rplStake === 0) {
+                if (nodeStatus.rplStake < rplPriceData.minPerMinipoolRplStake) {
                     rpdDaemon(`node can-stake-rpl ${selectedRplStake}`, (data) => {
                         //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
                         if (data.status === "error") {
                             setFeedback(data.error);
                         } else {
                             setFeedback("");
-                            setRplStakeButtonDisabled(false);
+                            setRplStakeButtonDisabled(selectedRplStake>=rplPriceData.minPerMinipoolRplStake);
                         }
                     });
                 }

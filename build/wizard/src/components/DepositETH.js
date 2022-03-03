@@ -40,7 +40,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
             }
         }
 
-        if (nodeFee && nodeFee.nodeFee && !selectedNodeFee) {
+        if (nodeFee && nodeFee?.status==="success" && !selectedNodeFee) {
             setSelectedNodeFee(nodeFee.nodeFee * 0.97); // allow 3% slippage by default
         }
 
@@ -99,7 +99,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                 </>
             )}
 
-            {nodeStatus && nodeStatus.minipoolCounts.total === 0 && (
+            {nodeStatus && nodeFee?.status==="succes" && nodeStatus.minipoolCounts.total === 0 && (
                 <>
                     <div className="field">
                         Your minimal nodeFee: <input id="sliderWithValue" className="slider has-output" step="0.01" min={nodeFee.minNodeFee} max={nodeFee.maxNodeFee} defaultValue={nodeFee.nodeFee} type="range" onChange={slider} />
