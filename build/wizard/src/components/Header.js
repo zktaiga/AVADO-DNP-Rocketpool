@@ -18,7 +18,7 @@ const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, 
         const eth = new web3(utils.wsProvider()).eth;
         const interval = setInterval(() => {
             eth.getGasPrice().then((result) => {
-                const currentPrice = parseFloat(web3.utils.fromWei(result, 'gwei')).toFixed(3);
+                const currentPrice = parseFloat(web3.utils.fromWei(result, 'gwei')).toFixed(1);
                 console.log("Gas: " + currentPrice);
                 setGasPrice(currentPrice);
             })
@@ -43,25 +43,39 @@ const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, 
                     </span>
                     <p>Rocket Pool without the command line</p>
                 </div>
+                <div className="column">
+                    {nodeSyncStatus && (
+                        <div>
+                            <p className="has-text-right">
+                                <SyncStatusTag progress={nodeSyncStatus.eth1Progress} label="ETH1" />&nbsp;
+                                <SyncStatusTag progress={nodeSyncStatus.eth2Progress} label="Beacon chain" />
+                                {minipoolStatus && minipoolStatus.minipools && (
+                                    beaconChainDashboard(minipoolStatus.minipools.filter((minipool) => "validator" in minipool).map((minipool) => minipool.validator.index))
+                                )}
+                            </p>
+                            {nodeSyncStatus.eth1Synced && (
+                                <p className="has-text-right">
+                                    {gasPrice && (
+                                        <>
+                                            <span className="icon-text">
+                                                <span className="icon">
+                                                    <FontAwesomeIcon icon={faGasPump} />
+                                                </span>
+                                                <span>{gasPrice ? gasPrice : <Spinner />} gwei</span>
+
+                                            </span>,
+                                        </>
+                                    )}
+                                    Node commision: {nodeFee?.nodeFee && utils ? utils.displayAsPercentage(nodeFee.nodeFee * 100) : <Spinner />},
+                                    RPL: {rplPriceData && utils ? utils.displayAsETH(rplPriceData.rplPrice, 5) : <Spinner />} ETH
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                </div>
             </div>
 
-            {nodeSyncStatus && (
-                <div>
-                    <p className="has-text-right">
-                        <SyncStatusTag progress={nodeSyncStatus.eth1Progress} label="Geth" />,
-                        <SyncStatusTag progress={nodeSyncStatus.eth2Progress} label="Prysm" />
-                        {minipoolStatus && minipoolStatus.minipools && (
-                            beaconChainDashboard(minipoolStatus.minipools.filter((minipool) => "validator" in minipool).map((minipool) => minipool.validator.index))
-                        )}
-
-                    </p>
-                    <p className="has-text-right">
-                        <FontAwesomeIcon className="icon" icon={faGasPump} /> {gasPrice ? gasPrice : <Spinner />} gwei,
-                        Node commision: {nodeFee?.nodeFee && utils ? utils.displayAsPercentage(nodeFee.nodeFee * 100) : <Spinner />},
-                        RPL: {rplPriceData && utils ? utils.displayAsETH(rplPriceData.rplPrice, 5) : <Spinner />} ETH
-                    </p>
-                </div>
-            )}
         </div>
     );
 };

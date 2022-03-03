@@ -126,7 +126,7 @@ const Comp = () => {
                     <div className="column">
                         {navBar === "Welcome" && (
                             <div>
-                                <Welcome />
+                                <Welcome nodeSyncStatus={nodeSyncStatus} setNavBar={setNavBar}/>
                             </div>
                         )}
 
@@ -142,6 +142,7 @@ const Comp = () => {
                                     minipoolStatus={minipoolStatus}
                                     updateMiniPoolStatus={updateMiniPoolStatus}
                                     nodeFee={nodeFee}
+                                    setNavBar={setNavBar}
                                     rpdDaemon={rpdDaemon} />
                             </div>
                         )}

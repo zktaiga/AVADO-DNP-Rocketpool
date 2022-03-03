@@ -23,7 +23,7 @@ const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }
     React.useEffect(() => {
         //rpdDaemon(`node can-set-withdrawal-address ${withdrawalAddress} yes`)
         if (web3.utils.isAddress(withdrawalAddress)) {
-            setAddressFeedback("Address looks OK");
+            setAddressFeedback("");
             setButtonDisabled(false);
         } else {
             setAddressFeedback("Invalid ETH address");
@@ -52,16 +52,18 @@ const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }
             });
         }
 
-    }, [waitingForTx,utils]);
+    }, [waitingForTx, utils]);
 
     const onClick = () => {
         confirmAlert({
-            title: 'Are you sure you want to continue?',
-            message: `Double check the withdrawal address (${withdrawalAddress}), if you make a mistake here, you loose control.
-             Note that this action consumes gas (ETH).`,
+            title: '',
+            message: `Double 
+            check that this withdrawal address (${withdrawalAddress}) 
+            is correct and this is an address you have full control over.
+            Are you sure you want to continue?`,
             buttons: [
                 {
-                    label: 'Yes',
+                    label: 'Yes I own and control this address',
                     onClick: () => rpdDaemon(`node set-withdrawal-address ${withdrawalAddress} yes`, (data) => {
                         if (data.status === "error") {
                             setAddressFeedback(data.error);
@@ -87,40 +89,57 @@ const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }
     return (
         <div>
             <h2 className="title is-3 has-text-white">Withdrawal address</h2>
-                <>
-                    <p>For security reasons you need to set a <b>withdrawal address</b> for your node.
-                        This is the address that all of your RPL checkpoint rewards, your staked RPL, and your Beacon Chain ETH
-                        will be sent to when you claim your checkpoint rewards or exit your validator and withdraw from your minipool.
-                    </p>
-                    <p>This withdrawal address must be a cold wallet that you control, such as a MetaMask address or a hardware wallet.</p>
-                    <p>This way, if your node wallet is compromised, the attacker doesn't get access to your staked ETH and RPL by forcing
-                        you to exit because all of those funds will be sent to your separate cold wallet (which they hopefully do not have).</p>
-                    <p>Withdrawal addresses are set at a node operator level. If you create multiple minipools they will all refer to the same withdrawal address. So you only need to perform this setup once.
-                    </p>
-                    <p className="WARNING">Once you have set the withdrawal address, this rocket pool node can no longer change it.
-                        To change it, you will need to send a signed transaction from your active withdrawal address. The Rocket Pool website has a function to help you do this.
-                    </p>
-                    <div>
-                        <div className="field">
-                            <label className="label">Withdrawal address</label>
-                            <p className="help">This is the address TODO (example: "0x9b18e9e9aa3dD35100b385b7035C0B1E44AfcA14"</p>
-                        </div>
-                        <div className="field has-addons">
-                            <input className="input" onChange={(e) => { setWithdrawalAddress(e.target.value) }} />
-                        </div>
-                        {withdrawalAddress && (
-                            <p className="help is-help">{addressFeedback}</p>
-                        )}
+            <>
+                <p>You need to set a <b>withdrawal address</b> for your node.
+                </p>
+                <br />
+                <div class="columns">
+                    <div className="column is-two-thirds">
+
+                        <article className="message is-warning ">
+                            <div className="message-header">
+                                <p>Warning</p>
+                            </div>
+                            <div className="message-body">
+                                <p> This is the address where all of your <b>RPL checkpoint rewards</b>, your <b>staked RPL</b>, and your <b>Beacon Chain ETH</b> will be sent to when you claim your checkpoint rewards or exit your validator and withdraw from your minipool.
+                                </p>
+                                {/* <p>This withdrawal address must be a cold wallet that you control, such as a MetaMask address or a hardware wallet.</p>
+                        <p>This way, if your node wallet is compromised, the attacker doesn't get access to your staked ETH and RPL by forcing
+                            you to exit because all of those funds will be sent to your separate cold wallet (which they hopefully do not have).</p>
+                        <p>Withdrawal addresses are set at a node operator level. If you create multiple minipools they will all refer to the same withdrawal address. So you only need to perform this setup once.
+                        </p> */}
+                                {/* <p>Once you have set the withdrawal address, this rocket pool node can no longer change it.
+                            To change it, you will need to send a signed transaction from your active withdrawal address. The Rocket Pool website has a function to help you do this.
+                        </p>  */}
+                                <p><b>Please read the info on the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">wiki</a> carefully before setting your withdrawal address!</b></p>
+                            </div>
+                        </article>
                     </div>
+                </div>
+
+
+                <div>
                     <div className="field">
-                        <button className="button" onClick={onClick} disabled={buttonDisabled}>
-                            {waitingForTx ? <Spinner /> : "Set withdrawal address"}
-                        </button>
+                        <label className="label">Withdrawal address</label>
+                        {/* <p className="help">This is the address TODO (example: "0x9b18e9e9aa3dD35100b385b7035C0B1E44AfcA14"</p> */}
                     </div>
-                    {txHash && (
-                        <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                    <div className="field has-addons">
+                        <input className="input" onChange={(e) => { setWithdrawalAddress(e.target.value) }} />
+                    </div>
+                    {withdrawalAddress && (
+                        <p className="help is-help">{addressFeedback}</p>
                     )}
-                </>
+                </div>
+                <div className="field">
+                    <br/>
+                    <button className="button" onClick={onClick} disabled={buttonDisabled}>
+                        {waitingForTx ? <Spinner /> : "Set withdrawal address"}
+                    </button>
+                </div>
+                {txHash && (
+                    <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                )}
+            </>
         </div>
     );
 };

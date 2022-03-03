@@ -5,6 +5,9 @@ const configs = {
         api: {
             HTTP: "http://rocketpool.my.ava.do:9999",
             // HTTP: "http://localhost:9999",
+        },
+        explorer:{
+            URL: "http://goerli.etherscan.io"
         }
     },
 
@@ -13,6 +16,9 @@ const configs = {
         admin: true,
         api: {
             HTTP: "http://rocketpool.my.ava.do:9999",
+        },
+        explorer:{
+            URL: "http://etherscan.io"
         }
     }
 };

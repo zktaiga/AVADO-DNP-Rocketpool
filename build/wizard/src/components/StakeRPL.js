@@ -5,6 +5,8 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import Spinner from "./Spinner";
 import config from "../config";
 import web3 from "web3";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon }) => {
 
@@ -53,8 +55,8 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
 
     const stakeRpl = () => {
         confirmAlert({
-            title: 'Are you sure you want to stake your RPL now?',
-            message: 'Staking RPL consumes gas (ETH)',
+            title: '',
+            message: 'Are you sure you want to stake your RPL now?',
             buttons: [
                 {
                     label: 'Yes',
@@ -65,7 +67,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
 
                             if (data.status === "error") {
                                 setFeedback(data.error);
-                            }                            
+                            }
                             setTxHash(data.stakeTxHash);
                             setWaitingForTx(true);
                         })
@@ -90,33 +92,43 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
                 });
             });
         }
-    }, [waitingForTx,txHash,utils]);
+    }, [waitingForTx, txHash, utils]);
 
     return (
         <div className="">
-            <h4 className="title is-4 has-text-white">Stake RPL</h4>
+            <h4 className="title is-4 has-text-white">2. Stake RPL</h4>
             {nodeStatus.rplStake > 0 && (
                 <p>
-                    {utils.displayAsETH(nodeStatus.rplStake, 4)} RPL successfully staked.
-
+                    <span className="tag is-success">{utils.displayAsETH(nodeStatus.rplStake, 3)} RPL successfully staked. <span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span>
                 </p>
             )}
             {nodeStatus.rplStake === 0 && (
-                <div className="field">
-                    <button
-                        className="button"
-                        onClick={stakeRpl}
-                        disabled={rplStakeButtonDisabled}>
-                        Stake {selectedRplStake ? utils.displayAsETH(selectedRplStake) + " " : ""}RPL{waitingForTx ? <Spinner /> : ""}
-                    </button>
-                    {feedback && (
-                        <p className="help is-danger">{feedback}</p>
-                    )}
-                </div>
+                <>
+                    <p>Stake RPL to your minipool. {rplPriceData && (<>Minimum stake is currently {Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))}</>)}</p><br />
+                    <div className="field">
+                        <button
+                            className="button"
+                            onClick={stakeRpl}
+                            disabled={rplStakeButtonDisabled}>
+                            Stake {selectedRplStake ? utils.displayAsETH(selectedRplStake) + " " : ""}RPL{waitingForTx ? <Spinner /> : ""}
+                        </button>
+                        <br />
+                        {feedback && (
+                            <>
+                                <p className="help is-danger">{feedback}</p>
+                                <br />
+                            </>
+                        )}
+                    </div>
+                </>
             )}
             {txHash && (
-                <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                <>
+                    <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                    <br />
+                </>
             )}
+            <br />
         </div>);
 }
 
