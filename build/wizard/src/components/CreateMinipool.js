@@ -46,7 +46,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                         </div>
                     ) : (
                         <div>
-                            <p>Now let's create your minipool. This involves 3 steps</p>
+                            <p>Almost done! The final part is to create your actual minipool. This involves 3 steps</p>
                             <br />
                             <div>
                                 {/* <h4 className="title is-4 has-text-white">Parameters</h4>

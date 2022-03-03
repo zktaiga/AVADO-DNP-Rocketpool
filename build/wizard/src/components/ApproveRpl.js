@@ -46,7 +46,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
 
         confirmAlert({
             title: '',
-            message: 'Are you sure you want to approve RPL from your hot wallet now ?',
+            message: 'Are you sure you want to approve all RPL in your hot wallet to use as stake in your minipool?',
             buttons: [
                 {
                     label: 'Yes',

@@ -54,8 +54,8 @@ const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
 
     const registerNode = () => {
         confirmAlert({
-            title: 'Are you sure you want to register this node?',
-            message: 'Registering a node consumes gas (ETH)',
+            title: '',
+            message: 'Are you sure you want to register this node on the Rocketpool network ?',
             buttons: [
                 {
                     label: 'Yes',
@@ -82,6 +82,8 @@ const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
             {nodeStatus && !nodeStatus.registered && (
                 <>
                     <h2 className="title is-3 has-text-white">Register Node</h2>
+                    <p>Now you need to register your node on the Rockerpool network.</p>
+                    <br/>
                     {/* {gasInfo && <p className="help is-help">Estimated gas limit {toGwei(gasInfo.estGasLimit)} gwei, Safe gas limit {toGwei(gasInfo.safeGasLimit)} gwei</p>} */}
                     <button className="button" onClick={registerNode} disabled={buttonDisabled}>Register Node{waitingForTx? <Spinner/>:""}</button>
                     {/* {waitingForTx && (

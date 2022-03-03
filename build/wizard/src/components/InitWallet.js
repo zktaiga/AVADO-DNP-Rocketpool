@@ -111,12 +111,22 @@ const InitWallet = ({ walletStatus, updateWalletStatus, updateNodeStatus, rpdDae
                     </>
                 ) : (
                     <div>
-                        <p className="help is-size-6 is-success"><b>Your Rocketpool hot-wallet address is:</b> {walletStatus.accountAddress}</p>
-                        {/* <p className="help is-success"><b>mnemonic:</b> "{walletMnemonic}"</p> */}
-
-                        {/* <p className="help is-danger"><b>You can download a backup of your mnemonic in a later step.</b></p> */}
-                        <DownloadBackup description="Download backup of your wallet" /><br />
-                        <button className="button" onClick={() => { onFinished() }}>I downloaded my wallet - continue</button>
+                        <p>Your Rocketpool hot-wallet has been created and its address is {walletStatus.accountAddress}</p>
+                        <br/>
+                        <div className="columns">
+                                <div className="column is-two-thirds">
+                                    <article className="message is-warning ">
+                                        <div className="message-header">
+                                            <p>Download backup</p>
+                                        </div>
+                                        <div className="message-body">
+                                            <p>Please download a backup of your hot wallet before continuing!</p><br/>
+                                            <DownloadBackup description="Download backup of my wallet" /><br /><br/>
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                        <button className="button" onClick={() => { onFinished() }}>I downloaded a backup of my wallet - continue to next step</button>
                     </div>
                 )}
             </div>

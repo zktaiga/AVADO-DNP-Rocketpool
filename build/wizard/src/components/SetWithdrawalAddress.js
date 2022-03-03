@@ -93,7 +93,7 @@ const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }
                 <p>You need to set a <b>withdrawal address</b> for your node.
                 </p>
                 <br />
-                <div class="columns">
+                <div className="columns">
                     <div className="column is-two-thirds">
 
                         <article className="message is-warning ">
@@ -101,7 +101,7 @@ const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }
                                 <p>Warning</p>
                             </div>
                             <div className="message-body">
-                                <p> This is the address where all of your <b>RPL checkpoint rewards</b>, your <b>staked RPL</b>, and your <b>Beacon Chain ETH</b> will be sent to when you claim your checkpoint rewards or exit your validator and withdraw from your minipool.
+                                <p> This should be an address you control (ex a MetaMask address). All of your <b>RPL checkpoint rewards</b>, your <b>staked RPL</b>, and your <b>Beacon Chain ETH</b> will be sent there when you claim your checkpoint rewards or exit your validator.
                                 </p>
                                 {/* <p>This withdrawal address must be a cold wallet that you control, such as a MetaMask address or a hardware wallet.</p>
                         <p>This way, if your node wallet is compromised, the attacker doesn't get access to your staked ETH and RPL by forcing

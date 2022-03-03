@@ -43,6 +43,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                 && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
                 && !nodeStatus.registered
                 && nodeStatus.accountBalances.eth > 0
+                && nodeStatus.accountBalances.rpl > rplPriceData.minPerMinipoolRplStake 
             ) {
                 setViewState(registerNode);
                 return;
@@ -122,7 +123,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
             </div>
             {/* {viewState.id} */}
             {(viewState.id === initWallet.id) && (<InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} onFinished={()=>{setViewState(fundNode)}}/>)}
-            {(viewState.id === fundNode.id) && (<FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+            {(viewState.id === fundNode.id) && (<FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus}  rplPriceData={rplPriceData} />)}
             {(viewState.id === registerNode.id) && (<RegisterNode utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
             {(viewState.id === withdrawalAddress.id) && (<SetWithdrawalAddress utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
             {(viewState.id === createMinipool.id) && (<CreateMinipool

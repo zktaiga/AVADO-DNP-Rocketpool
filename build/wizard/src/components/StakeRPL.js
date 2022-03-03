@@ -22,32 +22,39 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
         if (waitingForTx)
             return;
 
+        const rplBalance = new BN(nodeStatus.accountBalances.rpl.toString());
+        const rplMin = new BN(rplPriceData.minPerMinipoolRplStake.toString());
+
+        console.log("STAKE RPL BAL", nodeStatus.accountBalances.rpl.toString())
+        console.log("STAKE RPL MIN", rplPriceData.minPerMinipoolRplStake.toString())
+
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
-            if (nodeStatus.accountBalances.rpl < rplPriceData.minPerMinipoolRplStake) {
+            if (rplBalance.lt(rplMin)) {
                 setFeedback(`Not enough RPL in your wallet (${utils.displayAsETH(nodeStatus.accountBalances.rpl, 4)} RPL). Must be more than ${utils.displayAsETH(rplPriceData.minPerMinipoolRplStake, 4)} RPL before you can stake`);
             } else {
                 if (nodeStatus.rplStake < rplPriceData.minPerMinipoolRplStake) {
-                    rpdDaemon(`node can-stake-rpl ${selectedRplStake}`, (data) => {
+                    rpdDaemon(`node can-stake-rpl ${selectedRplStake.toString()}`, (data) => {
                         //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
                         if (data.status === "error") {
                             setFeedback(data.error);
                         } else {
                             setFeedback("");
-                            setRplStakeButtonDisabled(selectedRplStake>=rplPriceData.minPerMinipoolRplStake);
+                            setRplStakeButtonDisabled(selectedRplStake.ge(rplMin));
                         }
                     });
                 }
             }
         }
-        if (nodeStatus && nodeStatus.accountBalances && nodeStatus.accountBalances.rpl > 0 && rplPriceData) {
+        if (nodeStatus && nodeStatus.accountBalances && rplBalance.gt(new BN("0")) && rplPriceData) {
             // console.dir(nodeStatus.accountBalances.rpl)
             // console.dir(rplPriceData.maxPerMinipoolRplStake)
 
             // Use the deposited RPL amount (within limits)
-            const selectedRplStake = BN.min(new BN(nodeStatus.accountBalances.rpl.toString()), new BN(rplPriceData.maxPerMinipoolRplStake.toString()));
-            console.dir(selectedRplStake);
+            // // const selectedRplStake = BN.min(new BN(nodeStatus.accountBalances.rpl.toString()), new BN(rplPriceData.maxPerMinipoolRplStake.toString()));
+            // const selectedRplStake = new BN(nodeStatus.accountBalances.rpl.toString()), new BN(rplPriceData.maxPerMinipoolRplStake.toString()));
+            // console.dir(selectedRplStake);
             // const selectedRplStake = nodeStatus.accountBalances.rpl;
-            setSelectedRplStake(selectedRplStake.toString());
+            setSelectedRplStake(rplBalance);
         }
 
 
@@ -104,7 +111,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
             )}
             {nodeStatus.rplStake === 0 && (
                 <>
-                    <p>Stake RPL to your minipool. {rplPriceData && (<>Minimum stake is currently {Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))}</>)}</p><br />
+                    <p>Stake all RPL in my hot wallet. {rplPriceData && (<>Minimum stake is currently {Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))}</>)}</p><br />
                     <div className="field">
                         <button
                             className="button"
