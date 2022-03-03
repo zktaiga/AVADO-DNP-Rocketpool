@@ -1,14 +1,8 @@
 # AVADO RocketPool
 
-TODO: introduction
+## Installation & Documentation
 
-## Installation
-
-TODO
-
-## Documentation
-
-TODO: add link to page on wiki
+https://wiki.ava.do/en/tutorials/rocketpool
 
 ## Development
 
@@ -37,6 +31,8 @@ git commit -m"new release"
 git push
 npx release-it
 ```
+
+## Prater testnet
 
 
 Add Goerli RPL to metamask: contract 0x5e932688e81a182e3de211db6544f98b8e4f89c7

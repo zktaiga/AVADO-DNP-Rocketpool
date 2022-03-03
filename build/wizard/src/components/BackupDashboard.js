@@ -22,13 +22,12 @@ const BackupDashboard = ({ wampSession }) => {
 
                                 {tab === "backup" && (
                                     <section className="is-medium has-text-white">
-                                        <p className="">TODO: add info about downloading backup (security advisory too (contains password)).</p>
                                         <DownloadBackup />
                                     </section>
                                 )}
                                 {tab === "restore" && (
                                     <section className="is-medium has-text-white">
-                                        <p className="">Here you can upload your node identity keys. If you want to restore your node ID from a previous installation.</p>
+                                        <p className="">Restore a backup. This overwrites the current settings, so make sure you upload the correct file.</p>
                                         <RestoreBackup session={wampSession} />
                                     </section>
                                 )}

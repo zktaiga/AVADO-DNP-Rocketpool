@@ -22,10 +22,6 @@ const Comp = ({ session }) => {
         }
     }
 
-    //TODO: 2 steps:
-    // 1 upload and validate
-    // 2 ask confirmation (or report problems)
-    // 3 upload and restore
     async function restoreBackup(file) {
         const data = new FormData();
         data.append('file', file);
