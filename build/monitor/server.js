@@ -176,7 +176,6 @@ server.get("/" + backupFileName, (req, res) => {
 });
 
 //restore
-//TODO: 2 separate methods for validate and restore
 server.post('/restore-backup', (req, res, next) => {
     console.log("upload backup zip file");
     if (req.files.file) {

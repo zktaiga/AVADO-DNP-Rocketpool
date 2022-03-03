@@ -40,6 +40,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
                         } else {
                             setFeedback("");
                             setRplStakeButtonDisabled(selectedRplStake.ge(rplMin));
+
                         }
                     });
                 }

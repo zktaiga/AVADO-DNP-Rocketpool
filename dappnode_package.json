@@ -1,10 +1,9 @@
 {
   "name": "rocketpool.avado.dnp.dappnode.eth",
   "version": "0.0.59",
-  "upstream": "v1.1.2",
+  "upstream": "v1.2.4",
   "title": "Rocket Pool",
-  "description": "Rocket Pool TODO",
-  "mainService": "Rocket Pool TODO",
+  "description": "Rocket Pool is decentralised Ethereum staking protocol",
   "avatar": "/ipfs/QmWGXmd7dvGAjKZDcarCGdwPgBGtZvV2aKtCw1zpYaCRng",
   "type": "service",
   "autoupdate": true,
@@ -22,6 +21,7 @@
   "dependencies": {},
   "links": {
     "OnboardingWizard": "http://rocketpool.my.ava.do",
+    "Wiki": "https://wiki.ava.do/en/tutorials/rocketpool",
     "HomePage": "https://rocketpool.net/"
   }
 }
