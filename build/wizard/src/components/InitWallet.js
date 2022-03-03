@@ -1,9 +1,9 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import DownloadBackup from "./DownloadBackup";
 
-
-const InitWallet = ({ walletStatus, updateWalletStatus, updateNodeStatus, rpdDaemon }) => {
+const InitWallet = ({ walletStatus, updateWalletStatus, updateNodeStatus, rpdDaemon, onFinished }) => {
     const [password, setPassword] = React.useState("");
     const [verifyPassword, setVerifyPassword] = React.useState();
     const [passwordFeedback, setPasswordFeedback] = React.useState("");
@@ -67,9 +67,16 @@ const InitWallet = ({ walletStatus, updateWalletStatus, updateNodeStatus, rpdDae
 
     return (
         <div>
-            {initialWalletStatus && !initialWalletStatus.walletInitialized &&
+            {/* {initialWalletStatus && !initialWalletStatus.walletInitialized && */}
                 <div>
                     <h2 className="title is-3 has-text-white">Init wallet</h2>
+
+                    {(!walletStatus.accountAddress || walletStatus.accountAddress === "0x0000000000000000000000000000000000000000") ? (
+<>
+                    <div className="content">
+                        <p>We will create a hot wallet that you will use for your minipool.</p>
+                    </div>
+
                     <div className="field">
                         <label className="label">Rocket pool node password</label>
                         <p className="help">This is the password that will encrypt your Rocket Pool (hot) wallet - minimum length  =  12 characters</p>
@@ -101,17 +108,19 @@ const InitWallet = ({ walletStatus, updateWalletStatus, updateNodeStatus, rpdDae
                     <div className="field">
                         <button className="button" onClick={initWallet} disabled={buttonDisabled}>Init Wallet</button>
                     </div>
-
-                    {walletAddress && walletMnemonic && (
+                    </>
+                    : (
                         <div>
-                            <p className="help is-success"><b>address:</b> {walletAddress}</p>
-                            <p className="help is-success"><b>mnemonic:</b> "{walletMnemonic}"</p>
+                            <p className="help is-size-6 is-success"><b>Your Rocketpool hot-wallet address is:</b> {walletStatus.accountAddress}</p>
+                            {/* <p className="help is-success"><b>mnemonic:</b> "{walletMnemonic}"</p> */}
 
-                            <p className="help is-danger"><b>You can download a backup of your mnemonic in a later step.</b></p>
+                            {/* <p className="help is-danger"><b>You can download a backup of your mnemonic in a later step.</b></p> */}
+                            <DownloadBackup description="Download backup of your wallet" /><br/>
+                            <button className="button" onClick={() => { onFinished() }}>I downloaded my wallet - continue</button>
                         </div>
                     )}
                 </div>
-            }
+            {/* } */}
         </div>
     );
 };

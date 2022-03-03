@@ -6,7 +6,7 @@ import StakeRPL from "./StakeRPL";
 import DepositETH from "./DepositETH";
 import DownloadBackup from "./DownloadBackup";
 
-const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon }) => {
+const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon, setNavBar }) => {
     const minNodeFee = 0.05;
     const maxNodeFee = 0.2;
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
@@ -26,17 +26,30 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                     {(minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) ? (
                         <div className="content">
                             <p>Congratulations the minipool on your node has been created. Now, you have to wait for the other half to be deposited (after a 12 hour safety period).</p>
-                            <p>Depositing this second half will require gas, so leave some ETH in your wallet for now.</p>
-                            <p>You can follow the status on the <b>Status</b> page</p>
+                            <p>Depositing this second half will require gas, so leave some ETH in your wallet to pay for the gas.</p>
                             <br />
-                            <p>Don't forget to download a backup once your validator is active.</p>
-                            <DownloadBackup />
+                            <div class="columns">
+                                <div class="column is-two-thirds">
+                                    <article className="message is-warning ">
+                                        <div className="message-header">
+                                            <p>Download backup</p>
+                                        </div>
+                                        <div className="message-body">
+                                            <p>Please download a backup of your whole minipool configuration now!</p>
+                                            <DownloadBackup />
+                                        </div>
+                                    </article>
+                                </div>
+                            </div>
+                            <br />
+                            <p>After downloading your backup, you can follow the status on the <a onClick={() => { setNavBar("Status") }}>Status</a> page</p>
                         </div>
                     ) : (
                         <div>
-                            <p>TODO: extra info about procedure</p>
+                            <p>Now let's create your minipool. This involves 3 steps</p>
+                            <br />
                             <div>
-                                <h4 className="title is-4 has-text-white">Parameters</h4>
+                                {/* <h4 className="title is-4 has-text-white">Parameters</h4>
                                 <div className="content">
                                     <dl>
                                         <dt>Node commision fee</dt>
@@ -49,7 +62,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                         <dd>You can ... but it must be higher than {rplPriceData ? Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake)) : <Spinner />} RPL
                                         </dd>
                                     </dl>
-                                </div>
+                                </div> */}
 
 
                                 <ApproveRpl utils={utils} rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />

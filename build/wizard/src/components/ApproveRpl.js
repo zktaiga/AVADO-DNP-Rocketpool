@@ -45,8 +45,8 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
         maxApproval = maxApproval.sub(new BN(1))
 
         confirmAlert({
-            title: 'Are you sure you want to approve RPL for your wallet now?',
-            message: 'Aprroving RPL consumes gas (ETH)',
+            title: '',
+            message: 'Are you sure you want to approve RPL from your hot wallet now ?',
             buttons: [
                 {
                     label: 'Yes',
@@ -78,22 +78,23 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
                 });
             });
         }
-    }, [waitingForTx,txHash,utils]);
+    }, [waitingForTx, txHash, utils]);
 
     return (
         <div className="">
-            <h4 className="title is-4 has-text-white">Approve RPL</h4>
+            <h4 className="title is-4 has-text-white">1. Approve RPL</h4>
             {!rplAllowanceOK && (
                 <>
-                    <p>Before staking RPL, you must first give the staking contract approval to interact with your RPL.
-                        This only needs to be done once for your node.</p>
+                    <p>Approve the staking contract to use the RPL in your hot-wallet.</p>
+                    <br />
                     <div className="field">
                         <button className="button"
                             onClick={approveRpl}
                             disabled={rplApproveButtonDisabled}>
-                            Approve RPL{waitingForTx ? <Spinner /> : ""}
+                            Approve {waitingForTx ? <Spinner /> : ""}
                         </button>
                     </div>
+                    <br />
                 </>
             )}
             {feedback && (
@@ -105,6 +106,8 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
             {txHash && (
                 <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
             )}
+            <br />
+            <br/>
         </div>);
 }
 

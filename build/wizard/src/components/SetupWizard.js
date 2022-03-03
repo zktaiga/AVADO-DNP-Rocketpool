@@ -7,7 +7,7 @@ import RegisterNode from "./RegisterNode";
 import SetWithdrawalAddress from "./SetWithdrawalAddress";
 import CreateMinipool from "./CreateMinipool";
 
-const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon }) => {
+const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon, setNavBar }) => {
     const initWallet = { id: Symbol("Init wallet").toString(), name: "Init wallet" };
     const fundNode = { id: Symbol("Fund Node").toString(), name: "Fund Node" };
     const registerNode = { id: Symbol("Register node").toString(), name: "Register node" };
@@ -30,15 +30,15 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                 setViewState(initWallet);
                 return;
             }
-            if (nodeStatus.status === "success"
-                && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
-                && !nodeStatus.registered
-                && !nodeStatus.accountBalances.eth
-                //TODO : && displayAsETH(nodeStatus.accountBalances.rpl) < ???
-            ) {
-                setViewState(fundNode);
-                return;
-            }
+            // if (nodeStatus.status === "success"
+            //     && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
+            //     && !nodeStatus.registered
+            //     && !nodeStatus.accountBalances.eth
+            //     //TODO : && displayAsETH(nodeStatus.accountBalances.rpl) < ???
+            // ) {
+            //     setViewState(fundNode);
+            //     return;
+            // }
             if (nodeStatus.status === "success"
                 && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
                 && !nodeStatus.registered
@@ -92,7 +92,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                     <ul className="steps has-content-centered">
                         {setupStates.map((element) =>
                             <li className={"steps-segment" + (isActive(element) ? " is-active" : "")} key={element.name}>
-                                <span className={"steps-marker" + (isHollow(element) ? " is-hollow" : "")}></span>
+                                <span className={"steps-marker" + (isHollow(element) ? "" : "")}></span>
                                 <div className="steps-content">
                                     <p className="is-size-4 has-text-white">{element.name}</p>
                                     <div className="extra-data has-text-white">{stateComment(element)}</div>
@@ -104,6 +104,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                 {nodeStatus && (
                     <div className="column is-narrow">
                         <div className="box">
+                            <div className="is-size-5">Hot wallet</div>
                             <div className="columns">
                                 <div className="column">
                                     <FontAwesomeIcon className="icon" icon={faWallet} title="Wallet (click icon to copy address)" onClick={() => navigator.clipboard.writeText(nodeStatus.accountAddress)}/>
@@ -113,17 +114,18 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                                 </div>
                             </div>
                             {/* <p><a onClick={() => navigator.clipboard.writeText(nodeStatus.accountAddress)}><FontAwesomeIcon className="icon" icon={faClipboard} title="Copy address to clipboard" /> copy address</a></p> */}
-                            <p>{utils.displayAsETH(nodeStatus.accountBalances.eth, 5)} ETH</p>
-                            <p>{utils.displayAsETH(nodeStatus.accountBalances.rpl, 5)} RPL</p>
+                            <p>{utils.displayAsETH(nodeStatus.accountBalances.eth, 3)} ETH</p>
+                            <p>{utils.displayAsETH(nodeStatus.accountBalances.rpl, 3)} RPL</p>
                         </div>
                     </div>
                 )}
             </div>
-            <InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-            <FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-            <RegisterNode utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-            <SetWithdrawalAddress utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
-            <CreateMinipool
+            {/* {viewState.id} */}
+            {(viewState.id === initWallet.id) && (<InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} onFinished={()=>{setViewState(fundNode)}}/>)}
+            {(viewState.id === fundNode.id) && (<FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+            {(viewState.id === registerNode.id) && (<RegisterNode utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+            {(viewState.id === withdrawalAddress.id) && (<SetWithdrawalAddress utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+            {(viewState.id === createMinipool.id) && (<CreateMinipool
                 utils={utils}
                 nodeStatus={nodeStatus}
                 rplPriceData={rplPriceData}
@@ -132,7 +134,8 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                 minipoolStatus={minipoolStatus}
                 nodeFee={nodeFee}
                 rpdDaemon={rpdDaemon}
-            />
+                setNavBar={setNavBar}
+            />)}
         </div>
     );
 };
