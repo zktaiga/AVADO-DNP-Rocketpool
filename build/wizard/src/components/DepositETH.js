@@ -42,11 +42,9 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
             }
         }
 
-
-        if (nodeFee && nodeFee.nodeFee && !selectedNodeFee) {
+        if (nodeFee && nodeFee?.status==="success" && !selectedNodeFee) {
             setSelectedNodeFee(getNodeFeeWithSlippage(nodeFee.nodeFee)); // allow 3% slippage by default
         }
-
 
     }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, waitingForTx]);
 
@@ -104,7 +102,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                 </>
             )}
 
-            {nodeStatus && nodeStatus.minipoolCounts.total === 0 && (
+            {nodeStatus && nodeFee?.status==="succes" && nodeStatus.minipoolCounts.total === 0 && (
                 <>
                     <p>The estimated commission you will receive from other deposits is +/- {utils.displayAsPercentage(selectedNodeFee * 100)}.<br />For more info on this check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a></p>
                     <br />
