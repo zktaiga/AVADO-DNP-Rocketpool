@@ -9,7 +9,7 @@ class Utils {
     beaconChainBaseUrl = ({
         "prater": "https://prater.beaconcha.in/",
         "mainnet": "https://beaconcha.in/",
-    })[this.network] || "https://prater.beaconcha.in/"
+    })[this.network] || "https://beaconcha.in/"
 
     etherscanBaseUrl = ({
         "prater": "https://goerli.etherscan.io",
@@ -48,7 +48,7 @@ class Utils {
         return ({
             "prater": 'ws://goerli-geth.my.ava.do:8546',
             "mainnet": 'ws://ethchain-geth.my.ava.do:8546',
-        })[this.network] || 'ws://goerli-geth.my.ava.do:8546' // use prater as default (TODO change to mainnet for release)
+        })[this.network] || 'ws://ethchain-geth.my.ava.do:8546'
     }
 }
 

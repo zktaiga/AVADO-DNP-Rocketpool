@@ -12,7 +12,7 @@
       "rocketpool:/rocketpool"
     ],
     "environment": [
-      "NETWORK=prater"
+      "NETWORK=mainnet"
     ],
     "restart": "always"
   },

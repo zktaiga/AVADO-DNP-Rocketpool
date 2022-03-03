@@ -10,7 +10,7 @@ services:
     volumes:
       - 'rocketpool:/rocketpool'
     environment:
-      - NETWORK=prater
+      - NETWORK=mainnet
       - EXTRA_OPTS=
 volumes:
   rocketpool: {}
