@@ -1,7 +1,7 @@
 import React from "react";
 import Spinner from "./Spinner";
 
-const Welcome = ({ nodeSyncStatus, setNavBar }) => {
+const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
 
     const StatusButton = () => {
         if (!nodeSyncStatus) {
@@ -65,9 +65,10 @@ const Welcome = ({ nodeSyncStatus, setNavBar }) => {
                     <li>A fully synced Ethereum node. Install the <b>Ethereum Node (Geth)</b> from the <a target="_blank" href="http://my.ava.do/#/installer">DappStore</a></li>
                     <li>A fully synced Beacon chain. Install the <b>Prysm ETH2.0 Beacon Chain</b> from the <a target="_blank" href="http://my.ava.do/#/installer">DappStore</a></li>
                     <li>An Ethereum wallet with 16 ETH + some gas to deposit it in your minipool</li>
-                    <li>An Ethereum wallet with the neccesary amount of RPL to stake.</li>
+                    <li>An Ethereum wallet with the neccesary amount of RPL to stake. {rplPriceData && (<>Minimum stake is currently {Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))} RPL</>)}</li>
+                    <li>An Ethereum wallet to receive your staking rewards into. This can be an empty wallet, or a cold storage wallet - as you prefer.</li>
                 </ol>
-                <p>Check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a> to learn what it takes to run a Rocket Pool node.</p>
+                <p>Check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a> to learn what it takes to run a Rocket Pool node - and info on how to obtain RPL.</p>
 
                 {/* <p>After you checked the risks and responsabilities, and have secured the necessary prerequisites, click <b>Setup</b> in the menu bar to configure your node.</p> */}
 

@@ -49,22 +49,6 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                             <p>Almost done! The final part is to create your actual minipool. This involves 3 steps</p>
                             <br />
                             <div>
-                                {/* <h4 className="title is-4 has-text-white">Parameters</h4>
-                                <div className="content">
-                                    <dl>
-                                        <dt>Node commision fee</dt>
-                                        <dd>As a node operator you earn half of the validator's total ETH rewards, plus an extra commission.
-                                            The commission rate is based on how many minipools are in the queue and how much rETH is available in the staking pool, waiting to be staked. The lowest it can go is 5%, and the highest it can go is 20%. Once your minipool is created, its commission rate will be locked until you exit the validator and close the minipool. If you specify a commision that is higher than the current network's commision, ...<br />
-                                            TODO: replace with fixed slippage setting and just inform user.<br />
-                                            <b>Current Node commision fee: (Rocket Pool network)</b>{nodeFee?.nodeFee} (Minimum: {minNodeFee}, maximum: {maxNodeFee})
-                                        </dd>
-                                        <dt>RPL</dt>
-                                        <dd>You can ... but it must be higher than {rplPriceData ? Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake)) : <Spinner />} RPL
-                                        </dd>
-                                    </dl>
-                                </div> */}
-
-
                                 <ApproveRpl utils={utils} rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />
                                 <StakeRPL
                                     utils={utils}
@@ -74,7 +58,6 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                     updateNodeStatus={updateNodeStatus}
                                     rpdDaemon={rpdDaemon}
                                 />
-
                                 <DepositETH
                                     utils={utils}
                                     nodeStatus={nodeStatus}
@@ -84,6 +67,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                     nodeStatus={nodeStatus}
                                     updateNodeStatus={updateNodeStatus}
                                     rpdDaemon={rpdDaemon}
+                                    setNavBar={setNavBar}
                                 />
                             </div>
                         </div>

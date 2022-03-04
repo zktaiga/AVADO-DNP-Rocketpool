@@ -14,7 +14,9 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
     const [feedback, setFeedback] = React.useState("");
     const [txHash, setTxHash] = React.useState();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
-    const [selectedRplStake, setSelectedRplStake] = React.useState();
+
+    const rplBalance = new BN(nodeStatus.accountBalances.rpl.toString());
+    const rplMin = new BN(rplPriceData.minPerMinipoolRplStake.toString());
 
     React.useEffect(() => {
         setRplStakeButtonDisabled(true); //set default
@@ -22,43 +24,25 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
         if (waitingForTx)
             return;
 
-        const rplBalance = new BN(nodeStatus.accountBalances.rpl.toString());
-        const rplMin = new BN(rplPriceData.minPerMinipoolRplStake.toString());
-
-        console.log("STAKE RPL BAL", nodeStatus.accountBalances.rpl.toString())
-        console.log("STAKE RPL MIN", rplPriceData.minPerMinipoolRplStake.toString())
-
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
             if (rplBalance.lt(rplMin)) {
                 setFeedback(`Not enough RPL in your wallet (${utils.displayAsETH(nodeStatus.accountBalances.rpl, 4)} RPL). Must be more than ${utils.displayAsETH(rplPriceData.minPerMinipoolRplStake, 4)} RPL before you can stake`);
             } else {
                 if (nodeStatus.rplStake < rplPriceData.minPerMinipoolRplStake) {
-                    rpdDaemon(`node can-stake-rpl ${selectedRplStake.toString()}`, (data) => {
+                    console.log(`node can-stake-rpl ${rplBalance.toString()}`); 
+                    rpdDaemon(`node can-stake-rpl ${rplBalance.toString()}`, (data) => {
                         //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
                         if (data.status === "error") {
                             setFeedback(data.error);
                         } else {
-                            setFeedback("");
-                            setRplStakeButtonDisabled(selectedRplStake.ge(rplMin));
+                            // rpd says that I can stake - if I have enough in my wallet, enable button
+                            setRplStakeButtonDisabled(!rplBalance.gte(rplMin));
 
                         }
                     });
                 }
             }
         }
-        if (nodeStatus && nodeStatus.accountBalances && rplBalance.gt(new BN("0")) && rplPriceData) {
-            // console.dir(nodeStatus.accountBalances.rpl)
-            // console.dir(rplPriceData.maxPerMinipoolRplStake)
-
-            // Use the deposited RPL amount (within limits)
-            // // const selectedRplStake = BN.min(new BN(nodeStatus.accountBalances.rpl.toString()), new BN(rplPriceData.maxPerMinipoolRplStake.toString()));
-            // const selectedRplStake = new BN(nodeStatus.accountBalances.rpl.toString()), new BN(rplPriceData.maxPerMinipoolRplStake.toString()));
-            // console.dir(selectedRplStake);
-            // const selectedRplStake = nodeStatus.accountBalances.rpl;
-            setSelectedRplStake(rplBalance);
-        }
-
-
     }, [nodeStatus, rplPriceData, rplAllowanceOK, waitingForTx]);
 
     const stakeRpl = () => {
@@ -70,9 +54,8 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
                     label: 'Yes',
                     onClick: () => {
                         setRplStakeButtonDisabled(true);
-                        rpdDaemon(`node stake-rpl ${selectedRplStake}`, (data) => {
+                        rpdDaemon(`node stake-rpl ${rplBalance}`, (data) => {
                             //{"status":"success","error":"","stakeTxHash":"0x41a93be5b4fb06e819975acc0cdb91c1084e4c1943d625a3a5f96d823842d0e8"}
-
                             if (data.status === "error") {
                                 setFeedback(data.error);
                             }
@@ -107,7 +90,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
             <h4 className="title is-4 has-text-white">2. Stake RPL</h4>
             {nodeStatus.rplStake > 0 && (
                 <p>
-                    <span className="tag is-success">{utils.displayAsETH(nodeStatus.rplStake, 3)} RPL successfully staked. <span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span>
+                    <span className="tag is-success">{utils.displayAsETH(nodeStatus.rplStake, 2)} RPL successfully staked. <span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span>
                 </p>
             )}
             {nodeStatus.rplStake === 0 && (
@@ -118,7 +101,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
                             className="button"
                             onClick={stakeRpl}
                             disabled={rplStakeButtonDisabled}>
-                            Stake {selectedRplStake ? utils.displayAsETH(selectedRplStake) + " " : ""}RPL{waitingForTx ? <Spinner /> : ""}
+                            Stake {rplBalance ? utils.displayAsETH(rplBalance) + " " : ""}RPL{waitingForTx ? <Spinner /> : ""}
                         </button>
                         <br />
                         {feedback && (

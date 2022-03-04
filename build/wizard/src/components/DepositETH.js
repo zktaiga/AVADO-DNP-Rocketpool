@@ -1,12 +1,13 @@
 import React from "react";
-import BN from "bn.js"
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Spinner from "./Spinner";
-import config from "../config";
 import web3 from "web3";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import DownloadBackup from "./DownloadBackup";
 
-const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon }) => {
+const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon, setNavBar }) => {
 
 
     const [ethButtonDisabled, setEthButtonDisabled] = React.useState(true);
@@ -42,7 +43,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
             }
         }
 
-        if (nodeFee && nodeFee?.status==="success" && !selectedNodeFee) {
+        if (nodeFee && nodeFee?.status === "success" && !selectedNodeFee) {
             setSelectedNodeFee(getNodeFeeWithSlippage(nodeFee.nodeFee)); // allow 3% slippage by default
         }
 
@@ -89,29 +90,30 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
         });
     }
 
-    const slider = (e) => {
-        setSelectedNodeFee(e.target.value);
+    // const slider = (e) => {
+    //     setSelectedNodeFee(e.target.value);
+    // }
+
+    if (!nodeStatus || !nodeFee) {
+        return null;
     }
 
     return (
         <div className="">
-            <h4 className="title is-4 has-text-white">3. Deposit 16 ETH</h4>
-            {nodeStatus && nodeStatus.minipoolCounts.total > 0 && (
+            <h4 className="title is-4 has-text-white">3. Deposit 16 ETH and create MiniPool</h4>
+            {nodeStatus.minipoolCounts.total > 0 && (
                 <>
-                    <span className="tag is-success">16 ETH successfully deposited.</span>
+                    <span className="tag is-success">16 ETH successfully deposited. <span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span>
+                    <br />
                 </>
             )}
 
-            {nodeStatus && nodeFee?.status==="succes" && nodeStatus.minipoolCounts.total === 0 && (
+            {nodeFee.status === "success" && nodeStatus.minipoolCounts.total === 0 && (
                 <>
-                    <p>The estimated commission you will receive from other deposits is +/- {utils.displayAsPercentage(selectedNodeFee * 100)}.<br />For more info on this check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a></p>
+                    <p>The commission you will receive from other deposits is +/- {utils.displayAsPercentage(selectedNodeFee * 100)}.<br />For more info on this check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a></p>
                     <br />
-                    {/* <div className="field">
-                        Your minimum nodeFee: <input id="sliderWithValue" className="slider has-output" step="0.01" min={nodeFee.minNodeFee} max={nodeFee.maxNodeFee} value={selectedNodeFee} defaultValue={nodeFee.nodeFee} type="range" onChange={slider} />
-                        {utils.displayAsPercentage(selectedNodeFee * 100)} <a onClick={()=>{setSelectedNodeFee(getNodeFeeWithSlippage(nodeFee.nodeFee))}}>reset to default</a>
-                    </div> */}
                     <div className="field">
-                        <button className="button" onClick={depositEth} disabled={ethButtonDisabled}>Deposit 16 ETH and create minipool{waitingForTx ? <Spinner /> : ""}</button>
+                        <button className="button" onClick={depositEth} disabled={ethButtonDisabled}>Deposit 16 ETH and create minipool {waitingForTx ? <Spinner /> : ""}</button>
                     </div>
                     {feedback && (
                         <p className="help is-danger">{feedback}</p>
@@ -121,7 +123,26 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
             )}
             {txHash && (
                 <>
+                    <p>Your MiniPool has been successfully created! Click the button below to go to the status page.</p>
                     <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
+                    <br />
+                    <div class="columns">
+                        <div class="column is-two-thirds">
+                            <article className="message is-warning ">
+                                <div className="message-header">
+                                    <p>Download backup</p>
+                                </div>
+                                <div className="message-body">
+                                    <p>Please download a backup of your whole minipool configuration now!</p>
+                                    <DownloadBackup />
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                    <br />
+                    <p>
+                        <button className="button" onClick={() => { setNavBar("Status") }} >Go to the status page</button>
+                    </p>
                     <br />
                 </>
             )}
