@@ -4,17 +4,16 @@ import web3 from "web3";
 class Utils {
     constructor(network) {
         this.network = network;
+        this.beaconChainBaseUrl = ({
+            "prater": "https://prater.beaconcha.in",
+            "mainnet": "https://beaconcha.in",
+        })[this.network];
+    
+        this.etherscanBaseUrl = ({
+            "prater": "https://goerli.etherscan.io",
+            "mainnet": "https://etherscan.io",
+        })[this.network];
     }
-
-    beaconChainBaseUrl = ({
-        "prater": "https://prater.beaconcha.in/",
-        "mainnet": "https://beaconcha.in/",
-    })[this.network] || "https://beaconcha.in/"
-
-    etherscanBaseUrl = ({
-        "prater": "https://goerli.etherscan.io",
-        "mainnet": "https://etherscan.io",
-    })[this.network] || "https://goerli.etherscan.io"
 
     beaconchainUrl(validatorPubkey, text) {
         return <a target="_blank" href={this.beaconChainBaseUrl + "/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;

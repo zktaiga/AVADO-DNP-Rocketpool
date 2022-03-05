@@ -20,7 +20,7 @@ const NodeStatus = ({ utils, nodeStatus, updateNodeStatus, nodeSyncStatus}) => {
                                 <td><b>Beacon chain node</b></td>
                                 <td><SyncStatusTag progress={nodeSyncStatus.eth2Progress} /></td>
                             </tr>
-                            <tr><td><b>Account address</b></td><td>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</td></tr>
+                            <tr><td><b>Hot wallet address</b></td><td>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</td></tr>
                             <tr><td><b>Withdrawal address</b></td><td>{utils.etherscanAddressUrl(nodeStatus.withdrawalAddress)}</td></tr>
                         </tbody>
                     </table>

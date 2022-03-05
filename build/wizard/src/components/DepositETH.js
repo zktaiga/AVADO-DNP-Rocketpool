@@ -15,7 +15,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     const [txHash, setTxHash] = React.useState();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
     const [selectedNodeFee, setSelectedNodeFee] = React.useState();
-    const ETHDepositAmmount = 16000000000000000000;
+    const ETHDepositAmount = 16000000000000000000;
 
     const getNodeFeeWithSlippage = (nodeFee) => nodeFee * 0.97;
 
@@ -31,7 +31,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                 if (nodeStatus.accountBalances.eth / 1000000000000000000 < 16) {
                     setFeedback("There is not enough ETH in your wallet. You need at least 16 ETH + gas.")
                 } else {
-                    rpdDaemon(`node can-deposit ${ETHDepositAmmount} ${selectedNodeFee} 0`, (data) => {
+                    rpdDaemon(`node can-deposit ${ETHDepositAmount} ${selectedNodeFee} 0`, (data) => {
                         if (data.status === "error") {
                             setFeedback(data.error);
                         } else {
@@ -66,19 +66,19 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     const depositEth = () => {
         confirmAlert({
             title: '',
-            message: 'Are you sure you want to deposit your 16 ETH now and create your minipool?',
+            message: 'Are you sure you want to deposit your 16 ETH and create your minipool?',
             buttons: [
                 {
                     label: 'Yes',
                     onClick: () => {
                         setEthButtonDisabled(true);
-                        rpdDaemon(`node deposit ${ETHDepositAmmount} ${selectedNodeFee} 0`, (data) => {  //   rocketpool api node deposit amount min-fee salt
+                        rpdDaemon(`node deposit ${ETHDepositAmount} ${selectedNodeFee} 0`, (data) => {  //   rocketpool api node deposit amount min-fee salt
                             //{"status":"success","error":"","txHash":"0x6c8958917414479763aaa65dbff4b00e52d9ef699d64dbd0827a45e1fe8aee38","minipoolAddress":"0xc43a2d435bd48bde1e000c07e89f3e6ebe9161d4","validatorPubkey":"ac9cb87a11fd8c55a9529108964786f11623717a6e3af0db3cd5fde2da5c6a7a4f89e52d13770ad6bc080de1b63427a1","scrubPeriod":3600000000000}
                             if (data.status === "error") {
                                 setFeedback(data.error);
                             }
-                            setTxHash(data.txHash);
                             setWaitingForTx(true);
+                            setTxHash(data.txHash);
                         })
                     }
                 },
@@ -89,10 +89,6 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
             ]
         });
     }
-
-    // const slider = (e) => {
-    //     setSelectedNodeFee(e.target.value);
-    // }
 
     if (!nodeStatus || !nodeFee) {
         return null;
@@ -121,8 +117,9 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                     <br />
                 </>
             )}
-            {txHash && (
+            {txHash && !waitingForTx && (
                 <>
+                    <br />
                     <p>Your MiniPool has been successfully created! Click the button below to go to the status page.</p>
                     <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
                     <br />
@@ -141,7 +138,10 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                     </div>
                     <br />
                     <p>
-                        <button className="button" onClick={() => { setNavBar("Status") }} >Go to the status page</button>
+                        <button className="button" onClick={() => {
+                            updateNodeStatus();
+                            setNavBar("Status");
+                        }} >Go to the status page</button>
                     </p>
                     <br />
                 </>
