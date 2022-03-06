@@ -23,7 +23,8 @@ const FundWallet = ({ utils, nodeStatus, updateNodeStatus, rplPriceData }) => {
                     <div className="content">
                         <p>Now you need to fund your Rocketpool hot wallet.</p>
                         <ol>
-                            <li>Send 16.2 ETH to <ClickToCopy text={nodeStatus.accountAddress}>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</ClickToCopy> (16 ETH + 0.2 ETH gas money)</li>
+                            <li>Send 16.4 ETH to <ClickToCopy text={nodeStatus.accountAddress}>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</ClickToCopy> (16 ETH + 0.2 ETH gas money)</li>
+                            <br />(0.4 is a safe margin to create everything - including the expensive minipool contract deploy. The remaining gas can be withdrawn from this wallet later)
                             <li>Send a minimum of {Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))} RPL to <ClickToCopy text={nodeStatus.accountAddress}>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</ClickToCopy>
                                 <br />(maximum allowed stake is {Math.floor(utils.displayAsETH(rplPriceData.maxPerMinipoolRplStake))} RPL - the more you stake, the more you will earn. More details on the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a> )
                                 <br />(All RPL sent to this wallet will be used as your stake later - so please send exactly the desired stake amount)
