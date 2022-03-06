@@ -28,10 +28,11 @@ const Comp = () => {
     const [rplPriceData, setRplPriceData] = React.useState();
 
     const [wampSession, setWampSession] = React.useState();
-    const [navBar, setNavBar] = React.useState();
+    const [navBar, setNavBar] = React.useState("Welcome");
 
     React.useEffect(() => {
-        if (!navBar && walletStatus && minipoolStatus) {
+        if (walletStatus && minipoolStatus) {
+            debugger;
             if (minipoolStatus.status === "success" && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) {
                 setNavBar("Status");
                 return;

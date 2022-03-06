@@ -66,6 +66,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                     rplAllowanceOK={rplAllowanceOK}
                                     nodeStatus={nodeStatus}
                                     updateNodeStatus={updateNodeStatus}
+                                    updateMiniPoolStatus={updateMiniPoolStatus}
                                     rpdDaemon={rpdDaemon}
                                     setNavBar={setNavBar}
                                 />

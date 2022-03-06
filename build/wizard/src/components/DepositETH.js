@@ -7,8 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import DownloadBackup from "./DownloadBackup";
 
-const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon, setNavBar }) => {
-
+const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon, setNavBar, updateMiniPoolStatus }) => {
 
     const [ethButtonDisabled, setEthButtonDisabled] = React.useState(true);
     const [feedback, setFeedback] = React.useState("");
@@ -139,6 +138,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                     <br />
                     <p>
                         <button className="button" onClick={() => {
+                            updateMiniPoolStatus();
                             updateNodeStatus();
                             setNavBar("Status");
                         }} >Go to the status page</button>

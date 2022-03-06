@@ -2,6 +2,7 @@ import React from "react";
 import BN from "bn.js"
 // import web3 from "web3";
 // const BN = web3.utils.BN;
+import ClickToCopy from "./ClickToCopy";
 
 const FundWallet = ({ utils, nodeStatus, updateNodeStatus, rplPriceData }) => {
 
@@ -22,8 +23,8 @@ const FundWallet = ({ utils, nodeStatus, updateNodeStatus, rplPriceData }) => {
                     <div className="content">
                         <p>Now you need to fund your Rocketpool hot wallet.</p>
                         <ol>
-                            <li>Send 16.2 ETH to {utils.etherscanAddressUrl(nodeStatus.accountAddress)} (16 ETH + 0.2 ETH gas money)</li>
-                            <li>Send a minimum of {Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))} RPL to {utils.etherscanAddressUrl(nodeStatus.accountAddress)}.
+                            <li>Send 16.2 ETH to <ClickToCopy text={nodeStatus.accountAddress}>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</ClickToCopy> (16 ETH + 0.2 ETH gas money)</li>
+                            <li>Send a minimum of {Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))} RPL to <ClickToCopy text={nodeStatus.accountAddress}>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</ClickToCopy>
                                 <br />(maximum allowed stake is {Math.floor(utils.displayAsETH(rplPriceData.maxPerMinipoolRplStake))} RPL - the more you stake, the more you will earn. More details on the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a> )
                                 <br />(All RPL sent to this wallet will be used as your stake later - so please send exactly the desired stake amount)
                             </li>
