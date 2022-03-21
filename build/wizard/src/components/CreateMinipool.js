@@ -48,7 +48,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                             </div>
                             <br />
                             <p>After downloading your backup, you can follow the status on the <a onClick={() => { setNavBar("Status") }}>Status</a> page</p>
-                            <button onClick={()=>{addAnother()}}>Add another</button>
+                            <button className="button" onClick={()=>{addAnother()}}>Add another</button>
                         </div>
                     ) : (
                         <div>
