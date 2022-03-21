@@ -10,7 +10,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
     const minNodeFee = 0.05;
     const maxNodeFee = 0.2;
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
-    const [miniPoolsCount,setMiniPoolsCount] = React.useState(minipoolStatus?.minipools?.length || 1);
+    const [miniPoolsCount,setMiniPoolsCount] = React.useState(0);
 
     React.useEffect(() => {
         if (nodeFee && nodeFee.status === "success") {
@@ -18,6 +18,12 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
             console.assert(nodeFee.maxNodeFee, maxNodeFee);
         }
     }, [nodeFee]);
+
+    React.useEffect(() => {
+        if (minipoolStatus?.minipools) {
+            setMiniPoolsCount(minipoolStatus?.minipools?.length)
+        }
+    }, [minipoolStatus]);
 
     const addAnother = () => {
         setMiniPoolsCount(miniPoolsCount+1);
