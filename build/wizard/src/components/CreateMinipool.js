@@ -66,7 +66,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                     rpdDaemon={rpdDaemon}
                                 />
                                 <DepositETH
-                                    index = {miniPoolsCount}
+                                    count = {miniPoolsCount}
                                     utils={utils}
                                     nodeStatus={nodeStatus}
                                     nodeFee={nodeFee}
