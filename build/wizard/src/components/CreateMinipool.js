@@ -10,6 +10,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
     const minNodeFee = 0.05;
     const maxNodeFee = 0.2;
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
+    const [miniPoolsCount,setMiniPoolsCount] = React.useState(minipoolStatus?.minipools?.length || 1);
 
     React.useEffect(() => {
         if (nodeFee && nodeFee.status === "success") {
@@ -18,12 +19,16 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
         }
     }, [nodeFee]);
 
+    const addAnother = () => {
+        setMiniPoolsCount(miniPoolsCount+1);
+    }
+
     return (
         <div>
             {nodeStatus && nodeFee?.status === "success" && (
                 <>
                     <h3 className="title is-3 has-text-white">Add minipool</h3>
-                    {(minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) ? (
+                    {(minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length >= miniPoolsCount) ? (
                         <div className="content">
                             <p>Congratulations the minipool on your node has been created. Now, you have to wait for the other half to be deposited (after a 12 hour safety period).</p>
                             <p>Depositing this second half will require gas, so leave some ETH in your wallet to pay for the gas.</p>
@@ -43,14 +48,16 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                             </div>
                             <br />
                             <p>After downloading your backup, you can follow the status on the <a onClick={() => { setNavBar("Status") }}>Status</a> page</p>
+                            <button onClick={()=>{addAnother()}}>Add another</button>
                         </div>
                     ) : (
                         <div>
-                            <p>Almost done! The final part is to create your actual minipool. This involves 3 steps</p>
+                            <p>Create a minipool. This involves 3 steps</p>
                             <br />
                             <div>
                                 <ApproveRpl utils={utils} rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />
                                 <StakeRPL
+                                    count = {miniPoolsCount}
                                     utils={utils}
                                     nodeStatus={nodeStatus}
                                     rplPriceData={rplPriceData}
@@ -59,6 +66,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                     rpdDaemon={rpdDaemon}
                                 />
                                 <DepositETH
+                                    index = {miniPoolsCount}
                                     utils={utils}
                                     nodeStatus={nodeStatus}
                                     nodeFee={nodeFee}

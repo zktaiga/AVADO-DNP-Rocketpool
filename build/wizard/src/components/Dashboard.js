@@ -32,7 +32,7 @@ const Comp = () => {
 
     React.useEffect(() => {
         if (walletStatus && minipoolStatus) {
-            debugger;
+            // debugger;
             if (minipoolStatus.status === "success" && minipoolStatus.minipools && minipoolStatus.minipools.length > 0) {
                 setNavBar("Status");
                 return;
