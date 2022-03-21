@@ -6,8 +6,9 @@ import web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import DownloadBackup from "./DownloadBackup";
+import BN from "bn.js"
 
-const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon, setNavBar, updateMiniPoolStatus }) => {
+const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon, setNavBar, updateMiniPoolStatus, count }) => {
 
     const [ethButtonDisabled, setEthButtonDisabled] = React.useState(true);
     const [feedback, setFeedback] = React.useState("");
@@ -15,6 +16,8 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     const [waitingForTx, setWaitingForTx] = React.useState(false);
     const [selectedNodeFee, setSelectedNodeFee] = React.useState();
     const ETHDepositAmount = 16000000000000000000;
+    const minipoolCount = new BN(count.toString());
+    const rplMin = (new BN(rplPriceData.minPerMinipoolRplStake.toString())).mul(minipoolCount);
 
     const getNodeFeeWithSlippage = (nodeFee) => nodeFee * 0.97;
 
@@ -24,7 +27,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
 
         setEthButtonDisabled(true); //set default
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
-            if (nodeStatus.rplStake < rplPriceData.minPerMinipoolRplStake) {
+            if (nodeStatus.rplStake < rplMin) {
                 setFeedback("You need to stake RPL first")
             } else {
                 if (nodeStatus.accountBalances.eth / 1000000000000000000 < 16) {
@@ -96,14 +99,14 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     return (
         <div className="">
             <h4 className="title is-4 has-text-white">3. Deposit 16 ETH and create MiniPool</h4>
-            {nodeStatus.minipoolCounts.total > 0 && (
+            {nodeStatus.minipoolCounts.total >= count && (
                 <>
                     <span className="tag is-success">16 ETH successfully deposited. <span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span>
                     <br />
                 </>
             )}
 
-            {nodeFee.status === "success" && nodeStatus.minipoolCounts.total === 0 && (
+            {nodeFee.status === "success" && nodeStatus.minipoolCounts.total < count && (
                 <>
                     <p>The commission you will receive from other deposits is +/- {utils.displayAsPercentage(selectedNodeFee * 100)}.<br />For more info on this check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a></p>
                     <br />
