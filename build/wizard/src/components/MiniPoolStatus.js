@@ -34,56 +34,64 @@ const MiniPoolStatus = ({ utils, minipoolStatus }) => {
             <>
             </>
         );
-    const minipool0 = minipoolStatus.minipools[0];
     return (
         <div>
-            <h2 className="title is-3 has-text-white">Minipool status</h2>
-            {minipool0 && minipool0.status && (
-                <div> {/* https://octoshrimpy.github.io/bulma-o-steps/ */}
-                    <div className="columns">
-                        <div className="column">
-                            <ul className="steps has-content-centered">
-                                {miniPoolSteps.map((element) =>
-                                    <li className={"steps-segment" + (element === minipool0.status.status ? " is-active" : "")} key={element}>
-                                        <span className={"steps-marker" + (element === minipool0.status.status && isHollow(element, minipool0) ? "" : "")}></span>
-                                        <div className="steps-content">
-                                            <p className="is-size-4 has-text-white">{element}</p>
-                                            <div className="extra-data has-text-white">{miniPoolStepsComment(element)}</div>
-                                        </div>
-                                    </li>
-                                )}
-                            </ul>
+            {minipoolStatus.minipools.map((minipool, index) => {
+                if (!minipool.status)
+                return <></>
+                else 
+                return <div key={`minipool${index+1}`}> {/* https://octoshrimpy.github.io/bulma-o-steps/ */}
+                        <h3 className="title is-3 has-text-white">Minipool {index+1}</h3>
+                        <div className="columns">
+                            <div className="column">
+                                <ul className="steps has-content-centered">
+                                    {miniPoolSteps.map((element) =>
+                                        <li className={"steps-segment" + (element === minipool.status.status ? " is-active" : "")} key={element}>
+                                            <span className={"steps-marker" + (element === minipool.status.status && isHollow(element, minipool) ? "" : "")}></span>
+                                            <div className="steps-content">
+                                                <p className="is-size-4 has-text-white">{element}</p>
+                                                <div className="extra-data has-text-white">{miniPoolStepsComment(element)}</div>
+                                            </div>
+                                        </li>
+                                    )}
+                                </ul>
+                            </div>
                         </div>
+
+                        {/* {utils.beaconchainUrl(minipool0.validator.index, <img src={beaconchainlogo} alt="More info on beaconcha.in" />)} */}
+
+                        <table className="table">
+                            <tbody>
+                                <tr><td><b>Minipool address</b></td><td>{utils.etherscanAddressUrl(minipool.address)}</td></tr>
+                                <tr><td><b>Status updated</b></td><td>{minipool.status.statusTime}</td></tr>
+                                <tr><td><b>Node fee</b></td><td>{utils.displayAsPercentage(minipool.node.fee * 100)}</td></tr>
+                                <tr><td><b>Node deposit</b></td><td>{utils.displayAsETH(minipool.node.depositBalance)} ETH</td></tr>
+                                <tr><td><b>RP ETH assigned</b></td><td>{minipool.user.depositAssignedTime}</td></tr>
+                                <tr><td><b>RP deposit</b></td><td>{utils.displayAsETH(minipool.user.depositBalance)} ETH</td></tr>
+                                <tr><td><b>Validator pubkey</b></td><td>{utils.beaconchainUrl(minipool.validatorPubkey, "0x" + minipool.validatorPubkey.substring(0, 20) + "..." + minipool.validatorPubkey.substring(76))}</td></tr>
+                                <tr><td><b>Validator index</b></td><td>{minipool.validator.index !== 0 ? utils.beaconchainUrl(minipool.validator.index) : "n/a"}</td></tr>
+                                <tr><td><b>Validator active</b></td><td>{minipool.validator.active ? "yes" : "no"}</td></tr>
+                                <tr><td><b>Validator balance</b></td><td>{utils.displayAsETH(minipool.validator.balance)}</td></tr>
+                                <tr><td><b>Expected rewards</b></td><td>{utils.displayAsETH(minipool.validator.nodeBalance)}</td></tr>
+                            </tbody>
+                        </table>
+                        <br />
+                        <table className="table">
+                            <tbody>
+                                <tr><td><b>Use latest delegate</b></td><td>{minipool.useLatestDelegate ? "yes" : "no"}</td></tr>
+                                <tr><td><b>Delegate address</b></td><td>{utils.etherscanAddressUrl(minipool.delegate)}</td></tr>
+                                <tr><td><b>Effective delegate</b></td><td>{utils.etherscanAddressUrl(minipool.effectiveDelegate)}</td></tr>
+                            </tbody>
+                        </table>
+                        <p>{utils.beaconchainUrl(minipool.validatorPubkey, "More validator info on the Ethereum 2.0 Beacon Chain Explorer")}</p>
                     </div>
-
-                    {/* {utils.beaconchainUrl(minipool0.validator.index, <img src={beaconchainlogo} alt="More info on beaconcha.in" />)} */}
-
-                    <table className="table">
-                        <tbody>
-                            <tr><td><b>Minipool address</b></td><td>{utils.etherscanAddressUrl(minipool0.address)}</td></tr>
-                            <tr><td><b>Status updated</b></td><td>{minipool0.status.statusTime}</td></tr>
-                            <tr><td><b>Node fee</b></td><td>{utils.displayAsPercentage(minipool0.node.fee * 100)}</td></tr>
-                            <tr><td><b>Node deposit</b></td><td>{utils.displayAsETH(minipool0.node.depositBalance)} ETH</td></tr>
-                            <tr><td><b>RP ETH assigned</b></td><td>{minipool0.user.depositAssignedTime}</td></tr>
-                            <tr><td><b>RP deposit</b></td><td>{utils.displayAsETH(minipool0.user.depositBalance)} ETH</td></tr>
-                            <tr><td><b>Validator pubkey</b></td><td>{utils.beaconchainUrl(minipool0.validatorPubkey, "0x" + minipool0.validatorPubkey.substring(0, 20) + "..." + minipool0.validatorPubkey.substring(76))}</td></tr>
-                            <tr><td><b>Validator index</b></td><td>{minipool0.validator.index !== 0 ? utils.beaconchainUrl(minipool0.validator.index) : "n/a"}</td></tr>
-                            <tr><td><b>Validator active</b></td><td>{minipool0.validator.active ? "yes" : "no"}</td></tr>
-                            <tr><td><b>Validator balance</b></td><td>{utils.displayAsETH(minipool0.validator.balance)}</td></tr>
-                            <tr><td><b>Expected rewards</b></td><td>{utils.displayAsETH(minipool0.validator.nodeBalance)}</td></tr>
-                        </tbody>
-                    </table>
-                    <br />
-                    <table className="table">
-                        <tbody>
-                            <tr><td><b>Use latest delegate</b></td><td>{minipool0.useLatestDelegate ? "yes" : "no"}</td></tr>
-                            <tr><td><b>Delegate address</b></td><td>{utils.etherscanAddressUrl(minipool0.delegate)}</td></tr>
-                            <tr><td><b>Effective delegate</b></td><td>{utils.etherscanAddressUrl(minipool0.effectiveDelegate)}</td></tr>
-                        </tbody>
-                    </table>
-                    <p>{utils.beaconchainUrl(minipool0.validatorPubkey, "More validator info on the Ethereum 2.0 Beacon Chain Explorer")}</p>
-                </div>
+                
+            }
             )}
+
+
+
+
         </div>
     );
 };

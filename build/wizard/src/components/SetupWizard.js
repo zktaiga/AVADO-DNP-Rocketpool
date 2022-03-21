@@ -43,7 +43,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                 && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
                 && !nodeStatus.registered
                 && nodeStatus.accountBalances.eth > 0
-                && nodeStatus.accountBalances.rpl > rplPriceData.minPerMinipoolRplStake 
+                && nodeStatus.accountBalances.rpl > rplPriceData.minPerMinipoolRplStake
             ) {
                 setViewState(registerNode);
                 return;
@@ -90,17 +90,19 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
             <br />
             <div className="columns">
                 <div className="column">
-                    <ul className="steps has-content-centered">
-                        {setupStates.map((element) =>
-                            <li className={"steps-segment" + (isActive(element) ? " is-active" : "")} key={element.name}>
-                                <span className={"steps-marker" + (isHollow(element) ? "" : "")}></span>
-                                <div className="steps-content">
-                                    <p className="is-size-4 has-text-white">{element.name}</p>
-                                    <div className="extra-data has-text-white">{stateComment(element)}</div>
-                                </div>
-                            </li>
-                        )}
-                    </ul>
+                    {(viewState.id !== createMinipool.id) && (
+                        <ul className="steps has-content-centered">
+                            {setupStates.map((element) =>
+                                <li className={"steps-segment" + (isActive(element) ? " is-active" : "")} key={element.name}>
+                                    <span className={"steps-marker" + (isHollow(element) ? "" : "")}></span>
+                                    <div className="steps-content">
+                                        <p className="is-size-4 has-text-white">{element.name}</p>
+                                        <div className="extra-data has-text-white">{stateComment(element)}</div>
+                                    </div>
+                                </li>
+                            )}
+                        </ul>
+                    )}
                 </div>
                 {nodeStatus && (
                     <div className="column is-narrow">
@@ -108,7 +110,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                             <div className="is-size-5">Hot wallet</div>
                             <div className="columns">
                                 <div className="column">
-                                    <FontAwesomeIcon className="icon" icon={faWallet} title="Wallet (click icon to copy address)" onClick={() => navigator.clipboard.writeText(nodeStatus.accountAddress)}/>
+                                    <FontAwesomeIcon className="icon" icon={faWallet} title="Wallet (click icon to copy address)" onClick={() => navigator.clipboard.writeText(nodeStatus.accountAddress)} />
                                 </div>
                                 <div className="column">
                                     <div className="has-text-right"><a onClick={updateNodeStatus}><FontAwesomeIcon className="icon" icon={faSync} title="Refresh wallet" /></a></div>
@@ -121,9 +123,8 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                     </div>
                 )}
             </div>
-            {/* {viewState.id} */}
-            {(viewState.id === initWallet.id) && (<InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} onFinished={()=>{setViewState(fundNode)}}/>)}
-            {(viewState.id === fundNode.id) && (<FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus}  rplPriceData={rplPriceData} />)}
+            {(viewState.id === initWallet.id) && (<InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} onFinished={() => { setViewState(fundNode) }} />)}
+            {(viewState.id === fundNode.id) && (<FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rplPriceData={rplPriceData} />)}
             {(viewState.id === registerNode.id) && (<RegisterNode utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
             {(viewState.id === withdrawalAddress.id) && (<SetWithdrawalAddress utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
             {(viewState.id === createMinipool.id) && (<CreateMinipool
