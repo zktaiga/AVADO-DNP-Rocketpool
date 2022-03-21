@@ -10,7 +10,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
     const minNodeFee = 0.05;
     const maxNodeFee = 0.2;
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
-    const [miniPoolsCount,setMiniPoolsCount] = React.useState(0);
+    const [miniPoolsCount, setMiniPoolsCount] = React.useState(0);
 
     React.useEffect(() => {
         if (nodeFee && nodeFee.status === "success") {
@@ -26,18 +26,25 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
     }, [minipoolStatus]);
 
     const addAnother = () => {
-        setMiniPoolsCount(miniPoolsCount+1);
+        setMiniPoolsCount(miniPoolsCount + 1);
     }
 
     return (
         <div>
             {nodeStatus && nodeFee?.status === "success" && (
                 <>
-                    <h3 className="title is-3 has-text-white">Add minipool</h3>
+                    {/* <pre>{JSON.stringify(nodeStatus, 0, 2)}</pre> */}
+                    <h3 className="title is-3 has-text-white">Minipool</h3>
                     {(minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length >= miniPoolsCount) ? (
                         <div className="content">
-                            <p>Congratulations the minipool on your node has been created. Now, you have to wait for the other half to be deposited (after a 12 hour safety period).</p>
-                            <p>Depositing this second half will require gas, so leave some ETH in your wallet to pay for the gas.</p>
+                            {/* we will only show this part when you have new- non staking minipools */}
+                            {nodeStatus && nodeStatus.minipoolCounts && (nodeStatus.minipoolCounts.initialized > 0 || nodeStatus.minipoolCounts.prelaunch > 0) && (
+                                <>
+                                    <p>Congratulations the minipool on your node has been created. Now, you have to wait for the other half to be deposited (after a 12 hour safety period).</p>
+                                    <p>Depositing this second half will require gas, so leave some ETH in your wallet to pay for the gas.</p>
+                                    <p>After downloading your backup, you can follow the status on the <a onClick={() => { setNavBar("Status") }}>Status</a> page</p>
+                                </>
+                            )}
                             <br />
                             <div class="columns">
                                 <div class="column is-two-thirds">
@@ -53,8 +60,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                 </div>
                             </div>
                             <br />
-                            <p>After downloading your backup, you can follow the status on the <a onClick={() => { setNavBar("Status") }}>Status</a> page</p>
-                            <button className="button" onClick={()=>{addAnother()}}>Add another</button>
+                            <button className="button" onClick={() => { addAnother() }}>Add another minipool</button>
                         </div>
                     ) : (
                         <div>
@@ -63,7 +69,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                             <div>
                                 <ApproveRpl utils={utils} rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />
                                 <StakeRPL
-                                    count = {miniPoolsCount}
+                                    count={miniPoolsCount}
                                     utils={utils}
                                     nodeStatus={nodeStatus}
                                     rplPriceData={rplPriceData}
@@ -72,13 +78,12 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                     rpdDaemon={rpdDaemon}
                                 />
                                 <DepositETH
-                                    count = {miniPoolsCount}
+                                    count={miniPoolsCount}
                                     utils={utils}
                                     nodeStatus={nodeStatus}
                                     nodeFee={nodeFee}
                                     rplPriceData={rplPriceData}
                                     rplAllowanceOK={rplAllowanceOK}
-                                    nodeStatus={nodeStatus}
                                     updateNodeStatus={updateNodeStatus}
                                     updateMiniPoolStatus={updateMiniPoolStatus}
                                     rpdDaemon={rpdDaemon}
