@@ -15,17 +15,6 @@ const AdminPage = ({ wampSession }) => {
             getNetwork();
     }, [wampSession]) // eslint-disable-line
 
-    const restartValidator = () => {
-        setIsRestartValidator(true);
-        fetch(`${config.api.HTTP}/restart-validator`)
-            .then(res => res.text())
-            .then(data => {
-                setIsRestartValidator(false);
-                alert(data);
-            }
-            );
-    }
-
     const restartRpNode = () => {
         setIsRestartRpNode(true);
         fetch(`${config.api.HTTP}/restart-rocketpool-node`)
@@ -65,9 +54,6 @@ const AdminPage = ({ wampSession }) => {
             <BackupDashboard wampSession={wampSession} />
             <LogView wampSession={wampSession} />
             <h2>Debug</h2>
-            <div className="field">
-                <button className="button" onClick={restartValidator} disabled={isRestartValidator}>Restart validator{isRestartValidator ? <Spinner /> : ""}</button>
-            </div>
             <div className="field">
                 <button className="button" onClick={restartRpNode} disabled={isRestartRpNode}>Restart Rocket Pool Node{isRestartRpNode ? <Spinner /> : ""}</button>
             </div>
