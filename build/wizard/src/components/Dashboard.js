@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import axios from "axios";
 import config from "../config";
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
@@ -127,7 +127,7 @@ const Comp = () => {
                     <div className="column">
                         {navBar === "Welcome" && (
                             <div>
-                                <Welcome utils={utils} rplPriceData={rplPriceData} nodeSyncStatus={nodeSyncStatus} setNavBar={setNavBar}/>
+                                <Welcome utils={utils} rplPriceData={rplPriceData} nodeSyncStatus={nodeSyncStatus} setNavBar={setNavBar} />
                             </div>
                         )}
 

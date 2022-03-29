@@ -17,11 +17,14 @@ const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, 
         console.log("Using: " + utils.wsProvider());
         const eth = new web3(utils.wsProvider()).eth;
         const interval = setInterval(() => {
-            eth.getGasPrice().then((result) => {
-                const currentPrice = parseFloat(web3.utils.fromWei(result, 'gwei')).toFixed(1);
-                console.log("Gas: " + currentPrice);
-                setGasPrice(currentPrice);
-            })
+            eth.getGasPrice()
+                .then((result) => {
+                    const currentPrice = parseFloat(web3.utils.fromWei(result, 'gwei')).toFixed(1);
+                    console.log("Gas: " + currentPrice);
+                    setGasPrice(currentPrice);
+                }).catch((e)=>{
+                    console.log(`${e.message}`);
+                })
         }, 15 * 1000);
         return () => clearInterval(interval);
     }, [utils]);
