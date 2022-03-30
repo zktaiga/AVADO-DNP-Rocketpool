@@ -46,8 +46,8 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                 </>
                             )}
                             <br />
-                            <div class="columns">
-                                <div class="column is-two-thirds">
+                            <div className="columns">
+                                <div className="column is-two-thirds">
                                     <article className="message is-warning ">
                                         <div className="message-header">
                                             <p>Download backup</p>

@@ -7,14 +7,17 @@ const realm = "dappnode_admin";
 
 const Comp = ({ children }) => {
 
-    let session;
-    // const [session, setSession] = React.useState();
+    // let session;
+    const [session, setSession] = React.useState();
     const [packages, setPackages] = React.useState();
 
 
-    const refreshPackages = () => {
-        if (!session) return;
-        session
+    const refreshPackages = (sesh) => {
+        if (!sesh){
+            console.log(`refreshPackages: cant find session`);
+            return;
+        }
+        sesh
             .call("listPackages.dappmanager.dnp.dappnode.eth")
             .then(res => {
                 res = JSON.parse(res).result.reduce((accum, curr) => {
@@ -22,6 +25,7 @@ const Comp = ({ children }) => {
                     return accum;
                 }, {});
                 setPackages(res);
+                console.log(`refreshed packages`);
             });
     }
 
@@ -45,12 +49,12 @@ const Comp = ({ children }) => {
         connection.onopen = s => {
             console.log("CONNECTED to \nurl: " + url + " \nrealm: " + realm);
 
-            session = s; //setSession(s);
+            setSession(s);
 
             // pre-populate the packages
-            refreshPackages();
+            refreshPackages(s);
 
-            interval = setInterval(() => { refreshPackages(); }, 10 * 1000);
+            interval = setInterval(() => { refreshPackages(s); }, 10 * 1000);
 
         };
 
@@ -64,6 +68,7 @@ const Comp = ({ children }) => {
 
         return ()=>{
             if (interval){
+                console.log(`clearing refreshpackages interval`)
                 clearInterval(interval);
             }
         }
