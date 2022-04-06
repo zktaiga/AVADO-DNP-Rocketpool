@@ -1,6 +1,3 @@
-ARG PRYSM_VERSION
-FROM  gcr.io/prysmaticlabs/prysm/validator:${PRYSM_VERSION} as validator
-
 FROM node:16.14.0 as builder
 
 # build wizard
@@ -19,8 +16,6 @@ RUN wget "https://github.com/rocket-pool/smartnode-install/releases/download/${R
 
 RUN chmod +x /usr/local/bin/rocketpool /usr/local/bin/rocketpoold
 
-COPY --from=validator /app/cmd/validator/validator /usr/local/bin/validator
-
 RUN apk add --no-cache supervisor gcompat nginx nodejs npm
 RUN apk upgrade
 
@@ -33,7 +28,6 @@ RUN npm i --production
 
 COPY config-mainnet.yml /srv/rocketpool
 COPY config-prater.yml /srv/rocketpool
-COPY restart-validator.sh /srv/rocketpool
 COPY settings.yml /srv/rocketpool
 
 COPY supervisord.conf /etc/supervisord.conf

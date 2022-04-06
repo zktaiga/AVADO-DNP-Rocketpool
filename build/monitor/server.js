@@ -131,18 +131,6 @@ server.get("/network", (req, res) => {
     res.send(200, network);
 });
 
-//restartValidator
-server.get("/restart-validator", (req, res) => {
-    console.log(`Restart validator`);
-    const cmd = "sh /srv/rocketpool/restart-validator.sh";
-    execute(cmd).then((stdout) => {
-        res.send(200, stdout);
-    }).catch((e) => {
-        res.send(500, e);
-    })
-});
-
-
 //restart Rocket Pool smartnode
 server.get("/restart-rocketpool-node", (req, res) => {
     console.log(`Restart Rocket Pool smartnode`);
