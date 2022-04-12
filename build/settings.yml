@@ -1,7 +1,0 @@
-chains:
-  eth1:
-    client:
-      selected: geth
-  eth2:
-    client:
-      selected: prysm

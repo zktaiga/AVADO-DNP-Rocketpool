@@ -1,16 +1,16 @@
 version: '3.4'
 services:
   rocketpool.avado.dnp.dappnode.eth:
-    image: 'rocketpool.avado.dnp.dappnode.eth:0.0.62'
+    image: 'rocketpool.avado.dnp.dappnode.eth:0.0.65'
     build:
       context: ./build
       args:
-        PRYSM_VERSION: v2.0.6
-        RP_VERSION: v1.2.4
+        RP_VERSION: v1.3.0
     volumes:
       - 'rocketpool:/rocketpool'
     environment:
       - NETWORK=mainnet
+      - CONSENSUSCLIENT=prysm
       - EXTRA_OPTS=
 volumes:
   rocketpool: {}
