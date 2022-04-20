@@ -16,7 +16,7 @@ RUN wget "https://github.com/rocket-pool/smartnode-install/releases/download/${R
 
 RUN chmod +x /usr/local/bin/rocketpool /usr/local/bin/rocketpoold
 
-RUN apk add --no-cache supervisor gcompat nginx nodejs npm
+RUN apk add --no-cache supervisor gcompat nginx nodejs npm bash gettext
 RUN apk upgrade
 
 COPY --from=builder /usr/src/app/wizard/build /usr/local/wizard
@@ -26,17 +26,16 @@ WORKDIR /usr/src/monitor
 COPY monitor .
 RUN npm i --production
 
-COPY config-mainnet.yml /srv/rocketpool
-COPY config-prater.yml /srv/rocketpool
-COPY settings.yml /srv/rocketpool
+COPY startRpNode.sh /srv/rocketpool
+RUN chmod a+x /srv/rocketpool/startRpNode.sh
+COPY user-settings.template /srv/rocketpool
 
 COPY supervisord.conf /etc/supervisord.conf
 COPY nginx.conf /etc/nginx/
 
 # For testing
-RUN echo 'alias rp="rocketpool -d /usr/local/bin/rocketpoold -c /srv/rocketpool --allow-root"' >> ~/.bashrc
-RUN echo 'alias rpdp="/usr/local/bin/rocketpoold --config /srv/rocketpool/config-prater.yml --settings /srv/rocketpool/settings.yml api"' >> ~/.bashrc
-RUN echo 'alias rpdm="/usr/local/bin/rocketpoold --config /srv/rocketpool/config-mainnet.yml --settings /srv/rocketpool/settings.yml api"' >> ~/.bashrc
+RUN echo 'alias rp="rocketpool --daemon-path /usr/local/bin/rocketpoold --config-path /srv/rocketpool --allow-root"' >> ~/.bashrc
+RUN echo 'alias rpd="rocketpoold --settings /srv/rocketpool/user-settings.yml api"' >> ~/.bashrc
 
 # TODO?
 # RUN useradd nginx

@@ -101,7 +101,7 @@ const storeTxHash = (txHash) => {
 }
 
 const rpd = (command) => {
-    const cmd = `/usr/local/bin/rocketpoold --config /srv/rocketpool/config-${network}.yml --settings /srv/rocketpool/settings.yml api ${command}`;
+    const cmd = `/usr/local/bin/rocketpoold --settings /srv/rocketpool/user-settings.yml api ${command}`;
     console.log(`Running ${cmd}`);
     if (command.includes("wallet") && !command.includes("status")) {
         const datafolder = "/rocketpool/data";
