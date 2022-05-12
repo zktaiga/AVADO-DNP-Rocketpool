@@ -19,7 +19,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     const minipoolCount = new BN(count.toString());
     const rplMin = (new BN(rplPriceData.minPerMinipoolRplStake.toString())).mul(minipoolCount);
 
-    const getNodeFeeWithSlippage = (nodeFee) => nodeFee * 0.97;
+    const getNodeFeeWithSlippage = (nodeFee) => nodeFee * 1.0; // no more slippage
 
     React.useEffect(() => {
         if (waitingForTx)
