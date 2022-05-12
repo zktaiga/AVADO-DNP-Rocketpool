@@ -22,6 +22,7 @@ const NodeStatus = ({ utils, nodeStatus, updateNodeStatus, nodeSyncStatus}) => {
                             </tr>
                             <tr><td><b>Hot wallet address</b></td><td>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</td></tr>
                             <tr><td><b>Withdrawal address</b></td><td>{utils.etherscanAddressUrl(nodeStatus.withdrawalAddress)}</td></tr>
+                            <tr><td><b>RPL Stake</b></td><td>{utils.displayAsETH(nodeStatus.rplStake,2)} RPL</td></tr>
                         </tbody>
                     </table>
                 </div>
