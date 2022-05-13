@@ -29,7 +29,6 @@ const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, 
         return () => clearInterval(interval);
     }, [utils]);
 
-
     const beaconChainDashboard = (indexes) => indexes ? (<a href={`${utils.beaconChainBaseUrl}/dashboard?validators=` + indexes.join(",")}><FontAwesomeIcon className="icon" icon={faSatelliteDish} /></a>) : "";
 
     return (
@@ -47,7 +46,7 @@ const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, 
                     <p>Rocket Pool without the command line</p>
                 </div>
                 <div className="column">
-                    {nodeSyncStatus && (
+                    {nodeSyncStatus && utils && (
                         <div>
                             <p className="has-text-right">
                                 <SyncStatusTag progress={nodeSyncStatus.eth1Progress} label="ETH1" />&nbsp;
