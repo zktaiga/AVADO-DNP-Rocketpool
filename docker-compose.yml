@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   rocketpool.avado.dnp.dappnode.eth:
-    image: 'rocketpool.avado.dnp.dappnode.eth:0.0.67'
+    image: 'rocketpool.avado.dnp.dappnode.eth:0.0.68'
     build:
       context: ./build
       args:
