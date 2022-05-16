@@ -60,7 +60,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                 </div>
                             </div>
                             <br />
-                            <button className="button" onClick={() => { addAnother() }}>Add another minipool</button>
+                            <button className="button" onClick={() => { addAnother() }}>Add another minipool / stake more RPL</button>
                         </div>
                     ) : (
                         <div>
