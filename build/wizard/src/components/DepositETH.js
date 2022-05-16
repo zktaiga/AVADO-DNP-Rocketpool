@@ -27,7 +27,9 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
 
         setEthButtonDisabled(true); //set default
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
-            if (nodeStatus.rplStake < rplMin) {
+            const stakedRplBalance = new BN(nodeStatus.rplStake.toString());
+
+            if (stakedRplBalance < rplMin) {
                 setFeedback("You need to stake RPL first")
             } else {
                 if (nodeStatus.accountBalances.eth / 1000000000000000000 < 16) {
@@ -46,7 +48,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
         }
 
         if (nodeFee && nodeFee?.status === "success" && !selectedNodeFee) {
-            setSelectedNodeFee(getNodeFeeWithSlippage(nodeFee.nodeFee)); // allow 3% slippage by default
+            setSelectedNodeFee(getNodeFeeWithSlippage(nodeFee.nodeFee));
         }
 
     }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, waitingForTx]);
