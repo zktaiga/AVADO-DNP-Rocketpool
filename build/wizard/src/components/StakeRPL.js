@@ -8,7 +8,7 @@ import web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
-const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon ,count }) => {
+const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon, count }) => {
 
     const [rplStakeButtonDisabled, setRplStakeButtonDisabled] = React.useState(true);
     const [feedback, setFeedback] = React.useState("");
@@ -27,12 +27,14 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
             return;
 
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
-            if (count==1 && rplBalanceInWallet.lt(rplMin)) {
+            // first deposit only allowed if bigger than minium.
+            // If there is a minipool already, more deposits are allowed.
+            if (count == 1 && rplBalanceInWallet.lt(rplMin)) {
                 setFeedback(`Not enough RPL in your wallet (${utils.displayAsETH(rplBalanceInWallet, 4)} RPL). Must be more than ${utils.displayAsETH(rplPriceData.minPerMinipoolRplStake, 4)} RPL before you can stake`);
             } else {
                 console.log("Staked RPL", stakedRplBalance.toString(), "new count: ", rplMin.mul(minipoolCount).toString())
-                if (stakedRplBalance.lt(rplMin.mul(minipoolCount))) {
-                    console.log(`node can-stake-rpl ${rplBalanceInWallet.toString()}`); 
+                if (rplBalanceInWallet.gt(new BN(0))) {
+                    console.log(`node can-stake-rpl ${rplBalanceInWallet.toString()}`);
                     rpdDaemon(`node can-stake-rpl ${rplBalanceInWallet.toString()}`, (data) => {
                         //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
                         if (data.status === "error") {
@@ -40,8 +42,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
                         } else {
                             // rpd says that I can stake - if I have enough in my wallet, enable button
                             setFeedback();
-                            setRplStakeButtonDisabled(!rplBalanceInWallet.gte(rplMin));
-
+                            setRplStakeButtonDisabled(false);
                         }
                     });
                 }
@@ -94,17 +95,12 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
             <h4 className="title is-4 has-text-white">2. Stake RPL</h4>
             {stakedRplBalance && rplPriceData && (
                 <p>The minimum stake is currently {Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))} RPL per minipool<br />
-                You have already staked {stakedRplBalance && (<>{utils.displayAsETH(stakedRplBalance,2)}</>)} RPL for {count-1} minipools.
-                For {count} minipools, you need {Math.ceil(utils.displayAsETH(rplMin.mul(minipoolCount).toString()))} RPL</p>
+                    You have already staked {stakedRplBalance && (<>{utils.displayAsETH(stakedRplBalance, 2)}</>)} RPL for {count - 1} minipools.
+                    For {count} minipools, you need {Math.ceil(utils.displayAsETH(rplMin.mul(minipoolCount).toString()))} RPL</p>
             )
             }
 
-            {stakedRplBalance >= rplMin.mul(minipoolCount) && (
-                <p>
-                    <span className="tag is-success">{utils.displayAsETH(stakedRplBalance, 2)} RPL successfully staked. <span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span>
-                </p>
-            )}
-            {stakedRplBalance < rplMin.mul(minipoolCount) && (
+            {stakedRplBalance && (
                 <>
                     <p>Stake all RPL in my hot wallet.</p>
                     <div className="field">

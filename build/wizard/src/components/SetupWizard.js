@@ -90,7 +90,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
             <br />
             <div className="columns">
                 <div className="column">
-                    {(viewState.id !== createMinipool.id) && (
+                    {(
                         <ul className="steps has-content-centered">
                             {setupStates.map((element) =>
                                 <li className={"steps-segment" + (isActive(element) ? " is-active" : "")} key={element.name}>
