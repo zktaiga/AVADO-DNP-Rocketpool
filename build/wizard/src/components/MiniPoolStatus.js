@@ -1,5 +1,6 @@
 import React from "react";
-import beaconchainlogo from "../assets/beaconchain.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRocket } from "@fortawesome/free-solid-svg-icons";
 
 const MiniPoolStatus = ({ utils, minipoolStatus }) => {
     const miniPoolSteps = [
@@ -38,10 +39,10 @@ const MiniPoolStatus = ({ utils, minipoolStatus }) => {
         <div>
             {minipoolStatus.minipools.map((minipool, index) => {
                 if (!minipool.status)
-                return <></>
-                else 
-                return <div key={`minipool${index+1}`}> {/* https://octoshrimpy.github.io/bulma-o-steps/ */}
-                        <h3 className="title is-3 has-text-white">Minipool {index+1}</h3>
+                    return <></>
+                else
+                    return <div key={`minipool${index + 1}`}> {/* https://octoshrimpy.github.io/bulma-o-steps/ */}
+                        <h3 className="title is-3 has-text-white">Minipool {index + 1}</h3>
                         <div className="columns">
                             <div className="column">
                                 <ul className="steps has-content-centered">
@@ -62,7 +63,13 @@ const MiniPoolStatus = ({ utils, minipoolStatus }) => {
 
                         <table className="table">
                             <tbody>
-                                <tr><td><b>Minipool address</b></td><td>{utils.etherscanAddressUrl(minipool.address)}</td></tr>
+                                <tr>
+                                    <td><b>Minipool address</b></td>
+                                    <td>
+                                        {utils.etherscanAddressUrl(minipool.address)}{" "}
+                                        <a href={"https://rocketscan.io/minipool/" + minipool.address}><FontAwesomeIcon icon={faRocket} /></a>
+                                    </td>
+                                </tr>
                                 <tr><td><b>Status updated</b></td><td>{minipool.status.statusTime}</td></tr>
                                 <tr><td><b>Node fee</b></td><td>{utils.displayAsPercentage(minipool.node.fee * 100)}</td></tr>
                                 <tr><td><b>Node deposit</b></td><td>{utils.displayAsETH(minipool.node.depositBalance)} ETH</td></tr>
@@ -85,7 +92,7 @@ const MiniPoolStatus = ({ utils, minipoolStatus }) => {
                         </table>
                         <p>{utils.beaconchainUrl(minipool.validatorPubkey, "More validator info on the Ethereum 2.0 Beacon Chain Explorer")}</p>
                     </div>
-                
+
             }
             )}
 
