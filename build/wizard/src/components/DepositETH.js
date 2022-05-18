@@ -32,7 +32,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
             const stakedRplBalance = new BN(nodeStatus.rplStake.toString());
 
-            if (stakedRplBalance < rplMin) {
+            if (stakedRplBalance.lt(rplMin)) {
                 setFeedback("You need to stake RPL first")
             } else {
                 if (nodeStatus.accountBalances.eth / 1000000000000000000 < 16) {
