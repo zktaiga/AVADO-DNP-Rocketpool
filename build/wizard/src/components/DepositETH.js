@@ -15,13 +15,16 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     const [txHash, setTxHash] = React.useState();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
     const [selectedNodeFee, setSelectedNodeFee] = React.useState();
+
     const ETHDepositAmount = 16000000000000000000;
-    const minipoolCount = new BN(count.toString());
-    const rplMin = (new BN(rplPriceData.minPerMinipoolRplStake.toString())).mul(minipoolCount);
+
 
     const getNodeFeeWithSlippage = (nodeFee) => nodeFee * 1.0; // no more slippage
 
     React.useEffect(() => {
+        const minipoolCount = new BN(count.toString());
+        const rplMin = (new BN(rplPriceData.minPerMinipoolRplStake.toString())).mul(minipoolCount);
+
         if (waitingForTx)
             return;
 
@@ -51,7 +54,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
             setSelectedNodeFee(getNodeFeeWithSlippage(nodeFee.nodeFee));
         }
 
-    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, waitingForTx]);
+    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, count, waitingForTx]);
 
 
     React.useEffect(() => {
