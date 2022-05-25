@@ -1,3 +1,12 @@
+besu:
+  additionalFlags: ""
+  containerTag: hyperledger/besu:22.4.1-openjdk-latest
+  maxBackLayers: "512"
+  maxPeers: "25"
+bitflyNodeMetrics:
+  bitflyEndpoint: https://beaconcha.in/api/v1/client/metrics
+  bitflyMachineName: Smartnode
+  bitflySecret: ""
 consensusCommon:
   apiPort: "5052"
   checkpointSyncUrl: ""
@@ -6,8 +15,11 @@ consensusCommon:
   openApiPort: "false"
   p2pPort: "9001"
 executionCommon:
+  ethstatsLabel: ""
+  ethstatsLogin: ""
   httpPort: "8545"
   openRpcPorts: "false"
+  p2pPort: "30303"
   wsPort: "8546"
 exporter:
   additionalFlags: ""
@@ -36,8 +48,11 @@ externalTeku:
   graffiti: ""
   httpUrl: ${BCHTTPURL}
 fallbackExecutionCommon:
+  ethstatsLabel: ""
+  ethstatsLogin: ""
   httpPort: "8545"
   openRpcPorts: "false"
+  p2pPort: "30303"
   wsPort: "8546"
 fallbackExternalExecution:
   httpUrl: ""
@@ -54,10 +69,7 @@ geth:
   additionalFlags: ""
   cache: "16384"
   containerTag: ethereum/client-go:v1.10.17
-  ethstatsLabel: ""
-  ethstatsLogin: ""
   maxPeers: "50"
-  p2pPort: "30303"
 grafana:
   containerTag: grafana/grafana:8.3.2
   port: "3100"
@@ -75,6 +87,12 @@ native:
   consensusClient: ${CONSENSUSCLIENT}
   ecHttpUrl: ${ECHTTPURL}
   validatorRestartCommand: /srv/rocketpool/restart-validator.sh
+nethermind:
+  additionalFlags: ""
+  cache: "8192"
+  containerTag: nethermind/nethermind:1.13.0
+  maxPeers: "50"
+  pruneMemSize: "8192"
 nimbus:
   additionalFlags: ""
   containerTag: statusim/nimbus-eth2:multiarch-v22.3.0
@@ -100,6 +118,7 @@ root:
   bnMetricsPort: "9100"
   consensusClient: nimbus
   consensusClientMode: external
+  enableBitflyNodeMetrics: "false"
   enableMetrics: "false"
   executionClient: geth
   executionClientMode: external
@@ -113,7 +132,7 @@ root:
   rpDir: /srv/rocketpool/
   useFallbackExecutionClient: "false"
   vcMetricsPort: "9101"
-  version: v1.3.0
+  version: v1.4.0
   watchtowerMetricsPort: "9104"
 smartnode:
   dataPath: /rocketpool/data
