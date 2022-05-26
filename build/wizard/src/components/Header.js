@@ -49,13 +49,13 @@ const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, 
                     {nodeSyncStatus && utils && (
                         <div>
                             <p className="has-text-right">
-                                <SyncStatusTag progress={nodeSyncStatus.eth1Progress} label="ETH1" />&nbsp;
+                                <SyncStatusTag progress={nodeSyncStatus.ecStatus.primaryEcStatus.isSynced?1.0:nodeSyncStatus.ecStatus.primaryEcStatus.syncProgress} label="ETH1" />&nbsp;
                                 <SyncStatusTag progress={nodeSyncStatus.eth2Progress} label="Beacon chain" />
                                 {minipoolStatus && minipoolStatus.minipools && (
                                     beaconChainDashboard(minipoolStatus.minipools.filter((minipool) => "validator" in minipool).map((minipool) => minipool.validator.index))
                                 )}
                             </p>
-                            {nodeSyncStatus.eth1Synced && (
+                            {nodeSyncStatus.ecStatus.primaryEcStatus.isSynced && (
                                 <p className="has-text-right">
                                     {gasPrice && (
                                         <>

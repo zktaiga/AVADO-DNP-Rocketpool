@@ -134,7 +134,7 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
             )
         }
 
-        if (!nodeSyncStatus.eth1Synced) {
+        if (!nodeSyncStatus.ecStatus.primaryEcStatus.isSynced) {
             return (
                 <>
                     <span className="icon-text">
@@ -167,7 +167,6 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
         }
 
         return (<button className="button" onClick={() => { setNavBar("Setup") }} >Start setup</button>)
-
     }
 
     return (

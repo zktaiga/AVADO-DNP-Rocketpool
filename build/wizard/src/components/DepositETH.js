@@ -18,7 +18,6 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
 
     const ETHDepositAmount = 16000000000000000000;
 
-
     const getNodeFeeWithSlippage = (nodeFee) => nodeFee * 1.0; // no more slippage
 
     React.useEffect(() => {
@@ -113,7 +112,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
 
             {nodeFee.status === "success" && nodeStatus.minipoolCounts.total < count && (
                 <>
-                    <p>The commission you will receive from other deposits is +/- {utils.displayAsPercentage(selectedNodeFee * 100)}.<br />For more info on this check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a></p>
+                    <p>The commission you will receive from other deposits is {utils.displayAsPercentage(selectedNodeFee * 100)}.<br />For more info on this check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a></p>
                     <br />
                     <div className="field">
                         <button className="button" onClick={depositEth} disabled={ethButtonDisabled}>Deposit 16 ETH and create minipool {waitingForTx ? <Spinner /> : ""}</button>
