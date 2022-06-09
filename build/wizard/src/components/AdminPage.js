@@ -3,9 +3,11 @@ import config from "../config";
 import BackupDashboard from "./BackupDashboard";
 import LogView from "./LogView";
 import Spinner from "./Spinner";
+import RpdCommand from "./RpdCommand";
+
 const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
-const AdminPage = ({ wampSession }) => {
+const AdminPage = ({ wampSession, rpdDaemon, utils }) => {
     const [isRestartValidator, setIsRestartValidator] = React.useState(false);
     const [isRestartRpNode, setIsRestartRpNode] = React.useState(false);
     const [network, setNetwork] = React.useState("");
@@ -54,6 +56,7 @@ const AdminPage = ({ wampSession }) => {
             <BackupDashboard wampSession={wampSession} />
             <LogView wampSession={wampSession} />
             <h2>Debug</h2>
+            <RpdCommand rpdDaemon={rpdDaemon} />
             <div className="field">
                 <button className="button" onClick={restartRpNode} disabled={isRestartRpNode}>Restart Rocket Pool Node{isRestartRpNode ? <Spinner /> : ""}</button>
             </div>
