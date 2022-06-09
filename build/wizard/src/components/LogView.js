@@ -26,11 +26,11 @@ const LogView = ({ wampSession }) => {
     return (
         <div>
             <h2 className="title is-3 has-text-white">Latest log entries</h2>
-            <div className="container">
+            {/* <div className="container"> */}
                 <pre className="transcript">
                     {log}
                 </pre>
-            </div>
+            {/* </div> */}
             <button className="button" onClick={getLog}>Refresh log</button>
         </div>
     );
