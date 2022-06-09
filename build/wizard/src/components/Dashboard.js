@@ -78,13 +78,13 @@ const Comp = () => {
         connection.open();
     }, []);
 
-    const rpdDaemon = async (command, callback) => {
+    const rpdDaemon = async (command, callback, error) => {
         await axios.post(`${config.api.HTTP}/rpd`, { command: command }, { timeout: 5 * 60 * 1000 }).then((res) => {
             const data = bignumJSON.parse(res.data);
             console.log(`rocketpoold api ${command}: ` + res.data);
             // console.log('JSON: ' + bignumJSON.stringify(data))
             callback(data);
-        })
+        }).catch(e => error(e))
     }
 
     const updateMiniPoolStatus = () => rpdDaemon("minipool status", (data) => setMinipoolStatus(data));
@@ -164,7 +164,7 @@ const Comp = () => {
                         )}
 
                         {navBar === "Admin" && (
-                            <AdminPage utils={utils} wampSession={wampSession} />
+                            <AdminPage utils={utils} wampSession={wampSession} rpdDaemon={rpdDaemon} />
                         )}
                     </div>
                 </div>

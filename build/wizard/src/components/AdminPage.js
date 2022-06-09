@@ -3,9 +3,11 @@ import config from "../config";
 import BackupDashboard from "./BackupDashboard";
 import LogView from "./LogView";
 import Spinner from "./Spinner";
+import RpdCommand from "./RpdCommand";
+
 const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
-const AdminPage = ({ wampSession }) => {
+const AdminPage = ({ wampSession, rpdDaemon, utils }) => {
     const [isRestartValidator, setIsRestartValidator] = React.useState(false);
     const [isRestartRpNode, setIsRestartRpNode] = React.useState(false);
     const [network, setNetwork] = React.useState("");
@@ -48,18 +50,34 @@ const AdminPage = ({ wampSession }) => {
 
     return (
         <div>
-            <p>
+            {/* <p>
                 <a href="http://my.ava.do/#/Packages/rocketpool.avado.dnp.dappnode.eth/detail" target="_blank">Avado Rocket Pool package details</a>
-            </p>
+            </p> */}
+            <br/>
+            <article className="message is-warning">
+                <div className="message-header">
+                    <p>Warning</p>
+                    {/* <button className="delete" aria-label="delete"></button> */}
+                </div>
+                <div className="message-body">
+                    These are some admin functions of the Rocketpool package. Please proceed with caution!
+                </div>
+            </article>
+            <h2 className="title is-3 has-text-white">Backup and Restore</h2>
             <BackupDashboard wampSession={wampSession} />
             <LogView wampSession={wampSession} />
-            <h2>Debug</h2>
+            <br />
+            <RpdCommand rpdDaemon={rpdDaemon} />
+            <br />
+            <h2 className="title is-3 has-text-white">Restart RPD</h2>
             <div className="field">
                 <button className="button" onClick={restartRpNode} disabled={isRestartRpNode}>Restart Rocket Pool Node{isRestartRpNode ? <Spinner /> : ""}</button>
             </div>
-            {network && (<p><b>Network: </b>{network}</p>)}
+            <br />
+            <h2 className="title is-3 has-text-white">Switch network from mainnet to testnet (Prater)</h2>
+            {network && (<p><b>Current network: </b>{network}</p>)}
             <div className="field">
-                <button className="button" onClick={toggleNetwork}>Toggle network</button>
+                <button className="button" onClick={toggleNetwork}>Switch network</button>
             </div>
         </div>
     );
