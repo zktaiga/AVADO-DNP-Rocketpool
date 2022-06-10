@@ -8,7 +8,7 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import DownloadBackup from "./DownloadBackup";
 import BN from "bn.js"
 
-const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon, setNavBar, updateMiniPoolStatus, count }) => {
+const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, updateNodeStatus, rpdDaemon, setNavBar, updateMiniPoolStatus, targetCount }) => {
 
     const [ethButtonDisabled, setEthButtonDisabled] = React.useState(true);
     const [feedback, setFeedback] = React.useState("");
@@ -21,8 +21,8 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     const getNodeFeeWithSlippage = (nodeFee) => nodeFee * 1.0; // no more slippage
 
     React.useEffect(() => {
-        const minipoolCount = new BN(count.toString());
-        const rplMin = (new BN(rplPriceData.minPerMinipoolRplStake.toString())).mul(minipoolCount);
+        const targetCountBN = new BN(targetCount.toString());
+        const rplMin = (new BN(rplPriceData.minPerMinipoolRplStake.toString())).mul(targetCountBN);
 
         if (waitingForTx)
             return;
@@ -53,7 +53,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
             setSelectedNodeFee(getNodeFeeWithSlippage(nodeFee.nodeFee));
         }
 
-    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, count, waitingForTx]);
+    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, targetCount, waitingForTx]);
 
 
     React.useEffect(() => {
@@ -103,14 +103,14 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     return (
         <div className="">
             <h4 className="title is-4 has-text-white">3. Deposit 16 ETH and create MiniPool</h4>
-            {nodeStatus.minipoolCounts.total >= count && (
+            {nodeStatus.minipoolCounts.total >= targetCount && (
                 <>
                     <span className="tag is-success">16 ETH successfully deposited. <span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span>
                     <br />
                 </>
             )}
 
-            {nodeFee.status === "success" && nodeStatus.minipoolCounts.total < count && (
+            {nodeFee.status === "success" && nodeStatus.minipoolCounts.total < targetCount && (
                 <>
                     <p>The commission you will receive from other deposits is {utils.displayAsPercentage(selectedNodeFee * 100)}.<br />For more info on this check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a></p>
                     <br />
@@ -129,8 +129,8 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                     <p>Your MiniPool has been successfully created! Click the button below to go to the status page.</p>
                     <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
                     <br />
-                    <div class="columns">
-                        <div class="column is-two-thirds">
+                    <div className="columns">
+                        <div className="column is-two-thirds">
                             <article className="message is-warning ">
                                 <div className="message-header">
                                     <p>Download backup</p>
