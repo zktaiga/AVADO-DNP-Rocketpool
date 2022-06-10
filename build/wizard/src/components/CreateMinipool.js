@@ -43,6 +43,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                 <>
                                     <p>Congratulations the minipool on your node has been created. Now, you have to wait for the other half to be deposited (after a 12 hour safety period).</p>
                                     <p>Depositing this second half will require gas, so leave some ETH in your wallet to pay for the gas.</p>
+                                    <p>Once the second half is deposited, remember to import the validator key (inside the backup file) into your Ethereum Validator.</p>
                                     <p>After downloading your backup, you can follow the status on the <a onClick={() => { setNavBar("Status") }}>Status</a> page</p>
                                 </>
                             )}
