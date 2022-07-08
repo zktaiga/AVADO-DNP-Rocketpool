@@ -84,7 +84,7 @@ const Comp = () => {
             console.log(`rocketpoold api ${command}: ` + res.data);
             // console.log('JSON: ' + bignumJSON.stringify(data))
             callback(data);
-        }).catch(e => error(e))
+        }).catch(e => {if (error) error(e)})
     }
 
     const updateMiniPoolStatus = () => rpdDaemon("minipool status", (data) => setMinipoolStatus(data));

@@ -48,11 +48,11 @@ const StakeRPL = ({ rpdDaemon }) => {
 
                         {result && (
                             <>
-                                <div className="container">
+                                {/* <div className="container"> */}
                                     <pre className="transcript">
                                         {result.replace(/\\n/g, "\n")}
                                     </pre>
-                                </div>
+                                {/* </div> */}
                             </>
                         )}
 

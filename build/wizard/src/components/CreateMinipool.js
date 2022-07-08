@@ -10,7 +10,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
     const minNodeFee = 0.05;
     const maxNodeFee = 0.2;
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
-    const [miniPoolsCount, setMiniPoolsCount] = React.useState(0);
+    const [targetCount, setTargetCount] = React.useState(1);
 
     React.useEffect(() => {
         if (nodeFee && nodeFee.status === "success") {
@@ -19,14 +19,15 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
         }
     }, [nodeFee]);
 
-    React.useEffect(() => {
-        if (minipoolStatus?.minipools) {
-            setMiniPoolsCount(minipoolStatus?.minipools?.length)
-        }
-    }, [minipoolStatus]);
+    const currentMiniPoolCount = () => {
+        if (nodeStatus?.minipoolCounts?.total)
+            return nodeStatus?.minipoolCounts?.total
+        else
+            return 0
+    }
 
     const addAnother = () => {
-        setMiniPoolsCount(miniPoolsCount + 1);
+        setTargetCount(currentMiniPoolCount() + 1);
     }
 
     return (
@@ -35,13 +36,14 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                 <>
                     {/* <pre>{JSON.stringify(nodeStatus, 0, 2)}</pre> */}
                     <h3 className="title is-3 has-text-white">Minipool</h3>
-                    {(minipoolStatus && minipoolStatus.minipools && minipoolStatus.minipools.length >= miniPoolsCount) ? (
+                    {(currentMiniPoolCount() >= targetCount) ? (
                         <div className="content">
                             {/* we will only show this part when you have new- non staking minipools */}
                             {nodeStatus && nodeStatus.minipoolCounts && (nodeStatus.minipoolCounts.initialized > 0 || nodeStatus.minipoolCounts.prelaunch > 0) && (
                                 <>
                                     <p>Congratulations the minipool on your node has been created. Now, you have to wait for the other half to be deposited (after a 12 hour safety period).</p>
                                     <p>Depositing this second half will require gas, so leave some ETH in your wallet to pay for the gas.</p>
+                                    <p>Once the second half is deposited, remember to import the validator key (inside the backup file) into your Ethereum Validator.</p>
                                     <p>After downloading your backup, you can follow the status on the <a onClick={() => { setNavBar("Status") }}>Status</a> page</p>
                                 </>
                             )}
@@ -69,7 +71,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                             <div>
                                 <ApproveRpl utils={utils} rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />
                                 <StakeRPL
-                                    count={miniPoolsCount}
+                                    targetCount={targetCount}
                                     utils={utils}
                                     nodeStatus={nodeStatus}
                                     rplPriceData={rplPriceData}
@@ -78,7 +80,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, min
                                     rpdDaemon={rpdDaemon}
                                 />
                                 <DepositETH
-                                    count={miniPoolsCount}
+                                    targetCount={targetCount}
                                     utils={utils}
                                     nodeStatus={nodeStatus}
                                     nodeFee={nodeFee}

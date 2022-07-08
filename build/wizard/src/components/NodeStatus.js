@@ -15,7 +15,7 @@ const NodeStatus = ({ utils, nodeStatus, updateNodeStatus, nodeSyncStatus }) => 
                         <tbody>
                             <tr>
                                 <td><b>Execution (ETH1) node</b></td>
-                                <td><SyncStatusTag progress={nodeSyncStatus.ecStatus.primaryEcStatus.isSynced?1.0:nodeSyncStatus.ecStatus.primaryEcStatus.syncProgress} label="ETH1" />&nbsp;</td>
+                                <td><SyncStatusTag progress={nodeSyncStatus.ecStatus.primaryEcStatus.syncProgress}/></td>
                             </tr>
                             <tr>
                                 <td><b>Beacon chain (ETH2) node</b></td>
