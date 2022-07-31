@@ -110,7 +110,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
             )
             }
 
-            {stakedRplBalance && targetCount>1 && (
+            {/* {stakedRplBalance && targetCount>1 && ( */}
                 <>
                     <p>Stake all RPL in my hot wallet.</p>
                     <div className="field">
@@ -129,7 +129,7 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
                         )}
                     </div>
                 </>
-            )}
+            {/* )} */}
             {txHash && (
                 <>
                     <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
