@@ -1,6 +1,7 @@
 besu:
   additionalFlags: ""
   containerTag: hyperledger/besu:22.4.1-openjdk-latest
+  jvmHeapSize: "0"
   maxBackLayers: "512"
   maxPeers: "25"
 bitflyNodeMetrics:
@@ -15,6 +16,7 @@ consensusCommon:
   openApiPort: "false"
   p2pPort: "9001"
 executionCommon:
+  enginePort: "8551"
   ethstatsLabel: ""
   ethstatsLogin: ""
   httpPort: "8545"
@@ -25,7 +27,6 @@ exporter:
   additionalFlags: ""
   containerTag: prom/node-exporter:v1.3.1
   enableRootFs: "false"
-  port: "9103"
 externalExecution:
   httpUrl: ${ECHTTPURL}
   wsUrl: ${ECHTTPURL}
@@ -47,24 +48,13 @@ externalTeku:
   containerTag: consensys/teku:22.3.2
   graffiti: ""
   httpUrl: ${BCHTTPURL}
-fallbackExecutionCommon:
-  ethstatsLabel: ""
-  ethstatsLogin: ""
-  httpPort: "8545"
-  openRpcPorts: "false"
-  p2pPort: "30303"
-  wsPort: "8546"
-fallbackExternalExecution:
-  httpUrl: ""
-  wsUrl: ""
-fallbackInfura:
-  additionalFlags: ""
-  containerTag: rocketpool/smartnode-pow-proxy:v1.3.0
-  projectID: ""
-fallbackPocket:
-  additionalFlags: ""
-  containerTag: rocketpool/smartnode-pow-proxy:v1.3.0
-  gatewayID: lb/613bb4ae8c124d00353c40a1
+fallbackNormal:
+  ccHttpUrl: ""
+  ecHttpUrl: ""
+fallbackPrysm:
+  ccHttpUrl: ""
+  ecHttpUrl: ""
+  jsonRpcUrl: ""
 geth:
   additionalFlags: ""
   cache: "16384"
@@ -73,20 +63,24 @@ geth:
 grafana:
   containerTag: grafana/grafana:8.3.2
   port: "3100"
-infura:
-  additionalFlags: ""
-  containerTag: rocketpool/smartnode-pow-proxy:v1.3.0
-  projectID: ""
 lighthouse:
   additionalBnFlags: ""
   additionalVcFlags: ""
   containerTag: sigp/lighthouse:v2.1.5
   maxPeers: "80"
+mevBoost:
+  additionalFlags: ""
+  containerTag: flashbots/mev-boost:v0.7.7
+  externalUrl: ""
+  mode: local
+  port: "18550"
+  relays: ""
 native:
   ccHttpUrl: ${BCHTTPURL}
   consensusClient: ${CONSENSUSCLIENT}
   ecHttpUrl: ${ECHTTPURL}
   validatorRestartCommand: /srv/rocketpool/restart-validator.sh
+  validatorStopCommand: /srv/rocketpool/stop-validator.sh
 nethermind:
   additionalFlags: ""
   cache: "8192"
@@ -97,10 +91,6 @@ nimbus:
   additionalFlags: ""
   containerTag: statusim/nimbus-eth2:multiarch-v22.3.0
   maxPeers: "160"
-pocket:
-  additionalFlags: ""
-  containerTag: rocketpool/smartnode-pow-proxy:v1.3.0
-  gatewayID: lb/613bb4ae8c124d00353c40a1
 prometheus:
   additionalFlags: ""
   containerTag: prom/prometheus:v2.31.1
@@ -118,32 +108,35 @@ root:
   bnMetricsPort: "9100"
   consensusClient: nimbus
   consensusClientMode: external
+  ecMetricsPort: "9105"
   enableBitflyNodeMetrics: "false"
   enableMetrics: "false"
   executionClient: geth
   executionClientMode: external
   exporterMetricsPort: "9103"
   externalConsensusClient: prysm
-  fallbackExecutionClient: pocket
-  fallbackExecutionClientMode: external
   isNative: "true"
   nodeMetricsPort: "9102"
   reconnectDelay: 60s
   rpDir: /srv/rocketpool/
-  useFallbackExecutionClient: "false"
+  useFallbackClients: "false"
   vcMetricsPort: "9101"
-  version: v1.4.0
+  version: v1.5.0
   watchtowerMetricsPort: "9104"
 smartnode:
+  archiveECUrl: ""
   dataPath: /rocketpool/data
   manualMaxFee: "0"
   minipoolStakeGasThreshold: "150"
   network: ${NETWORK}
   priorityFee: "2"
   projectName: rocketpool
+  rewardsTreeMode: download
   rplClaimGasThreshold: "150"
+  web3StorageApiToken: ""
 teku:
   additionalBnFlags: ""
   additionalVcFlags: ""
   containerTag: consensys/teku:22.3.2
+  jvmHeapSize: "0"
   maxPeers: "74"
