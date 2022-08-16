@@ -4,6 +4,8 @@
 
 https://wiki.ava.do/en/tutorials/rocketpool
 
+Corresponding CLI tool: https://github.com/rocket-pool/smartnode
+
 ## Development
 
 Install the AVADO SDK:

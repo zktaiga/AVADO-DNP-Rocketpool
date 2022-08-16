@@ -27,5 +27,8 @@ BCHTTPURL="${BCHTTPURL}" \
 BCJSONRPCURL="${BCJSONRPCURL}" \
     envsubst <$(dirname "$0")/user-settings.template >$(dirname "$0")/user-settings.yml
 
+# Create folder for rewards trees
+mkdir -p /rocketpool/data/rewards-trees/
+
 # Start RocketPool node daemon
-/usr/local/bin/rocketpoold --settings /srv/rocketpool/user-settings.yml node
+exec /usr/local/bin/rocketpoold --settings /srv/rocketpool/user-settings.yml node

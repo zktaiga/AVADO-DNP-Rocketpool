@@ -16,15 +16,15 @@ class Utils {
     }
 
     beaconchainUrl(validatorPubkey, text) {
-        return <a target="_blank" href={this.beaconChainBaseUrl + "/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
+        return <a target="_blank" rel="noreferrer" href={this.beaconChainBaseUrl + "/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
     }
 
     etherscanAddressUrl(address, text) {
-        return <a target="_blank" href={this.etherscanBaseUrl + "/address/" + address}>{text ? text : address}</a>;
+        return <a target="_blank"rel="noreferrer" href={this.etherscanBaseUrl + "/address/" + address}>{text ? text : address}</a>;
     }
 
     etherscanTransactionUrl(txHash, text) {
-        return <a target="_blank" href={this.etherscanBaseUrl + "/tx/" + txHash}>{text ? text : txHash}</a>;
+        return <a target="_blank" rel="noreferrer" href={this.etherscanBaseUrl + "/tx/" + txHash}>{text ? text : txHash}</a>;
     }
 
     displayAsETH(number, fractionDigits) {
