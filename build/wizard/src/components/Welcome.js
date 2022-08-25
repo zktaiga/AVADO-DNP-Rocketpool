@@ -150,7 +150,7 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
             )
         }
 
-        if (!nodeSyncStatus.eth2Synced) {
+        if (!nodeSyncStatus.bcStatus.primaryEcStatus.isSynced) {
             return (
                 <>
                     <span className="icon-text">

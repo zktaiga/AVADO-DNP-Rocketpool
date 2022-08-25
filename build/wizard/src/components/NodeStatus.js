@@ -4,8 +4,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
 
 const NodeStatus = ({ utils, nodeStatus, updateNodeStatus, nodeSyncStatus }) => {
-    //{"status":"success","error":"","eth1Progress":1,"eth2Progress":0.999965525074369,"eth1Synced":true,"eth2Synced":false,"eth1LatestBlockTime":1641917772}
-
     return (
         <div>
             <h2 className="title is-3 has-text-white">Node status</h2>
@@ -19,7 +17,7 @@ const NodeStatus = ({ utils, nodeStatus, updateNodeStatus, nodeSyncStatus }) => 
                             </tr>
                             <tr>
                                 <td><b>Beacon chain (ETH2) node</b></td>
-                                <td><SyncStatusTag progress={nodeSyncStatus.eth2Progress} /></td>
+                                <td><SyncStatusTag progress={nodeSyncStatus.bcStatus.primaryEcStatus.syncProgress} /></td>
                             </tr>
                             <tr>
                                 <td><b>Hot wallet address</b></td>

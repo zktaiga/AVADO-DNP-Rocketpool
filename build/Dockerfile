@@ -6,7 +6,7 @@ COPY wizard .
 RUN yarn
 RUN rm -Rf build && yarn run build
 
-FROM alpine:latest
+FROM --platform=linux/amd64 alpine:latest
 ARG RP_VERSION
 
 RUN mkdir -p /srv/rocketpool
