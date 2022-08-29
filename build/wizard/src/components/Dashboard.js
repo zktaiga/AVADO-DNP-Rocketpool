@@ -15,6 +15,11 @@ import bignumJSON from "json-bignum"
 import AdminPage from "./AdminPage";
 import NetworkBanner from "./NetworkBanner";
 import Utils from "./utils";
+import ValidatorBanner from "./ValidatorBanner";
+import { DappManagerHelper } from "./DappManagerHelper";
+import SmoothingPoolBanner from "./SmoothingPoolBanner";
+
+export const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
 const Comp = () => {
     const [network, setNetwork] = React.useState();
@@ -29,6 +34,10 @@ const Comp = () => {
 
     const [wampSession, setWampSession] = React.useState();
     const [navBar, setNavBar] = React.useState("Welcome");
+
+    const dappManagerHelper = React.useMemo(() => wampSession ? new DappManagerHelper(packageName, wampSession) : null, [wampSession]);
+
+    const [keyManagerHelper, setKeyManagerHelper] = React.useState();
 
     React.useEffect(() => {
         if (walletStatus && minipoolStatus) {
@@ -115,6 +124,9 @@ const Comp = () => {
     return (
         <div className="dashboard has-text-white">
             <NetworkBanner network={network} />
+            <ValidatorBanner dappManagerHelper={dappManagerHelper} minipoolStatus={minipoolStatus} keyManagerHelper={keyManagerHelper} setKeyManagerHelper={setKeyManagerHelper}  utils={utils} nodeStatus={nodeStatus} />
+            <SmoothingPoolBanner rpdDaemon={rpdDaemon} utils={utils} updateNodeStatus={updateNodeStatus} nodeStatus={nodeStatus} keyManagerHelper={keyManagerHelper} minipoolSatus={minipoolStatus} />
+
             <Header utils={utils} rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
 

@@ -1,3 +1,11 @@
+addons-gww:
+  additionalFlags: ""
+  containerTag: rocketpool/graffiti-wall-addon:v0.1.0
+  enabled: "false"
+  inputUrl: https://cdn-rocketpool.s3.us-west-2.amazonaws.com/graffiti.json
+  updateInputTime: "600"
+  updatePixelTime: "60"
+  updateWallTime: "600"
 besu:
   additionalFlags: ""
   containerTag: hyperledger/besu:22.4.1-openjdk-latest
@@ -111,6 +119,7 @@ root:
   ecMetricsPort: "9105"
   enableBitflyNodeMetrics: "false"
   enableMetrics: "false"
+  enableMevBoost: "false"
   executionClient: geth
   executionClientMode: external
   exporterMetricsPort: "9103"
@@ -121,7 +130,7 @@ root:
   rpDir: /srv/rocketpool/
   useFallbackClients: "false"
   vcMetricsPort: "9101"
-  version: v1.5.0
+  version: v1.6.0
   watchtowerMetricsPort: "9104"
 smartnode:
   archiveECUrl: ""
@@ -133,6 +142,7 @@ smartnode:
   projectName: rocketpool
   rewardsTreeMode: download
   rplClaimGasThreshold: "150"
+  ttd: ""
   web3StorageApiToken: ""
 teku:
   additionalBnFlags: ""

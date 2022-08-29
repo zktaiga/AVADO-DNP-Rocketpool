@@ -1,4 +1,4 @@
-FROM node:16.14.0 as builder
+FROM node:16.15.0 as builder
 
 # build wizard
 WORKDIR /usr/src/app/wizard
@@ -27,7 +27,9 @@ COPY monitor .
 RUN npm i --production
 
 COPY startRpNode.sh /srv/rocketpool
-RUN chmod a+x /srv/rocketpool/startRpNode.sh
+COPY restart-validator.sh /srv/rocketpool
+RUN chmod a+x /srv/rocketpool/startRpNode.sh /srv/rocketpool/restart-validator.sh
+RUN ln -sf /srv/rocketpool/restart-validator.sh /srv/rocketpool/stop-validator.sh
 COPY user-settings.template /srv/rocketpool
 
 COPY supervisord.conf /etc/supervisord.conf

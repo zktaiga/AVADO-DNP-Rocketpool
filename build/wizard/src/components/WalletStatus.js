@@ -1,5 +1,4 @@
 import React from "react";
-import Utils from './utils.js';
 
 const WalletStatus = ({ utils, nodeStatus, updateNodeStatus }) => {
     return (

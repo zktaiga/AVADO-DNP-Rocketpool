@@ -1,6 +1,6 @@
 import React from 'react';
 import Dashboard from "./components/Dashboard";
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AutobahnContext from "./components/AutobahnContext";
 import StoreContext from "./components/StoreContext";
 import "./css/style.sass";
@@ -12,13 +12,13 @@ function App() {
             <AutobahnContext>
                 <StoreContext>
                     <BrowserRouter>
-                        <Switch>
+                        <Routes>
                             <Route
                                 path="/"
                                 exact={true}
-                                render={props => (<Dashboard {...props} />)}
+                                element={<Dashboard/>}
                             />
-                        </Switch>
+                        </Routes>
                     </BrowserRouter>
                 </StoreContext>
             </AutobahnContext>
