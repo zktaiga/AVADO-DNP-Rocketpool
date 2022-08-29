@@ -53,7 +53,7 @@ export class DappManagerHelper {
         return fetchData();
     }
 
-    public writeFileToContainer(fileName: string, pathInContainer: string, content: string) {
+    public writeFileToContainer(fileName: string, pathInContainer: string, content: string, packageName?: string) {
         if (!this.wampSession)
             return
         const pushData = async () => {
@@ -61,7 +61,7 @@ export class DappManagerHelper {
             const dataUri = `data:application/json";base64,${base64Data}`
             const res = JSON.parse(await this.wampSession.call("copyFileTo.dappmanager.dnp.dappnode.eth", [],
                 {
-                    id: this.packageName,
+                    id: packageName ?? this.packageName,
                     dataUri: dataUri,
                     filename: fileName,
                     toPath: pathInContainer
@@ -147,13 +147,13 @@ export class DappManagerHelper {
         return pushData();
     }
 
-    public restartPackage() {
+    public restartPackage(packageName?: string) {
         if (!this.wampSession)
             return "Loading..."
         const pushData = async () => {
             const res = JSON.parse(await this.wampSession.call("restartPackage.dappmanager.dnp.dappnode.eth", [],
                 {
-                    id: this.packageName
+                    id: packageName ?? this.packageName,
                 }));
             if (res.success !== true) return;
             return res.result

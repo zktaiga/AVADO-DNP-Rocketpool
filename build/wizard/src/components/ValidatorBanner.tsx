@@ -8,12 +8,12 @@ interface Props {
     dappManagerHelper: DappManagerHelper,
     minipoolStatus: minipoolStatusType,
     nodeStatus: nodeStatusType,
-    keyManagerAPI: RestApi,
-    setKeyManagerAPI: (restApi: RestApi) => void,
+    keyManagerHelper: KeyManagerHelper,
+    setKeyManagerHelper: (keyManagerHelper: KeyManagerHelper) => void,
     utils: any
 }
 
-const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerAPI, keyManagerAPI, utils, nodeStatus }: Props) => {
+const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelper, keyManagerHelper, utils, nodeStatus }: Props) => {
 
     const [packages, setPackages] = React.useState<string[]>();
     const [network, setNetwork] = React.useState<networkType>();
@@ -67,7 +67,9 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerAPI, 
                     (apiToken) => {
                         // console.log(apiToken)
                         if (apiToken) {
-                            setKeyManagerAPI(new RestApi(keyManagerAPIUrl, apiToken))
+                            const keyManagerAPI = new RestApi(keyManagerAPIUrl, apiToken)
+                            const keyManagerHelper = new KeyManagerHelper(keyManagerAPI, dappManagerHelper, validatorPackage);
+                            setKeyManagerHelper(keyManagerHelper)
                         }
                     }
                 )
@@ -86,8 +88,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerAPI, 
     const ERROR = "-1"
 
     React.useEffect(() => {
-        if (keyManagerAPI) {
-            const keyManagerHelper = new KeyManagerHelper(keyManagerAPI);
+        if (keyManagerHelper) {
 
             const setAllValidatorsInfo = async () => {
                 const pubKeys = minipoolStatus.minipools.map(minipool => "0x" + minipool.validatorPubkey)
@@ -108,18 +109,17 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerAPI, 
             setAllValidatorsInfo();
 
         }
-    }, [keyManagerAPI, minipoolStatus]);
+    }, [keyManagerHelper, minipoolStatus]);
 
 
     const [configuredValidators, setConfiguredValidators] = React.useState<string[]>();
     React.useEffect(() => {
-        if (keyManagerAPI) {
-            const keyManagerHelper = new KeyManagerHelper(keyManagerAPI);
+        if (keyManagerHelper) {
             keyManagerHelper.getValidators().then(validators => {
                 setConfiguredValidators(validators)
             })
         }
-    }, [keyManagerAPI]);
+    }, [keyManagerHelper]);
 
     const [missingValidators, setMissingValidators] = React.useState<string[]>();
     React.useEffect(() => {
@@ -142,11 +142,10 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerAPI, 
     }, [validatorsInfo]);
 
     const setFeeRecipients = async () => {
-        const keyManagerHelper = new KeyManagerHelper(keyManagerAPI);
-
-        misconfiguredValidators?.forEach(validator => {
-            keyManagerHelper.setFeeRecipient(validator.address, nodeStatus.feeRecipientInfo.smoothingPoolAddress)
-        })
+        if (misconfiguredValidators) {
+            // set for all minipool validators (for Prysm workaround: non persistend setting via API)
+            keyManagerHelper.setFeeRecipients(minipoolStatus, nodeStatus.feeRecipientInfo.smoothingPoolAddress)
+        }
     }
 
     return (

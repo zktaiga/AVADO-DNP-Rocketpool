@@ -5,6 +5,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import Spinner from "./Spinner";
 import web3 from "web3";
 import { KeyManagerHelper } from "./KeyManagerHelper";
+import { DappManagerHelper } from "./DappManagerHelper";
 
 interface Props {
     rpdDaemon: any,
@@ -12,10 +13,10 @@ interface Props {
     updateNodeStatus: any,
     minipoolSatus: minipoolStatusType,
     nodeStatus: nodeStatusType,
-    keyManagerAPI: RestApi
+    keyManagerHelper: KeyManagerHelper,
 }
 
-const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, minipoolSatus, keyManagerAPI }: Props) => {
+const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, minipoolSatus, keyManagerHelper }: Props) => {
 
     // get-smoothing-pool-registration-status  Check whether or not the node is opted into the Smoothing Pool
     // ```
@@ -70,11 +71,7 @@ const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, m
     }, [nodeStatus, waitingForTx, rpdDaemon]);
 
     const setFeeRecipients = async () => {
-        const keyManagerHelper = new KeyManagerHelper(keyManagerAPI);
-        minipoolSatus.minipools.forEach(minipool => {
-            console.log("Setting fee recipient for", minipool.validatorPubkey)
-            keyManagerHelper.setFeeRecipient("0x"+minipool.validatorPubkey, nodeStatus.feeRecipientInfo.smoothingPoolAddress)
-        })
+        keyManagerHelper.setFeeRecipients(minipoolSatus, nodeStatus.feeRecipientInfo.smoothingPoolAddress)
     }
 
     const joinSmoothingPool = () => {

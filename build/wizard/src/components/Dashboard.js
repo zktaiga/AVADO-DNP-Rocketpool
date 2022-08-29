@@ -37,7 +37,7 @@ const Comp = () => {
 
     const dappManagerHelper = React.useMemo(() => wampSession ? new DappManagerHelper(packageName, wampSession) : null, [wampSession]);
 
-    const [keyManagerAPI, setKeyManagerAPI] = React.useState();
+    const [keyManagerHelper, setKeyManagerHelper] = React.useState();
 
     React.useEffect(() => {
         if (walletStatus && minipoolStatus) {
@@ -124,8 +124,8 @@ const Comp = () => {
     return (
         <div className="dashboard has-text-white">
             <NetworkBanner network={network} />
-            <ValidatorBanner dappManagerHelper={dappManagerHelper} minipoolStatus={minipoolStatus} keyManagerAPI={keyManagerAPI} setKeyManagerAPI={setKeyManagerAPI}  utils={utils} nodeStatus={nodeStatus} />
-            <SmoothingPoolBanner rpdDaemon={rpdDaemon} utils={utils} updateNodeStatus={updateNodeStatus} nodeStatus={nodeStatus} keyManagerAPI={keyManagerAPI} minipoolSatus={minipoolStatus} />
+            <ValidatorBanner dappManagerHelper={dappManagerHelper} minipoolStatus={minipoolStatus} keyManagerHelper={keyManagerHelper} setKeyManagerHelper={setKeyManagerHelper}  utils={utils} nodeStatus={nodeStatus} />
+            <SmoothingPoolBanner rpdDaemon={rpdDaemon} utils={utils} updateNodeStatus={updateNodeStatus} nodeStatus={nodeStatus} keyManagerHelper={keyManagerHelper} minipoolSatus={minipoolStatus} />
 
             <Header utils={utils} rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
             <NavigationBar navBar={navBar} setNavBar={setNavBar} />
