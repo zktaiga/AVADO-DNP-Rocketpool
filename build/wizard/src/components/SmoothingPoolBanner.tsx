@@ -71,7 +71,7 @@ const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, m
     }, [nodeStatus, waitingForTx, rpdDaemon]);
 
     const setFeeRecipients = async () => {
-        keyManagerHelper.setFeeRecipients(minipoolSatus, nodeStatus.feeRecipientInfo.smoothingPoolAddress)
+        keyManagerHelper.setFeeRecipients(minipoolSatus, nodeStatus.feeRecipientInfo.smoothingPoolAddress, false)
     }
 
     const joinSmoothingPool = () => {
@@ -89,7 +89,7 @@ const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, m
                             }
                             setWaitingForTx(true);
                             setTxHash(data.txHash);
-                            setFeedback("Waiting for transaction " + data.txHash);
+                            setFeedback("Waiting for onchain transaction.");
                         })
                         setFeeRecipients()
                     }
@@ -110,6 +110,9 @@ const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, m
                     console.log(receipt);
                     setWaitingForTx(false);
                     updateNodeStatus();
+                    
+                    //force reload
+                    window.location.reload()
                 });
             });
         }
@@ -129,6 +132,9 @@ const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, m
                                 <button className="button" onClick={joinSmoothingPool} disabled={!updateButtonEnabled}>Update {waitingForTx ? <Spinner /> : ""}</button>
                                 {feedback && (
                                     <p className="help">{feedback}</p>
+                                )}
+                                 {txHash && (
+                                    <p className="help">Transaction details: {utils.etherscanAddressUrl(txHash)}</p>
                                 )}
                             </div>
                         </div>

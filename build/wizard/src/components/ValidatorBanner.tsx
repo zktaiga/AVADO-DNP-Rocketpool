@@ -144,7 +144,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
     const setFeeRecipients = async () => {
         if (misconfiguredValidators) {
             // set for all minipool validators (for Prysm workaround: non persistend setting via API)
-            keyManagerHelper.setFeeRecipients(minipoolStatus, nodeStatus.feeRecipientInfo.smoothingPoolAddress)
+            keyManagerHelper.setFeeRecipients(minipoolStatus, nodeStatus.feeRecipientInfo.smoothingPoolAddress, true)
         }
     }
 

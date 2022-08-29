@@ -34,7 +34,7 @@ export class KeyManagerHelper {
             });
     }
 
-    public setFeeRecipients(minipoolSatus: minipoolStatusType, feeRecipientAddress: string) {
+    public setFeeRecipients(minipoolSatus: minipoolStatusType, feeRecipientAddress: string, refresh?: boolean ) {
         const pubKeys = minipoolSatus.minipools.map(minipool => minipool.validatorPubkey)
         console.log(`Setting feerecipient for ${pubKeys} to ${feeRecipientAddress}`)
         
@@ -44,7 +44,8 @@ export class KeyManagerHelper {
             this.prysmFeeRecipientsWorkaround(pubKeys, feeRecipientAddress)
 
         //wait a bit and force a page reload
-        setTimeout(() => window.location.reload(), 10000);
+        if (refresh)
+            setTimeout(() => window.location.reload(), 10000);
     }
 
     //workaround for Prysm because the keyManager API calls are not persisted: https://github.com/prysmaticlabs/prysm/issues/11322
