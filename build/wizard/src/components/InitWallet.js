@@ -40,7 +40,6 @@ const InitWallet = ({ walletStatus, updateWalletStatus, updateNodeStatus, rpdDae
     }, [walletStatus, initialWalletStatus]);
 
     // Future improvement: allow recovery (`wallet recover mnemonic`)
-
     const initWallet = () => {
         if (!walletStatus.passwordSet) {
             rpdDaemon("wallet set-password \"" + password + "\"", (data) => {
@@ -55,9 +54,18 @@ const InitWallet = ({ walletStatus, updateWalletStatus, updateNodeStatus, rpdDae
                     }
                     setWalletAddress(data.accountAddress);
                     setWalletMnemonic(data.mnemonic);
-                    setButtonDisabled(true);
-                    updateWalletStatus();
-                    updateNodeStatus();
+
+                    // Do a recover to save the wallet
+                    // https://github.com/rocket-pool/smartnode/blob/master/rocketpool-cli/wallet/init.go#L78
+                    rpdDaemon(`wallet recover "${data.mnemonic}"`, (data) => {
+                        //{"status":"success","error":"","mnemonic":"corn wool actor cable marine anger nothing return coast energy magnet evolve best lion dutch clerk visit begin agree about sing federal sausage ribbon","accountAddress":"0xd97afeffa7ce00aa489e5c88880e124fb75b8e05"}
+                        if (data.status === "error") {
+                            setPasswordFeedback(data.error);
+                        }
+                        setButtonDisabled(true);
+                        updateWalletStatus();
+                        updateNodeStatus();
+                    });
                 });
             });
         }
@@ -112,20 +120,20 @@ const InitWallet = ({ walletStatus, updateWalletStatus, updateNodeStatus, rpdDae
                 ) : (
                     <div>
                         <p>Your Rocketpool hot-wallet has been created and its address is {walletStatus.accountAddress}</p>
-                        <br/>
+                        <br />
                         <div className="columns">
-                                <div className="column is-two-thirds">
-                                    <article className="message is-warning ">
-                                        <div className="message-header">
-                                            <p>Download backup</p>
-                                        </div>
-                                        <div className="message-body">
-                                            <p>Please download a backup of your hot wallet before continuing!</p><br/>
-                                            <DownloadBackup description="Download backup of my wallet" /><br /><br/>
-                                        </div>
-                                    </article>
-                                </div>
+                            <div className="column is-two-thirds">
+                                <article className="message is-warning ">
+                                    <div className="message-header">
+                                        <p>Download backup</p>
+                                    </div>
+                                    <div className="message-body">
+                                        <p>Please download a backup of your hot wallet before continuing!</p><br />
+                                        <DownloadBackup description="Download backup of my wallet" /><br /><br />
+                                    </div>
+                                </article>
                             </div>
+                        </div>
                         <button className="button" onClick={() => { onFinished() }}>I downloaded a backup of my wallet - continue to next step</button>
                     </div>
                 )}

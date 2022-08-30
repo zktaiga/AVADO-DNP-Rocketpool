@@ -120,7 +120,7 @@ const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, m
 
     return (
         <>
-            {nodeStatus && !nodeStatus.feeRecipientInfo.isInSmoothingPool && (
+            {nodeStatus && !nodeStatus.error && nodeStatus.registered && !nodeStatus.feeRecipientInfo.isInSmoothingPool && (
                 <section className="hero is-danger">
                     <div className="hero-body is-small">
                         <p className="has-text-centered">Your RocketPool configuration needs an update!</p>
