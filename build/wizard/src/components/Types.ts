@@ -110,3 +110,12 @@ export type nodeStatusType = {
   "penalizedMinipools": {},
   "proposalVotes": []
 }
+
+export type walletStatusType = {
+  "status": "success" | "error",
+  "error": string,
+  "passwordSet": boolean,
+  "walletInitialized": boolean,
+  "accountAddress": string
+}
+
