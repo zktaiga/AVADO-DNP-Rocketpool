@@ -1,11 +1,9 @@
 import React from "react";
-import { RestApi } from "./RestApi";
 import { minipoolStatusType, nodeStatusType } from "./Types"
 import { confirmAlert } from 'react-confirm-alert';
 import Spinner from "./Spinner";
 import web3 from "web3";
-import { KeyManagerHelper } from "./KeyManagerHelper";
-import { DappManagerHelper } from "./DappManagerHelper";
+import { KeyManagerHelper } from "./KeyManagerHelper"
 
 interface Props {
     rpdDaemon: any,
@@ -120,7 +118,7 @@ const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, m
 
     return (
         <>
-            {nodeStatus && !nodeStatus.feeRecipientInfo.isInSmoothingPool && (
+            {nodeStatus && !nodeStatus.error && nodeStatus.registered && !nodeStatus.feeRecipientInfo.isInSmoothingPool && (
                 <section className="hero is-danger">
                     <div className="hero-body is-small">
                         <p className="has-text-centered">Your RocketPool configuration needs an update!</p>

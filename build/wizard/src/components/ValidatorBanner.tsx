@@ -3,6 +3,7 @@ import { DappManagerHelper } from "./DappManagerHelper";
 import { RestApi } from "./RestApi";
 import { networkType, consusClientType, minipoolStatusType, nodeStatusType } from "./Types"
 import { KeyManagerHelper } from "./KeyManagerHelper";
+import { confirmAlert } from 'react-confirm-alert';
 
 interface Props {
     dappManagerHelper: DappManagerHelper,
@@ -88,7 +89,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
     const ERROR = "-1"
 
     React.useEffect(() => {
-        if (keyManagerHelper) {
+        if (keyManagerHelper && minipoolStatus.minipools) {
 
             const setAllValidatorsInfo = async () => {
                 const pubKeys = minipoolStatus.minipools.map(minipool => "0x" + minipool.validatorPubkey)
@@ -148,6 +149,57 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
         }
     }
 
+
+    const importValidators = async () => {
+        console.dir(missingValidators)
+
+        const importValidator = async (validator: string) => {
+            // get keyStoreFile
+            const keyStoreFile = await dappManagerHelper.getFileContentFromContainer(`/rocketpool/data/validators/teku/keys/${validator}.json`)
+            console.log(keyStoreFile)
+            // get password
+            const password = await dappManagerHelper.getFileContentFromContainer(`/rocketpool/data/validators/teku/passwords/${validator}.txt`)
+            console.log(password)
+            // create message
+            const message = {
+                keystores: [keyStoreFile],
+                passwords: [password]
+            }
+
+            console.log(message)
+
+            // API call
+            keyManagerHelper.keyManagerAPI.post("/eth/v1/keystores", message, (res) => {
+                //https://ethereum.github.io/keymanager-APIs/#/Local%20Key%20Manager/ImportKeystores
+                const status = res.data.data[0].status
+                window.location.reload()
+            }, (e) => {
+                console.log(e)
+            });
+        }
+
+        missingValidators?.forEach(validator => importValidator(validator))
+    }
+
+    const confirmImportValidators = () => {
+        confirmAlert({
+            title: `Import validators into ${consensusClient}?`,
+            message: "Make sure you only run each validator only once! Running a validator on multiple machines will lead to your validator being slashed.",
+            buttons: [
+                {
+                    label: 'Yes',
+                    onClick: () => {
+                        importValidators();
+                    }
+                },
+                {
+                    label: 'No',
+                    onClick: () => { }
+                }
+            ]
+        });
+    }
+
     return (
         <>
             {/* package is installed? */}
@@ -169,8 +221,12 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
                             <div className="hero-body is-small">
                                 {missingValidators.map(validator => {
                                     return <p className="has-text-centered">Minipool {validator} is not imported in your Beacon Chain validator.</p>
-                                    //TODO: import now
                                 })}
+                                <div className="has-text-centered">
+                                    <div className="content">
+                                        <button className="button" onClick={confirmImportValidators}>Add validators to {consensusClient}</button>
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     )}

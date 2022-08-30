@@ -35,6 +35,9 @@ export class KeyManagerHelper {
     }
 
     public setFeeRecipients(minipoolSatus: minipoolStatusType, feeRecipientAddress: string, refresh?: boolean ) {
+        if (!minipoolSatus.minipools)
+            return;
+        
         const pubKeys = minipoolSatus.minipools.map(minipool => minipool.validatorPubkey)
         console.log(`Setting feerecipient for ${pubKeys} to ${feeRecipientAddress}`)
         
