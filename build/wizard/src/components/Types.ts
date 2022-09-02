@@ -2,6 +2,7 @@
 export type networkType = "prater" | "mainnet"
 export type consusClientType = "teku" | "prysm"
 
+// https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/minipool.go
 export type minipoolStatusType = {
   "status": "success" | "error",
   "error": string,
@@ -56,6 +57,7 @@ export type minipoolStatusType = {
   "latestDelegate": string
 }
 
+// https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/node.go
 export type nodeStatusType = {
   "status": "success" | "error",
   "error": string,
@@ -97,7 +99,6 @@ export type nodeStatusType = {
     "finalised": number
   },
   "activeSnapshotProposals": [],
-  "isMergeUpdateDeployed": boolean,
   "isFeeDistributorInitialized": boolean,
   "feeRecipientInfo": {
     "smoothingPoolAddress": string,
@@ -111,6 +112,7 @@ export type nodeStatusType = {
   "proposalVotes": []
 }
 
+//https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/wallet.go
 export type walletStatusType = {
   "status": "success" | "error",
   "error": string,
