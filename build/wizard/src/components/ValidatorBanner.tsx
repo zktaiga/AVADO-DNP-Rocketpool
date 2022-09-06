@@ -89,7 +89,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
     const ERROR = "-1"
 
     React.useEffect(() => {
-        if (keyManagerHelper && minipoolStatus.minipools) {
+        if (keyManagerHelper && minipoolStatus?.minipools) {
 
             const setAllValidatorsInfo = async () => {
                 const pubKeys = minipoolStatus.minipools.map(minipool => "0x" + minipool.validatorPubkey)
