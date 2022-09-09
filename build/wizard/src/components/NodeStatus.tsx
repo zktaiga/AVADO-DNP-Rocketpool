@@ -45,8 +45,7 @@ const NodeStatus = ({ utils, nodeStatus, updateNodeStatus, nodeSyncStatus }: Pro
                             </tr>
                             <tr><td><b>RPL Stake</b></td><td>{utils.displayAsETH(nodeStatus.rplStake, 2)} RPL</td></tr>
                             <tr><td><b>Time zone</b></td><td>{nodeStatus.timezoneLocation}</td></tr>
-                            <tr><td><b>Smoothing pool joined</b></td><td>{nodeStatus.feeRecipientInfo.isInSmoothingPool ? "yes" : "no"}</td></tr>
-                            <tr><td><b>Fee Distributor Initialized</b></td><td>{nodeStatus.isFeeDistributorInitialized ? "yes" : "no"}</td></tr>
+                            <tr><td><b>Smoothing pool joined</b></td><td>{nodeStatus.feeRecipientInfo.isInSmoothingPool ? "yes" : "no"}</td></tr>                            
                         </tbody>
                     </table>
                 </div>
