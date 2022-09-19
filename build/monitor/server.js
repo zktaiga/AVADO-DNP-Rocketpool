@@ -111,6 +111,15 @@ const rpd = (command) => {
             fs.mkdirSync(datafolder);
         }
     }
+
+    if (command.includes("set-smoothing-pool-status")) {
+        const datafolder = "/rocketpool/data/validators";
+        if (!fs.existsSync(datafolder)) {
+            console.log("Creating " + datafolder)
+            fs.mkdirSync(datafolder);
+        }
+    }
+
     const executionPromise = execute(cmd);
 
     executionPromise.then((result) => {

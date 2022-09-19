@@ -133,14 +133,14 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
 
     const [misconfiguredValidators, setMisconfiguredValidators] = React.useState<validatorInfoType[]>();
     React.useEffect(() => {
-        if (validatorsInfo) {
+        if (validatorsInfo && nodeStatus) {
             // console.dir(validatorsInfo)
             const misses = validatorsInfo.filter(i => {
                 return i.feerecipient !== ERROR && i.feerecipient.toUpperCase() !== nodeStatus.feeRecipientInfo.smoothingPoolAddress.toUpperCase()
             })
             setMisconfiguredValidators(misses)
         }
-    }, [validatorsInfo]);
+    }, [validatorsInfo, nodeStatus]);
 
     const setFeeRecipients = async () => {
         if (misconfiguredValidators) {
