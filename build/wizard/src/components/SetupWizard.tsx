@@ -6,12 +6,31 @@ import FundWallet from "./FundWallet";
 import RegisterNode from "./RegisterNode";
 import SetWithdrawalAddress from "./SetWithdrawalAddress";
 import CreateMinipool from "./CreateMinipool";
+import JoinSmoothingPool from "./JoinSmoothingPool"
+import { minipoolStatusType, nodeStatusType, walletStatusType } from "./Types"
+import { KeyManagerHelper } from "./KeyManagerHelper";
 
-const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon, setNavBar }) => {
+
+interface Props {
+    rpdDaemon: any,
+    utils: any,
+    updateNodeStatus: any,
+    minipoolStatus: minipoolStatusType,
+    nodeStatus: nodeStatusType,
+    walletStatus: walletStatusType,
+    updateWalletStatus: any,
+    rplPriceData: any,
+    updateMiniPoolStatus: any,
+    nodeFee: any,
+    setNavBar: any
+}
+
+const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon, setNavBar }: Props) => {
     const initWallet = { id: Symbol("Init wallet").toString(), name: "Init wallet" };
     const fundNode = { id: Symbol("Fund Node").toString(), name: "Fund Node" };
     const registerNode = { id: Symbol("Register node").toString(), name: "Register node" };
     const withdrawalAddress = { id: Symbol("Withdrawal address").toString(), name: "Withdrawal address" };
+    const joinSmoothingPool = { id: Symbol("Join smoothing pool").toString(), name: "Join smoothing pool" };
     const createMinipool = { id: Symbol("Add minipool").toString(), name: "Add minipool" };
 
     const [viewState, setViewState] = React.useState(initWallet);
@@ -21,7 +40,8 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
         fundNode,
         registerNode,
         withdrawalAddress,
-        createMinipool
+        joinSmoothingPool,
+        createMinipool,
     ];
 
     React.useEffect(() => {
@@ -57,25 +77,30 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
             if (nodeStatus.status === "success"
                 && nodeStatus.registered
                 && nodeStatus.withdrawalAddress !== nodeStatus.accountAddress) {
-                setViewState(createMinipool);
+                if (!nodeStatus.feeRecipientInfo.isInSmoothingPool) {
+                    setViewState(joinSmoothingPool);
+                }
+                else {
+                    setViewState(createMinipool);
+                }
                 return;
             }
         }
     }, [nodeStatus, walletStatus]);
 
 
-    const isActive = (element) => {
+    const isActive = (element: any) => {
         return element.id == viewState.id;
 
     }
-    const isHollow = (element) => {
+    const isHollow = (element: any) => {
         if (isActive(element) && element.id == createMinipool.id)
             return !nodeStatus.minipoolCounts || nodeStatus.minipoolCounts.total == 0;
         else
             return element.id == viewState.id;
     }
 
-    const stateComment = (element) => {
+    const stateComment = (element: any) => {
         if ("comment" in element)
             return element.comment;
     }
@@ -127,6 +152,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
             {(viewState.id === fundNode.id) && (<FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rplPriceData={rplPriceData} />)}
             {(viewState.id === registerNode.id) && (<RegisterNode utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
             {(viewState.id === withdrawalAddress.id) && (<SetWithdrawalAddress utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+            {(viewState.id === joinSmoothingPool.id) && (<JoinSmoothingPool utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
             {(viewState.id === createMinipool.id) && (<CreateMinipool
                 utils={utils}
                 nodeStatus={nodeStatus}
@@ -143,5 +169,4 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
 };
 
 export default SetupWizard
-
 

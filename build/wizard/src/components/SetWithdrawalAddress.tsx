@@ -3,8 +3,7 @@ import web3 from "web3";
 
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
-import config from "../config";
+import { minipoolStatusType, nodeStatusType } from "./Types"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
@@ -13,11 +12,18 @@ import Spinner from "./Spinner";
 //TODO: make safer with Rocket Pool procedure
 //https://github.com/rocket-pool/smartnode/blob/cf50c3c83e19b56f1bbc6d8f404a704f457821cc/rocketpool-cli/node/withdrawal-address.go
 
-const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
+interface Props {
+    utils: any,
+    nodeStatus: nodeStatusType,
+    updateNodeStatus: any,
+    rpdDaemon: any,
+}
+
+const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon } : Props) => {
     const [withdrawalAddress, setWithdrawalAddress] = React.useState("");
     const [addressFeedback, setAddressFeedback] = React.useState("");
     const [buttonDisabled, setButtonDisabled] = React.useState(false);
-    const [txHash, setTxHash] = React.useState();
+    const [txHash, setTxHash] = React.useState<string>();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
 
     React.useEffect(() => {
@@ -41,8 +47,8 @@ const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }
     }, [nodeStatus, withdrawalAddress]);
 
     React.useEffect(() => {
-        if (waitingForTx) {
-            rpdDaemon(`wait ${txHash}`, (data) => {
+        if (waitingForTx && txHash) {
+            rpdDaemon(`wait ${txHash}`, (data:any) => {
                 const w3 = new web3(utils.wsProvider());
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
@@ -64,7 +70,7 @@ const SetWithdrawalAddress = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }
             buttons: [
                 {
                     label: 'Yes I own and control this address',
-                    onClick: () => rpdDaemon(`node set-withdrawal-address ${withdrawalAddress} yes`, (data) => {
+                    onClick: () => rpdDaemon(`node set-withdrawal-address ${withdrawalAddress} yes`, (data : any) => {
                         if (data.status === "error") {
                             setAddressFeedback(data.error);
                         }
