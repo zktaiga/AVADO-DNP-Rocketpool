@@ -13,6 +13,7 @@
     ],
     "environment": [
       "NETWORK=mainnet",
+      "EXECUTIONCLIENT=geth",
       "CONSENSUSCLIENT=prysm"
     ],
     "restart": "always"

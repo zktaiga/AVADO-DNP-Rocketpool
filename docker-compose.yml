@@ -10,6 +10,7 @@ services:
       - 'rocketpool:/rocketpool'
     environment:
       - NETWORK=mainnet
+      - EXECUTIONCLIENT=geth
       - CONSENSUSCLIENT=prysm
       - EXTRA_OPTS=
 volumes:
