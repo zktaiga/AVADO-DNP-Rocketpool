@@ -29,8 +29,8 @@ case ${EXECUTIONCLIENT} in
 esac
 
 if [ "${EXECUTIONCLIENT}" = "nethermind" ]; then
-        ECHTTPURL="http://avado-dnp-nethermind.my.ava.do:8545"
-        ECWSURL="ws://avado-dnp-nethermind.my.ava.do:8545"
+    ECHTTPURL="http://avado-dnp-nethermind.my.ava.do:8545"
+    ECWSURL="ws://avado-dnp-nethermind.my.ava.do:8545"
 else
     if [ "${NETWORK}" = "prater" ]; then
         ECHTTPURL="http://goerli-geth.my.ava.do:8545"
