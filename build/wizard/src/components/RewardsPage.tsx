@@ -14,7 +14,7 @@ import LogView from "./LogView";
 import Spinner from "./Spinner";
 import RpdCommand from "./RpdCommand";
 import { domainToUnicode } from "url";
-import ClaimRewardsButton from "./ClaimRewardsButton";
+import ClaimRewardsButtons from "./ClaimRewardsButtons";
 import BN from "bn.js"
 
 interface Props {
@@ -76,7 +76,7 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
                 const unclaimedIntervals = data.unclaimedIntervals.map(ui => ui.index)
                 setUnclaimedIntervals(unclaimedIntervals)
 
-                setClaimRPl(data.unclaimedIntervals.reduce((prev,ui)=>prev.add(new BN(ui.collateralRplAmount)), new BN(0)))
+                setClaimRPl(data.unclaimedIntervals.reduce((prev, ui) => prev.add(new BN(ui.collateralRplAmount)), new BN(0)))
             });
         }
     }, [rpdDaemon]);
@@ -130,9 +130,11 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
                 <p>
                     You may claim these rewards at any time. You no longer need to claim them within this interval.
                 </p>
-                <ClaimRewardsButton utils={utils} rpdDaemon={rpdDaemon} restake={false} unclaimedIntervals={unclaimedIntervals} />
-                or
-                <ClaimRewardsButton utils={utils} rpdDaemon={rpdDaemon} restake={true} unclaimedIntervals={unclaimedIntervals} claimRPl={claimRPl} />
+                <ul>
+                    <li>ETH: <b>{nodeRewards.unclaimedEthRewards.toFixed(4)} ETH</b></li>
+                    <li>RPL: <b>{nodeRewards.unclaimedRplRewards.toFixed(4)} RPL</b></li>
+                </ul>
+                <ClaimRewardsButtons utils={utils} rpdDaemon={rpdDaemon} unclaimedIntervals={unclaimedIntervals} claimRPl={claimRPl} />
             </div>
         </div >
     );

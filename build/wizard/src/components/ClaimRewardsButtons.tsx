@@ -14,65 +14,78 @@ import BN from "bn.js"
 interface Props {
     utils: any,
     rpdDaemon: any,
-    restake: boolean,
     unclaimedIntervals: number[],
-    claimRPl?: BN
+    claimRPl: BN
 }
 
-const ClaimRewardsButton = ({ utils, rpdDaemon, restake, unclaimedIntervals, claimRPl = new BN(0) }: Props) => {
-    const [buttonEnabled, setButtonEnabled] = React.useState(false);
+const ClaimRewardsButtons = ({ utils, rpdDaemon, unclaimedIntervals, claimRPl }: Props) => {
+    const [claimButtonEnabled, setClaimButtonEnabled] = React.useState(false);
+    const [restakeButtonEnabled, setRestakeButtonEnabled] = React.useState(false);
+    const [claimFeedback, setClaimFeedback] = React.useState("");
+    const [restakeFeedback, setRestakeFeedback] = React.useState("");
+
     const [waitingForTx, setWaitingForTx] = React.useState(false);
-    const [feedback, setFeedback] = React.useState("");
     const [txHash, setTxHash] = React.useState();
 
-    const checkCommand = () => restake ?
+    const checkCommand = (restake: boolean) => restake ?
         "can-claim-and-stake-rewards " + unclaimedIntervals.join(",") + " " + claimRPl
         : "can-claim-rewards " + unclaimedIntervals.join(",")
-    const command = () => restake ?
+    const command = (restake: boolean) => restake ?
         "claim-and-stake-rewards " + unclaimedIntervals.join(",") + " " + claimRPl
         : "claim-rewards " + unclaimedIntervals.join(",")
-    const message = () => restake ? "Claim and restake RPL rewards" : "Claim all rewards"
+    const message = (restake: boolean) => restake ? "Claim and restake RPL rewards" : "Claim all rewards"
 
     React.useEffect(() => {
         if (waitingForTx)
             return;
 
-        setButtonEnabled(false); //set default
+        setClaimButtonEnabled(false); //set default
+        setRestakeButtonEnabled(false); //set default
         // console.log(checkCommand())
 
         if (unclaimedIntervals && unclaimedIntervals.length > 0) {
-            rpdDaemon(`node ` + checkCommand(), (data: any) => {
+            rpdDaemon(`node ` + checkCommand(false), (data: any) => {
                 if (data.status === "error") {
-                    setFeedback(data.error);
+                    setClaimFeedback(data.error);
                 } else {
-                    setFeedback("");
-                    setButtonEnabled(true);
+                    setClaimFeedback("");
+                    setClaimButtonEnabled(true);
+                }
+            });
+            rpdDaemon(`node ` + checkCommand(true), (data: any) => {
+                if (data.status === "error") {
+                    setRestakeFeedback(data.error);
+                } else {
+                    setRestakeFeedback("");
+                    setRestakeButtonEnabled(true);
                 }
             });
 
         }
     }, [waitingForTx, rpdDaemon, unclaimedIntervals]);
 
-    const claim = () => {
-        console.log(command())
+    const claim = (restake: boolean) => {
+        console.log(command(restake))
 
         confirmAlert({
             title: '',
-            message: message(),
+            message: message(restake),
             buttons: [
                 {
                     label: 'Yes',
                     onClick: () => {
-                        setButtonEnabled(false);
-                        rpdDaemon(`node ` + command(), (data: any) => {
+                        setClaimButtonEnabled(false);
+                        setRestakeButtonEnabled(false);
+                        rpdDaemon(`node ` + command(restake), (data: any) => {
                             //{"status":"success","error":"","txHash":"0x9e1401966779de0c896b33027272fc466d59503c69954111e0e00111582ee2e5"}
                             if (data.status === "error") {
-                                setFeedback(data.error);
+                                restake ? setClaimFeedback(data.error) : setRestakeFeedback(data.error);
                                 return
                             }
                             setWaitingForTx(true);
                             setTxHash(data.txHash);
-                            setFeedback("Waiting for onchain transaction.");
+                            const feedback = "Waiting for onchain transaction."
+                            restake ? setClaimFeedback(feedback) : setRestakeFeedback(feedback);
                         })
                     }
                 },
@@ -100,12 +113,18 @@ const ClaimRewardsButton = ({ utils, rpdDaemon, restake, unclaimedIntervals, cla
     return (
         <div>
             <div className="field">
-                <button className="button" onClick={claim} disabled={!buttonEnabled}>
-                    {waitingForTx ? <Spinner /> : message()}
+                <button className="button" onClick={() => claim(false)} disabled={!claimButtonEnabled}>
+                    {waitingForTx ? <Spinner /> : message(false)}
+                </button> or
+                <button className="button" onClick={() => claim(true)} disabled={!restakeButtonEnabled}>
+                    {waitingForTx ? <Spinner /> : message(true)}
                 </button>
             </div>
-            {feedback && (
-                <p className="help">{feedback}</p>
+            {claimFeedback && (
+                <p className="help">{claimFeedback}</p>
+            )}
+            {restakeFeedback && (
+                <p className="help">{restakeFeedback}</p>
             )}
             {txHash && (
                 <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
@@ -115,4 +134,4 @@ const ClaimRewardsButton = ({ utils, rpdDaemon, restake, unclaimedIntervals, cla
     );
 };
 
-export default ClaimRewardsButton
+export default ClaimRewardsButtons
