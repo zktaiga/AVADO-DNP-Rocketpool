@@ -22,15 +22,18 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
     let prerequisites = [];
     let extraSoftwareNeeded = false;
 
+    const execution_engines = [
+        "ethchain-geth.public.dappnode.eth",
+        "avado-dnp-nethermind.public.dappnode.eth",
+    ]
+
     // check if ETH1 (geth) nodeis installed
-    const eth1Node = Object.keys(packages).find((k) => {
-        return (packages[k].name === "ethchain-geth.public.dappnode.eth")
-    });
+    const eth1Node = Object.keys(packages).find(k => execution_engines.includes(packages[k].manifest.name));
     if (!eth1Node) {
         prerequisites.push(
             {
                 description: "A fully synced Ethereum node",
-                suggestedpackages: [store.packages.find((p) => { return p.manifest.name === "ethchain-geth.public.dappnode.eth" })]
+                suggestedpackages: store.packages.filter((p) => execution_engines.includes(p.manifest.name))
             }
         );
         extraSoftwareNeeded = true;

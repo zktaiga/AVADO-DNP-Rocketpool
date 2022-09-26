@@ -33,19 +33,20 @@ const NodeStatus = ({ utils, nodeStatus, updateNodeStatus, nodeSyncStatus }: Pro
                                 <td><b>Hot wallet address</b></td>
                                 <td>
                                     {utils.etherscanAddressUrl(nodeStatus.accountAddress)}{" "}
-                                    <a href={"https://rocketscan.io/node/" + nodeStatus.accountAddress}><FontAwesomeIcon icon={faRocket} /></a>
+                                    {utils.rocketscanUrl("/node/" + nodeStatus.accountAddress, <FontAwesomeIcon icon={faRocket} />)}
                                 </td>
                             </tr>
                             <tr>
                                 <td><b>Withdrawal address</b></td>
                                 <td>
                                     {utils.etherscanAddressUrl(nodeStatus.withdrawalAddress)}{" "}
-                                    <a href={"https://rocketscan.io/address/" + nodeStatus.withdrawalAddress}><FontAwesomeIcon icon={faRocket} /></a>
+                                    {utils.rocketscanUrl("/address/" + nodeStatus.withdrawalAddress, <FontAwesomeIcon icon={faRocket} />)}
                                 </td>
                             </tr>
                             <tr><td><b>RPL Stake</b></td><td>{utils.displayAsETH(nodeStatus.rplStake, 2)} RPL</td></tr>
                             <tr><td><b>Time zone</b></td><td>{nodeStatus.timezoneLocation}</td></tr>
-                            <tr><td><b>Smoothing pool joined</b></td><td>{nodeStatus.feeRecipientInfo.isInSmoothingPool ? "yes" : "no"}</td></tr>                            
+                            <tr><td><b>Smoothing pool joined</b></td><td>{nodeStatus.feeRecipientInfo.isInSmoothingPool ? "yes" : "no"}</td></tr>
+                            <tr><td><b>Fee distributor initialized</b></td><td>{nodeStatus.isFeeDistributorInitialized ? "yes" : "no"}</td></tr>
                         </tbody>
                     </table>
                 </div>

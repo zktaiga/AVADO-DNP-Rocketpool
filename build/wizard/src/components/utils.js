@@ -16,15 +16,20 @@ class Utils {
     }
 
     beaconchainUrl(validatorPubkey, text) {
-        return <a target="_blank" rel="noreferrer" href={this.beaconChainBaseUrl + "/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
+        return <a target="_blank" rel="noopener noreferrer" href={this.beaconChainBaseUrl + "/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
     }
 
     etherscanAddressUrl(address, text) {
-        return <a target="_blank"rel="noreferrer" href={this.etherscanBaseUrl + "/address/" + address}>{text ? text : address}</a>;
+        return <a target="_blank"rel="noopener noreferrer" href={this.etherscanBaseUrl + "/address/" + address}>{text ? text : address}</a>;
     }
 
     etherscanTransactionUrl(txHash, text) {
-        return <a target="_blank" rel="noreferrer" href={this.etherscanBaseUrl + "/tx/" + txHash}>{text ? text : txHash}</a>;
+        return <a target="_blank" rel="noopener noreferrer" href={this.etherscanBaseUrl + "/tx/" + txHash}>{text ? text : txHash}</a>;
+    }
+
+    rocketscanUrl(path, child) {
+        const praterPrefix = (this.network === "prater") ? "prater." : ""
+        return <a target="_blank" rel="noopener noreferrer" href={"https://" + praterPrefix + "rocketscan.io" + path} >{child}</a>
     }
 
     displayAsETH(number, fractionDigits) {

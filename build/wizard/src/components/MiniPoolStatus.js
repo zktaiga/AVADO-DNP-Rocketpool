@@ -67,7 +67,7 @@ const MiniPoolStatus = ({ utils, minipoolStatus }) => {
                                     <td><b>Minipool address</b></td>
                                     <td>
                                         {utils.etherscanAddressUrl(minipool.address)}{" "}
-                                        <a href={"https://rocketscan.io/minipool/" + minipool.address}><FontAwesomeIcon icon={faRocket} /></a>
+                                        {utils.rocketscanUrl("/minipool/" + minipool.address, <FontAwesomeIcon icon={faRocket} />)}{" "}
                                     </td>
                                 </tr>
                                 <tr><td><b>Status updated</b></td><td>{minipool.status.statusTime}</td></tr>

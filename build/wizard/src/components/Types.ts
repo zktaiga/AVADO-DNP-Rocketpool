@@ -42,6 +42,7 @@ export type minipoolStatusType = {
         "nodeBalance": number
       },
       "canStake": boolean,
+      // queue
       "refundAvailable": boolean,
       "withdrawalAvailable": boolean,
       "closeAvailable": boolean,
@@ -98,7 +99,6 @@ export type nodeStatusType = {
     "closeAvailable": number,
     "finalised": number
   },
-  "activeSnapshotProposals": [],
   "isFeeDistributorInitialized": boolean,
   "feeRecipientInfo": {
     "smoothingPoolAddress": string,
@@ -108,8 +108,12 @@ export type nodeStatusType = {
     "optOutEpoch": number
   },
   "feeDistributorBalance": number,
-  "penalizedMinipools": {},
-  "proposalVotes": []
+  "penalizedMinipools": [string],
+  "snapshotResponse": {
+    "error": string,
+    "proposalVotes": []
+    "activeSnapshotProposals": []
+  }
 }
 
 //https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/wallet.go

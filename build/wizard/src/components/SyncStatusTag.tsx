@@ -8,7 +8,7 @@ interface Props {
 const SyncStatusTag = ({ progress, label }: Props) => {
     return (
         <span className={"tag" + (progress === 1 ? " is-success" : " is-warning")}>
-            {(label ? `${label} ` : "") + (progress * 100).toFixed(2) + "% synced"}
+            {(label ? `${label} ` : "") + (Math.floor(progress * 100 * 100) / 100).toFixed(2) + "% synced"}
         </span>
     );
 };
