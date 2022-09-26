@@ -29,6 +29,7 @@ const NavigationBar = ({ navBar, setNavBar }) => {
                     <Link className={`navbar-item ${navBar === "Welcome" ? "is-active has-text-weight-bold" : ""}`} to="/" onClick={() => { setNavBar("Welcome") }} >Welcome</Link>
                     <Link className={`navbar-item ${navBar === "Setup" ? "is-active has-text-weight-bold" : ""}`} to="/" onClick={() => { setNavBar("Setup") }} >Setup</Link>
                     <Link className={`navbar-item ${navBar === "Status" ? "is-active has-text-weight-bold" : ""}`} to="/" onClick={() => { setNavBar("Status") }} >Status</Link>
+                    <Link className={`navbar-item ${navBar === "Rewards" ? "is-active has-text-weight-bold" : ""}`} to="/" onClick={() => { setNavBar("Rewards") }} >Rewards</Link>
                 </div>
 
                 <div className="navbar-end">
