@@ -12,8 +12,10 @@ const FundWallet = ({ utils, nodeStatus, updateNodeStatus, rplPriceData }) => {
     //     rpdDaemon("network rpl-price", (data) => setRplPriceData(data));
     // }, []); // eslint-disable-line
 
-    console.log("RPL", (new BN(rplPriceData.minPerMinipoolRplStake.toString())).toString());
-    console.log("BALANCE RPL", (new BN(nodeStatus.accountBalances.rpl.toString())).toString())
+    if (rplPriceData)
+        console.log("RPL", (new BN(rplPriceData.minPerMinipoolRplStake.toString())).toString());
+    if (nodeStatus)
+        console.log("BALANCE RPL", (new BN(nodeStatus.accountBalances.rpl.toString())).toString())
     return (
         <div>
             {/* {nodeStatus && nodeStatus.accountAddress && nodeStatus.accountBalances.eth !== null && nodeStatus.accountBalances.eth <= 0 && ( */}

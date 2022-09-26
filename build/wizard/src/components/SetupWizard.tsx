@@ -9,6 +9,7 @@ import CreateMinipool from "./CreateMinipool";
 import JoinSmoothingPool from "./JoinSmoothingPool"
 import { minipoolStatusType, nodeStatusType, walletStatusType } from "./Types"
 import { KeyManagerHelper } from "./KeyManagerHelper";
+import InitializeFeeDistributor from "./InitializeFeeDistributor";
 
 
 interface Props {
@@ -31,6 +32,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
     const registerNode = { id: Symbol("Register node").toString(), name: "Register node" };
     const withdrawalAddress = { id: Symbol("Withdrawal address").toString(), name: "Withdrawal address" };
     const joinSmoothingPool = { id: Symbol("Join smoothing pool").toString(), name: "Join smoothing pool" };
+    const initializeFeeDistributor = { id: Symbol("Initialize Fee Distributor").toString(), name: "Initialize Fee Distributor" };
     const createMinipool = { id: Symbol("Add minipool").toString(), name: "Add minipool" };
 
     const [viewState, setViewState] = React.useState(initWallet);
@@ -41,6 +43,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
         registerNode,
         withdrawalAddress,
         joinSmoothingPool,
+        initializeFeeDistributor,
         createMinipool,
     ];
 
@@ -79,9 +82,12 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                 && nodeStatus.withdrawalAddress !== nodeStatus.accountAddress) {
                 if (!nodeStatus.feeRecipientInfo.isInSmoothingPool) {
                     setViewState(joinSmoothingPool);
-                }
-                else {
-                    setViewState(createMinipool);
+                } else {
+                    if (!nodeStatus.isFeeDistributorInitialized) {
+                        setViewState(initializeFeeDistributor);
+                    } else {
+                        setViewState(createMinipool);
+                    }
                 }
                 return;
             }
@@ -153,6 +159,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
             {(viewState.id === registerNode.id) && (<RegisterNode utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
             {(viewState.id === withdrawalAddress.id) && (<SetWithdrawalAddress utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
             {(viewState.id === joinSmoothingPool.id) && (<JoinSmoothingPool utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+            {(viewState.id === initializeFeeDistributor.id) && (<InitializeFeeDistributor utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
             {(viewState.id === createMinipool.id) && (<CreateMinipool
                 utils={utils}
                 nodeStatus={nodeStatus}
