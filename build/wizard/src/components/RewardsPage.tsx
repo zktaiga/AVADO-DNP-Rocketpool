@@ -68,7 +68,7 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
     const [unclaimedIntervals, setUnclaimedIntervals] = React.useState<number[]>([]);
     const [claimRPl, setClaimRPl] = React.useState<BN>(new BN(0));
 
-    React.useEffect(() => {
+    const updateRewardsInformation = () => {
         if (rpdDaemon) {
             rpdDaemon(`node rewards`, (data: nodeRewardsType) => setNodeRewards(data));
             rpdDaemon(`node get-rewards-info`, (data: rewardsInfoType) => {
@@ -79,7 +79,18 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
                 setClaimRPl(data.unclaimedIntervals.reduce((prev, ui) => prev.add(new BN(ui.collateralRplAmount)), new BN(0)))
             });
         }
+    }
+    React.useEffect(() => {
+        updateRewardsInformation()
     }, [rpdDaemon]);
+
+    const onRewardsClaimFinished = () => {
+        setNodeRewards(undefined)
+        setRewardsInfo(undefined)
+        setUnclaimedIntervals([])
+        setClaimRPl(new BN(0))
+        updateRewardsInformation()
+    }
 
     if (!nodeRewards || !rewardsInfo) {
         return (
@@ -134,7 +145,7 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
                     <li>ETH: <b>{nodeRewards.unclaimedEthRewards.toFixed(4)} ETH</b></li>
                     <li>RPL: <b>{nodeRewards.unclaimedRplRewards.toFixed(4)} RPL</b></li>
                 </ul>
-                <ClaimRewardsButtons utils={utils} rpdDaemon={rpdDaemon} unclaimedIntervals={unclaimedIntervals} claimRPl={claimRPl} />
+                <ClaimRewardsButtons utils={utils} rpdDaemon={rpdDaemon} unclaimedIntervals={unclaimedIntervals} claimRPl={claimRPl} onRewardsClaimFinished={onRewardsClaimFinished}/>
             </div>
         </div >
     );

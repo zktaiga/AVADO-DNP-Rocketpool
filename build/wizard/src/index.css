@@ -20,6 +20,10 @@ pre.transcript {
     font-size: 0.8em;
     color: #fff;
     background-color: black;
+    word-wrap: break-word;
+    display: inline-block;
+    width: 100vw;
+    white-space: pre-wrap;
 }
 
 .keygen li {

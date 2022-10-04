@@ -16,9 +16,10 @@ interface Props {
     rpdDaemon: any,
     unclaimedIntervals: number[],
     claimRPl: BN
+    onRewardsClaimFinished: () => void
 }
 
-const ClaimRewardsButtons = ({ utils, rpdDaemon, unclaimedIntervals, claimRPl }: Props) => {
+const ClaimRewardsButtons = ({ utils, rpdDaemon, unclaimedIntervals, claimRPl, onRewardsClaimFinished }: Props) => {
     const [claimButtonEnabled, setClaimButtonEnabled] = React.useState(false);
     const [restakeButtonEnabled, setRestakeButtonEnabled] = React.useState(false);
     const [claimFeedback, setClaimFeedback] = React.useState("");
@@ -104,6 +105,9 @@ const ClaimRewardsButtons = ({ utils, rpdDaemon, unclaimedIntervals, claimRPl }:
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
+                    onRewardsClaimFinished()
+                    setClaimFeedback("")
+                    setRestakeFeedback("")
                 });
             });
         }
