@@ -13,6 +13,7 @@ import WalletStatus from "./WalletStatus";
 import SetupWizard from "./SetupWizard";
 import bignumJSON from "json-bignum"
 import AdminPage from "./AdminPage";
+import RewardsPage from "./RewardsPage"
 import NetworkBanner from "./NetworkBanner";
 import Utils from "./utils";
 import ValidatorBanner from "./ValidatorBanner";
@@ -93,7 +94,7 @@ const Comp = () => {
             console.log(`rocketpoold api ${command}: ` + res.data);
             // console.log('JSON: ' + bignumJSON.stringify(data))
             callback(data);
-        }).catch(e => {if (error) error(e)})
+        }).catch(e => { if (error) error(e) })
     }
 
     const updateMiniPoolStatus = () => rpdDaemon("minipool status", (data) => setMinipoolStatus(data));
@@ -124,7 +125,7 @@ const Comp = () => {
     return (
         <div className="dashboard has-text-white">
             <NetworkBanner network={network} />
-            <ValidatorBanner dappManagerHelper={dappManagerHelper} minipoolStatus={minipoolStatus} keyManagerHelper={keyManagerHelper} setKeyManagerHelper={setKeyManagerHelper}  utils={utils} nodeStatus={nodeStatus} />
+            <ValidatorBanner dappManagerHelper={dappManagerHelper} minipoolStatus={minipoolStatus} keyManagerHelper={keyManagerHelper} setKeyManagerHelper={setKeyManagerHelper} utils={utils} nodeStatus={nodeStatus} />
             <SmoothingPoolBanner rpdDaemon={rpdDaemon} utils={utils} updateNodeStatus={updateNodeStatus} nodeStatus={nodeStatus} keyManagerHelper={keyManagerHelper} minipoolSatus={minipoolStatus} />
 
             <Header utils={utils} rocketpoollogo={rocketpoollogo} nodeSyncStatus={nodeSyncStatus} nodeFee={nodeFee} rplPriceData={rplPriceData} minipoolStatus={minipoolStatus} />
@@ -175,6 +176,9 @@ const Comp = () => {
                             </div>
                         )}
 
+                        {navBar === "Rewards" && (
+                            <RewardsPage utils={utils} rpdDaemon={rpdDaemon} />
+                        )}
                         {navBar === "Admin" && (
                             <AdminPage utils={utils} wampSession={wampSession} rpdDaemon={rpdDaemon} />
                         )}
