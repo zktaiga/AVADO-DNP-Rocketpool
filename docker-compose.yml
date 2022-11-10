@@ -1,11 +1,11 @@
 version: '3.4'
 services:
   rocketpool.avado.dnp.dappnode.eth:
-    image: 'rocketpool.avado.dnp.dappnode.eth:0.0.84'
+    image: 'rocketpool.avado.dnp.dappnode.eth:0.0.85'
     build:
       context: ./build
       args:
-        RP_VERSION: v1.6.5
+        RP_VERSION: v1.7.0
     volumes:
       - 'rocketpool:/rocketpool'
     environment:
