@@ -237,7 +237,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
                             <div className="hero-body is-small">
                                 {misconfiguredValidators.map(validatorInfo => {
                                     return <>
-                                        <p className="has-text-centered">Validator {utils.beaconchainUrl(validatorInfo.address, "0x" + validatorInfo.address.substring(0, 10) + "...")} must have {utils.etherscanAddressUrl(nodeStatus.feeRecipientInfo.smoothingPoolAddress)} as fee recipient.</p>
+                                        <p className="has-text-centered">Validator {utils.beaconchainUrl(validatorInfo.address, validatorInfo.address.substring(0, 10) + "...")} must have {utils.etherscanAddressUrl(nodeStatus.feeRecipientInfo.smoothingPoolAddress)} as fee recipient.</p>
                                     </>
                                 })}
                                 <div className="has-text-centered">
