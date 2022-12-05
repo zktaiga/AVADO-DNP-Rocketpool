@@ -6,7 +6,15 @@ COPY wizard .
 RUN yarn
 RUN rm -Rf build && yarn run build
 
-FROM --platform=linux/amd64 alpine:latest
+# Monitor
+WORKDIR /usr/src/monitor
+COPY monitor .
+RUN yarn --production
+
+
+####### Main image
+
+FROM --platform=linux/amd64 node:16.15.0
 ARG RP_VERSION
 
 RUN mkdir -p /srv/rocketpool
@@ -16,15 +24,17 @@ RUN wget "https://github.com/rocket-pool/smartnode-install/releases/download/${R
 
 RUN chmod +x /usr/local/bin/rocketpool /usr/local/bin/rocketpoold
 
-RUN apk add --no-cache supervisor gcompat nginx nodejs npm bash gettext
-RUN apk upgrade
+RUN apt-get -y update && apt-get -y upgrade && apt-get -y install \
+    gettext\
+    nginx \
+    sudo \
+    supervisor \
+    vim-tiny \
+    && rm -rf /var/lib/apt/lists/*
+RUN useradd -s /bin/false nginx
 
 COPY --from=builder /usr/src/app/wizard/build /usr/local/wizard
-
-# Monitor
-WORKDIR /usr/src/monitor
-COPY monitor .
-RUN npm i --production
+COPY --from=builder /usr/src/monitor /usr/src/monitor
 
 COPY startRpNode.sh /srv/rocketpool
 COPY restart-validator.sh /srv/rocketpool
