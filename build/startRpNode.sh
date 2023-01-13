@@ -5,7 +5,6 @@ CONSENSUSCLIENT=${CONSENSUSCLIENT}
 
 case ${NETWORK} in
 "mainnet" | "prater") ;;
-
 *)
     echo "Invalid NETWORK configured"
     exit -1
@@ -13,32 +12,49 @@ case ${NETWORK} in
 esac
 case ${CONSENSUSCLIENT} in
 "teku" | "prysm") ;;
-
 *)
     echo "Invalid CONSENSUSCLIENT configured"
     exit -1
     ;;
 esac
 case ${EXECUTIONCLIENT} in
-"geth" | "nethermind") ;;
-
+"geth" | "nethermind" | "erigon") ;;
 *)
     echo "Invalid EXECUTIONCLIENT configured"
     exit -1
     ;;
 esac
 
-if [ "${EXECUTIONCLIENT}" = "nethermind" ]; then
-    ECHTTPURL="http://avado-dnp-nethermind.my.ava.do:8545"
-    ECWSURL="ws://avado-dnp-nethermind.my.ava.do:8545"
-else
-    if [ "${NETWORK}" = "prater" ]; then
+if [ "${NETWORK}" = "prater" ]; then
+    case ${EXECUTIONCLIENT} in
+    "geth")
         ECHTTPURL="http://goerli-geth.my.ava.do:8545"
         ECWSURL="ws://goerli-geth.my.ava.do:8546"
-    else
+        ;;
+    "nethermind")
+        ECHTTPURL="http://nethermind-goerli.my.ava.do:8545"
+        ECWSURL="ws://avado-dnp-nethermind.my.ava.do:8545"
+        ;;
+    "erigon")
+        ECHTTPURL="http://erigon.my.ava.do:8545"
+        ECWSURL="ws://erigon.my.ava.do:8545"
+        ;;
+    esac
+else # Mainnet
+    case ${EXECUTIONCLIENT} in
+    "geth")
         ECHTTPURL="http://ethchain-geth.my.ava.do:8545"
         ECWSURL="http://ethchain-geth.my.ava.do:8546"
-    fi
+        ;;
+    "nethermind")
+        ECHTTPURL="http://avado-dnp-nethermind.my.ava.do:8545"
+        ECWSURL="ws://avado-dnp-nethermind.my.ava.do:8545"
+        ;;
+    "erigon")
+        ECHTTPURL="http://erigon.my.ava.do:8545"
+        ECWSURL="ws://erigon.my.ava.do:8545"
+        ;;
+    esac
 fi
 
 if [ "${CONSENSUSCLIENT}" = "teku" ]; then

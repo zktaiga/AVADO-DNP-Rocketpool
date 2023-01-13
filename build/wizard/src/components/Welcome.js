@@ -25,6 +25,7 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
     const execution_engines = [
         "ethchain-geth.public.dappnode.eth",
         "avado-dnp-nethermind.public.dappnode.eth",
+        "erigon.avado.dappnode.eth",
     ]
 
     // check if ETH1 (geth) nodeis installed
