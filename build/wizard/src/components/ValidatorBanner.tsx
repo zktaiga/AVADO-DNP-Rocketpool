@@ -40,7 +40,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
         if (packages && network && consensusClient) {
             const packageNames = {
                 "prater": {
-                    "teku": "teku.avado.dnp.dappnode.eth",
+                    "teku": "teku-prater.avado.dnp.dappnode.eth",
                     "prysm": "eth2validator-prater.avado.dnp.dappnode.eth"
                 },
                 "mainnet": {
