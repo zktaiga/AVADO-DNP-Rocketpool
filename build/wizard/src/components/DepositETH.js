@@ -22,7 +22,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
 
     React.useEffect(() => {
         const targetCountBN = new BN(targetCount.toString());
-        const rplMin = (new BN(rplPriceData.minPerMinipoolRplStake.toString())).mul(targetCountBN);
+        const rplMin = (new BN(rplPriceData.minPer16EthMinipoolRplStake.toString())).mul(targetCountBN);
 
         if (waitingForTx)
             return;
@@ -78,7 +78,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
                     label: 'Yes',
                     onClick: () => {
                         setEthButtonDisabled(true);
-                        rpdDaemon(`node deposit ${ETHDepositAmount} ${selectedNodeFee} 0 true`, (data) => {  //   rocketpool api node deposit amount min-fee salt submit
+                        rpdDaemon(`node deposit ${ETHDepositAmount} ${selectedNodeFee} 0 false true`, (data) => {  //   rocketpool api node deposit amount min-fee salt use-credit-balance submit
                             //{"status":"success","error":"","txHash":"0x6c8958917414479763aaa65dbff4b00e52d9ef699d64dbd0827a45e1fe8aee38","minipoolAddress":"0xc43a2d435bd48bde1e000c07e89f3e6ebe9161d4","validatorPubkey":"ac9cb87a11fd8c55a9529108964786f11623717a6e3af0db3cd5fde2da5c6a7a4f89e52d13770ad6bc080de1b63427a1","scrubPeriod":3600000000000}
                             if (data.status === "error") {
                                 setFeedback(data.error);

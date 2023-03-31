@@ -66,7 +66,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                 && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
                 && !nodeStatus.registered
                 && nodeStatus.accountBalances.eth > 0
-                && nodeStatus.accountBalances.rpl > rplPriceData.minPerMinipoolRplStake
+                && nodeStatus.accountBalances.rpl > rplPriceData.minPer16EthMinipoolRplStake
             ) {
                 setViewState(registerNode);
                 return;

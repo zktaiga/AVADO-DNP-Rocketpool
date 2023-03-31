@@ -6,14 +6,18 @@ import ClickToCopy from "./ClickToCopy";
 
 const FundWallet = ({ utils, nodeStatus, updateNodeStatus, rplPriceData }) => {
 
-    // const [rplPriceData, setRplPriceData] = React.useState();
+    // console.dir(rplPriceData)
+    // maxPer8EthMinipoolRplStake :  BigNumber 
+    // maxPer16EthMinipoolRplStake : BigNumber
+    // minPer8EthMinipoolRplStake : BigNumber
+    // minPer16EthMinipoolRplStake : BigNumber
+    // rplPrice : BigNumber
+    // rplPriceBlock : 8748480
+    // status: "success"
 
-    // React.useEffect(() => {
-    //     rpdDaemon("network rpl-price", (data) => setRplPriceData(data));
-    // }, []); // eslint-disable-line
 
-    if (rplPriceData)
-        console.log("RPL", (new BN(rplPriceData.minPerMinipoolRplStake.toString())).toString());
+    // if (rplPriceData)
+    //     console.log("RPL", (new BN(rplPriceData.minPer16EthMinipoolRplStake.toString())).toString());
     if (nodeStatus)
         console.log("BALANCE RPL", (new BN(nodeStatus.accountBalances.rpl.toString())).toString())
     return (
@@ -27,7 +31,7 @@ const FundWallet = ({ utils, nodeStatus, updateNodeStatus, rplPriceData }) => {
                         <ol>
                             <li>Send 16.4 ETH to <ClickToCopy text={nodeStatus.accountAddress}>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</ClickToCopy> (16 ETH + 0.2 ETH gas money)</li>
                             <br />(0.4 is a safe margin to create everything - including the expensive minipool contract deploy. The remaining gas can be withdrawn from this wallet later)
-                            <li>Send a minimum of {Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))} RPL to <ClickToCopy text={nodeStatus.accountAddress}>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</ClickToCopy>
+                            <li>Send a minimum of {Math.ceil(utils.displayAsETH(rplPriceData.minPer16EthMinipoolRplStake))} RPL to <ClickToCopy text={nodeStatus.accountAddress}>{utils.etherscanAddressUrl(nodeStatus.accountAddress)}</ClickToCopy>
                                 <br />(maximum allowed stake is {Math.floor(utils.displayAsETH(rplPriceData.maxPerMinipoolRplStake))} RPL - the more you stake, the more you will earn. More details on the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a> )
                                 <br />(All RPL sent to this wallet will be used as your stake later - so please send exactly the desired stake amount)
                             </li>
@@ -42,7 +46,7 @@ const FundWallet = ({ utils, nodeStatus, updateNodeStatus, rplPriceData }) => {
                             }
                             </li>
 
-                            <li><b>RPL: </b>{(new BN(nodeStatus.accountBalances.rpl.toString())).lt(new BN(rplPriceData.minPerMinipoolRplStake.toString())) ?
+                            <li><b>RPL: </b>{(new BN(nodeStatus.accountBalances.rpl.toString())).lt(new BN(rplPriceData.minPer16EthMinipoolRplStake.toString())) ?
                                 (<span className="tag is-danger ">{utils.displayAsETH(nodeStatus.accountBalances.rpl)} RPL</span>)
                                 :
                                 (<span className="tag is-success ">{utils.displayAsETH(nodeStatus.accountBalances.rpl)} RPL</span>)
