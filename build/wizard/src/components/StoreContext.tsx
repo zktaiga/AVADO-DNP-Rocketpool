@@ -1,10 +1,15 @@
 import axios from "axios";
 import React from "react";
-const StoreContext = React.createContext();
+const StoreContext = React.createContext<any>(<></>);
 
-const Comp = ({ children }) => {
 
-    const [store, setStore] = React.useState();
+interface Props {
+    children?: React.ReactNode
+}
+
+const Comp = ({ children }: Props) => {
+
+    const [store, setStore] = React.useState<any>();
 
     const value = React.useMemo(() => {
         return {

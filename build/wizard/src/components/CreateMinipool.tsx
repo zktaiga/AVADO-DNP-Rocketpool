@@ -5,19 +5,22 @@ import ApproveRpl from "./ApproveRpl";
 import StakeRPL from "./StakeRPL";
 import DepositETH from "./DepositETH";
 import DownloadBackup from "./DownloadBackup";
+import { rplPriceDataType, nodeStatusType, nodeFeeType } from "./Types"
 
-const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, minipoolStatus, updateMiniPoolStatus, nodeFee, rpdDaemon, setNavBar }) => {
-    const minNodeFee = 0.05;
-    const maxNodeFee = 0.2;
+interface Props {
+    utils: any,
+    nodeStatus: nodeStatusType,
+    rplPriceData: rplPriceDataType,
+    updateNodeStatus: any,
+    updateMiniPoolStatus: any,
+    nodeFee: nodeFeeType,
+    rpdDaemon: any,
+    setNavBar: any
+}
+
+const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, updateMiniPoolStatus, nodeFee, rpdDaemon, setNavBar } : Props) => {
     const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
     const [targetCount, setTargetCount] = React.useState(1);
-
-    React.useEffect(() => {
-        if (nodeFee && nodeFee.status === "success") {
-            console.assert(nodeFee.minNodeFee, minNodeFee);
-            console.assert(nodeFee.maxNodeFee, maxNodeFee);
-        }
-    }, [nodeFee]);
 
     const currentMiniPoolCount = () => {
         if (nodeStatus?.minipoolCounts?.total)

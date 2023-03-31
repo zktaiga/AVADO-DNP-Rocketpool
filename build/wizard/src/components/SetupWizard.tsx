@@ -166,7 +166,6 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                 rplPriceData={rplPriceData}
                 updateNodeStatus={updateNodeStatus}
                 updateMiniPoolStatus={updateMiniPoolStatus}
-                minipoolStatus={minipoolStatus}
                 nodeFee={nodeFee}
                 rpdDaemon={rpdDaemon}
                 setNavBar={setNavBar}

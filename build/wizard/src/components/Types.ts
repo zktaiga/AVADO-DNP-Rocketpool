@@ -116,6 +116,26 @@ export type nodeStatusType = {
   }
 }
 
+// https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/node.go#L278
+export type nodeSyncProgressResponseType = {
+  "status": "success" | "error",
+  "error": string,
+  "ecStatus": ClientManagerStatusType,
+  "bcStatus": ClientManagerStatusType
+}
+export type ClientManagerStatusType = {
+  "primaryEcStatus": ClientStatusType,
+  "fallbackEnabled": boolean,
+  "fallbackEcStatus": ClientStatusType
+}
+export type ClientStatusType = {
+  "isWorking": boolean
+  "isSynced": boolean
+  "syncProgress": number,
+  "networkId": number
+  "error": string
+}
+
 //https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/wallet.go
 export type walletStatusType = {
   "status": "success" | "error",
@@ -125,3 +145,24 @@ export type walletStatusType = {
   "accountAddress": string
 }
 
+// https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/network.go#L18
+export type rplPriceDataType = {
+  "status": string,
+  "error": string,
+  "rplPrice": bigint,
+  "rplPriceBlock": number
+  "minPer8EthMinipoolRplStake": bigint,
+  "maxPer8EthMinipoolRplStake": bigint,
+  "minPer16EthMinipoolRplStake": bigint,
+  "maxPer16EthMinipoolRplStake": bigint
+}
+
+// https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/network.go#L9
+export type nodeFeeType = {
+  "status": string,
+  "error": string,
+  "nodeFee": number
+  "minNodeFee": number
+  "targetNodeFee": number
+  "maxNodeFee": number
+}

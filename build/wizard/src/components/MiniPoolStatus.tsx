@@ -1,22 +1,29 @@
-import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
+import { minipoolStatusType } from "./Types";
 
-const MiniPoolStatus = ({ utils, minipoolStatus }) => {
-    const miniPoolSteps = [
+interface Props {
+    utils: any,
+    minipoolStatus: minipoolStatusType
+}
+
+const MiniPoolStatus = ({ utils, minipoolStatus } : Props ) => {
+
+    type minipoolStepsType = "Initializing" |  "Prelaunch" | "Minipool active"
+    const miniPoolSteps: minipoolStepsType[] = [
         "Initializing",
         "Prelaunch",
         "Minipool active",
         // "Exited"
     ];
 
-    const isHollow = (step, minipool) => {
+    const isHollow = (step: minipoolStepsType, active: boolean) => {
         if (step === "Minipool active")
-            return !minipool.validator.active;
+            return !active;
         return false;
 
     }
-    const miniPoolStepsComment = (step) => {
+    const miniPoolStepsComment = (step: minipoolStepsType) => {
         if (step === "Prelaunch") return "(~12 hours)";
         else return "";
     };
@@ -29,7 +36,7 @@ const MiniPoolStatus = ({ utils, minipoolStatus }) => {
     // {"status":"success","error":"","minipools":[{"address":"0x990074a02a06c27b9e13869cfe937efaa0de0b92","validatorPubkey":"996a3d7f3da4c6ed02f66243b849c10feaae37c38bb9be8657d8647216997b9a19827bdb20dde6b412453512770c2900","status":{"status":"Minipool active","statusBlock":6233072,"statusTime":"2022-01-20T10:01:08Z"},"depositType":"Full","node":{"address":"0x1192b62c60aad67a89196a0cefd42ed85d27506e","fee":0.16840959301290093,"depositBalance":16000000000000000000,"refundBalance":16000000000000000000,"depositAssigned":true},"user":{"depositBalance":16000000000000000000,"depositAssigned":true,"depositAssignedTime":"2022-01-10T13:47:50Z"},"balances":{"eth":16000000000000000000,"reth":0,"rpl":0,"fixedSupplyRpl":0},"validator":{"exists":true,"active":false,"index":271831,"balance":32000000000000000000,"nodeBalance":16000000000000000000},"refundAvailable":true,"withdrawalAvailable":false,"closeAvailable":false,"finalised":false,"useLatestDelegate":false,"delegate":"0xc6b40c1a317144a09c303c504cb525ee68ab8c8e","previousDelegate":"0x0000000000000000000000000000000000000000","effectiveDelegate":"0xc6b40c1a317144a09c303c504cb525ee68ab8c8e"}],"latestDelegate":"0xc6b40c1a317144a09c303c504cb525ee68ab8c8e"}
 
 
-    const finalisedTag = (minipool) => (minipool.finalised ? <span className="tag is-warning">Finalised</span> : <></>)
+    const finalisedTag = (finalised: boolean) => (finalised ? <span className="tag is-warning">Finalised</span> : <></>)
 
     if (!minipoolStatus || !minipoolStatus.minipools)
         return (
@@ -43,7 +50,7 @@ const MiniPoolStatus = ({ utils, minipoolStatus }) => {
                     return <></>
                 else
                     return <div key={`minipool${index + 1}`}> {/* https://octoshrimpy.github.io/bulma-o-steps/ */}
-                        <h3 className="title is-3 has-text-white">Minipool {index + 1}{finalisedTag(minipool)}</h3>
+                        <h3 className="title is-3 has-text-white">Minipool {index + 1}{finalisedTag(minipool.finalised)}</h3>
                         <div>
                             {!minipool.finalised && (
                                 <div className="columns">
@@ -51,7 +58,7 @@ const MiniPoolStatus = ({ utils, minipoolStatus }) => {
                                         <ul className="steps has-content-centered">
                                             {miniPoolSteps.map((element) =>
                                                 <li className={"steps-segment" + (element === minipool.status.status ? " is-active" : "")} key={element}>
-                                                    <span className={"steps-marker" + (element === minipool.status.status && isHollow(element, minipool) ? "" : "")}></span>
+                                                    <span className={"steps-marker" + (element === minipool.status.status && isHollow(element, minipool.validator.active) ? "" : "")}></span>
                                                     <div className="steps-content">
                                                         <p className="is-size-4 has-text-white">{element}</p>
                                                         <div className="extra-data has-text-white">{miniPoolStepsComment(element)}</div>
