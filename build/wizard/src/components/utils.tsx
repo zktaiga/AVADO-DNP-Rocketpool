@@ -2,7 +2,11 @@ import React from 'react';
 import web3 from "web3";
 
 class Utils {
-    constructor(network) {
+    network: "prater" | "mainnet";
+    beaconChainBaseUrl : string;
+    etherscanBaseUrl: string;
+
+    constructor(network: "prater" | "mainnet") {
         this.network = network;
         this.beaconChainBaseUrl = ({
             "prater": "https://prater.beaconcha.in",
@@ -15,24 +19,24 @@ class Utils {
         })[this.network];
     }
 
-    beaconchainUrl(validatorPubkey, text) {
+    beaconchainUrl(validatorPubkey:string, text:string) {
         return <a target="_blank" rel="noopener noreferrer" href={this.beaconChainBaseUrl + "/validator/" + validatorPubkey + "#rocketpool"}>{text ? text : validatorPubkey}</a>;
     }
 
-    etherscanAddressUrl(address, text) {
+    etherscanAddressUrl(address: string, text:string) {
         return <a target="_blank"rel="noopener noreferrer" href={this.etherscanBaseUrl + "/address/" + address}>{text ? text : address}</a>;
     }
 
-    etherscanTransactionUrl(txHash, text) {
+    etherscanTransactionUrl(txHash: string, text: string) {
         return <a target="_blank" rel="noopener noreferrer" href={this.etherscanBaseUrl + "/tx/" + txHash}>{text ? text : txHash}</a>;
     }
 
-    rocketscanUrl(path, child) {
+    rocketscanUrl(path:string, child: React.ReactNode) {
         const praterPrefix = (this.network === "prater") ? "prater." : ""
         return <a target="_blank" rel="noopener noreferrer" href={"https://" + praterPrefix + "rocketscan.io" + path} >{child}</a>
     }
 
-    displayAsETH(number, fractionDigits) {
+    displayAsETH(number:number, fractionDigits:number) {
         if (!number)
             return 0;
         // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
@@ -42,7 +46,7 @@ class Utils {
         return result
     }
 
-    displayAsPercentage(number) {
+    displayAsPercentage(number:string) {
         if (!number)
             return "- %";
         return parseFloat(number).toFixed(2) + "%";

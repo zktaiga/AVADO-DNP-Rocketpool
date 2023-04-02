@@ -3,8 +3,18 @@ import Spinner from "./Spinner";
 import { AutobahnContext } from "./AutobahnContext";
 import { StoreContext } from "./StoreContext";
 import InstallPackage from "./InstallPackage";
+import { rplPriceDataType, nodeSyncProgressResponseType } from "./Types"
 
-const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
+
+interface Props {
+    utils: any,
+    nodeSyncStatus: nodeSyncProgressResponseType,
+    updateNodeStatus: any,
+    setNavBar: any
+    rplPriceData: rplPriceDataType,
+}
+
+const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }: Props) => {
 
     const { packages } = React.useContext(AutobahnContext);
     const { store } = React.useContext(StoreContext);
@@ -33,7 +43,7 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
         prerequisites.push(
             {
                 description: "A fully synced Ethereum node",
-                suggestedpackages: store.packages.filter((p) => execution_engines.includes(p.manifest.name))
+                suggestedpackages: store.packages.filter((p: any) => execution_engines.includes(p.manifest.name))
             }
         );
         extraSoftwareNeeded = true;
@@ -59,8 +69,8 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
             {
                 description: "An ETH2.0 beacon chain",
                 suggestedpackages: [
-                    store.packages.find((p) => { return p.manifest.name === "teku.avado.dnp.dappnode.eth" }),
-                    store.packages.find((p) => { return p.manifest.name === "prysm-beacon-chain-mainnet.avado.dnp.dappnode.eth" })
+                    store.packages.find((p: any) => { return p.manifest.name === "teku.avado.dnp.dappnode.eth" }),
+                    store.packages.find((p: any) => { return p.manifest.name === "prysm-beacon-chain-mainnet.avado.dnp.dappnode.eth" })
                 ]
             }
         );
@@ -86,8 +96,8 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
             {
                 description: "An ETH2.0 validator client",
                 suggestedpackages: [
-                    store.packages.find((p) => { return p.manifest.name === "teku.avado.dnp.dappnode.eth" }),
-                    store.packages.find((p) => { return p.manifest.name === "prysm-beacon-chain-mainnet.avado.dnp.dappnode.eth" })
+                    store.packages.find((p: any) => { return p.manifest.name === "teku.avado.dnp.dappnode.eth" }),
+                    store.packages.find((p: any) => { return p.manifest.name === "prysm-beacon-chain-mainnet.avado.dnp.dappnode.eth" })
                 ]
             }
         );

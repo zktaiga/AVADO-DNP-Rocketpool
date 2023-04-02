@@ -6,11 +6,11 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 
 const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
-const Comp = ({ session }) => {
+const Comp = ({ session }: { session: any }) => {
 
     const [dataresult, setDataresult] = React.useState();
-    const [dataSuccess, setDataSuccess] = React.useState();
-    const [restartresult, setRestartresult] = React.useState();
+    const [dataSuccess, setDataSuccess] = React.useState(false);
+    const [restartresult, setRestartresult] = React.useState("");
 
     const restart = async () => {
         const res = JSON.parse(await session.call("restartPackage.dappmanager.dnp.dappnode.eth", [],
@@ -22,7 +22,7 @@ const Comp = ({ session }) => {
         }
     }
 
-    async function restoreBackup(file) {
+    async function restoreBackup(file: File) {
         const data = new FormData();
         data.append('file', file);
         axios.post(`${config.api.HTTP}/restore-backup`, data).then(res => {
@@ -37,7 +37,7 @@ const Comp = ({ session }) => {
         });
     }
 
-    async function askConfirmationRestoreBackup(file) {
+    async function askConfirmationRestoreBackup(file: File) {
         confirmAlert({
             title: `Are you sure you want to restore from "${file.name}"?`,
             message: 'This will overwrite your current Rocket Pool configuration',
@@ -60,7 +60,7 @@ const Comp = ({ session }) => {
                 rocket-pool-backup.zip &nbsp;
                 <input
                     type="file"
-                    onChange={e => askConfirmationRestoreBackup(e.target.files[0])}
+                    onChange={e => askConfirmationRestoreBackup(e.target.files![0])}
                 />
                 {dataresult && (<div className={"is-size-7" + (dataSuccess ? "" : " has-text-danger")}>{dataresult}</div>)}
             </div>
