@@ -6,56 +6,64 @@ export type consusClientType = "teku" | "prysm"
 export type minipoolStatusType = {
   "status": "success" | "error",
   "error": string,
-  "minipools": [
-    {
-      "address": string,
-      "validatorPubkey": string,
-      "status": {
-        "status": string,
-        "statusBlock": number,
-        "statusTime": string
-      },
-      "depositType": string,
-      "node": {
-        "address": string,
-        "fee": number,
-        "depositBalance": number,
-        "refundBalance": number,
-        "depositAssigned": boolean
-      },
-      "user": {
-        "depositBalance": number,
-        "depositAssigned": boolean,
-        "depositAssignedTime": string
-      },
-      "balances": {
-        "eth": number,
-        "reth": number,
-        "rpl": number,
-        "fixedSupplyRpl": number
-      },
-      "validator": {
-        "exists": boolean,
-        "active": boolean,
-        "index": number,
-        "balance": number,
-        "nodeBalance": number
-      },
-      "canStake": boolean,
-      // queue
-      "refundAvailable": boolean,
-      "withdrawalAvailable": boolean,
-      "closeAvailable": boolean,
-      "finalised": boolean,
-      "useLatestDelegate": boolean,
-      "delegate": string,
-      "previousDelegate": string,
-      "effectiveDelegate": string,
-      "timeUntilDissolve": number,
-      "penalties": number
-    }
-  ],
-  "latestDelegate": string
+  "minipools": MinipoolDetailsType[],
+  "latestDelegate": string,
+  "isAtlasDeployed": boolean
+}
+
+export type MinipoolDetailsType = {
+  "address": string,
+  "validatorPubkey": string,
+  "status": minipoolStatusDetailsType,
+  "depositType": string,
+  "node": NodeDetailsType,
+  "user": UserDetailsType,
+  "balances": balancesDetailType,
+  "validator": validatorDetailsType,
+  "canStake": boolean,
+  // queue
+  "refundAvailable": boolean,
+  "withdrawalAvailable": boolean,
+  "closeAvailable": boolean,
+  "finalised": boolean,
+  "useLatestDelegate": boolean,
+  "delegate": string,
+  "previousDelegate": string,
+  "effectiveDelegate": string,
+  "timeUntilDissolve": number,
+  "penalties": number,
+  "reduceBondTime": any,
+	"reduceBondCancelled": boolean
+}
+export type minipoolStatusDetailsType = {
+  "status": string,
+  "statusBlock": number,
+  "statusTime": string
+}
+export type NodeDetailsType = {
+  "address": string,
+  "fee": number,
+  "depositBalance": number,
+  "refundBalance": number,
+  "depositAssigned": boolean
+}
+export type UserDetailsType = {
+  "depositBalance": number,
+  "depositAssigned": boolean,
+  "depositAssignedTime": string
+}
+export type balancesDetailType = {
+  "eth": number,
+  "reth": number,
+  "rpl": number,
+  "fixedSupplyRpl": number
+}
+export type validatorDetailsType = {
+    "exists": boolean,
+    "active": boolean,
+    "index": number,
+    "balance": number,
+    "nodeBalance": number
 }
 
 // https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/node.go

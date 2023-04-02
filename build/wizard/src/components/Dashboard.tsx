@@ -3,7 +3,6 @@ import axios from "axios";
 import config from "../config";
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import rocketpoollogo from "../assets/rocketpool.png";
-import autobahn from "autobahn-browser";
 import MiniPoolStatus from "./MiniPoolStatus";
 import NodeStatus from "./NodeStatus";
 import NavigationBar from "./NavigationBar";
@@ -11,7 +10,6 @@ import Header from "./Header";
 import Welcome from "./Welcome";
 import WalletStatus from "./WalletStatus";
 import SetupWizard from "./SetupWizard";
-import bignumJSON from "json-bignum"
 import AdminPage from "./AdminPage";
 import RewardsPage from "./RewardsPage"
 import NetworkBanner from "./NetworkBanner";
@@ -19,26 +17,44 @@ import Utils from "./utils";
 import ValidatorBanner from "./ValidatorBanner";
 import { DappManagerHelper } from "./DappManagerHelper";
 import SmoothingPoolBanner from "./SmoothingPoolBanner";
+import { minipoolStatusType, nodeFeeType, nodeStatusType, nodeSyncProgressResponseType, rplPriceDataType, walletStatusType } from "./Types";
+import { KeyManagerHelper } from "./KeyManagerHelper";
+import JSONbig from "json-bigint";
 
 export const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
-const Comp = () => {
-    const [network, setNetwork] = React.useState();
-    const [utils, setUtils] = React.useState();
+const autobahn = require('autobahn-browser')
+// const JSONbig = require('json-bigint');
 
-    const [walletStatus, setWalletStatus] = React.useState();
-    const [minipoolStatus, setMinipoolStatus] = React.useState();
-    const [nodeStatus, setNodeStatus] = React.useState();
-    const [nodeSyncStatus, setNodeSyncStatus] = React.useState();
-    const [nodeFee, setNodeFee] = React.useState();
-    const [rplPriceData, setRplPriceData] = React.useState();
+const Comp = () => {
+    const [network, setNetwork] = React.useState<string>();
+    const [utils, setUtils] = React.useState<Utils>();
+
+    const [walletStatus, setWalletStatus] = React.useState<walletStatusType>({
+        "status": "success",
+        "error": "",
+        "passwordSet": false,
+        "walletInitialized": false,
+        "accountAddress": ""
+    });
+    const [minipoolStatus, setMinipoolStatus] = React.useState<minipoolStatusType>({
+        "status": "error",
+        "error": "",
+        "minipools": [],
+        "latestDelegate": "",
+        isAtlasDeployed: false
+    });
+    const [nodeStatus, setNodeStatus] = React.useState<nodeStatusType>();
+    const [nodeSyncStatus, setNodeSyncStatus] = React.useState<nodeSyncProgressResponseType>();
+    const [nodeFee, setNodeFee] = React.useState<nodeFeeType>();
+    const [rplPriceData, setRplPriceData] = React.useState<rplPriceDataType>();
 
     const [wampSession, setWampSession] = React.useState();
     const [navBar, setNavBar] = React.useState("Welcome");
 
-    const dappManagerHelper = React.useMemo(() => wampSession ? new DappManagerHelper(packageName, wampSession) : null, [wampSession]);
+    const dappManagerHelper = React.useMemo(() => wampSession ? new DappManagerHelper(packageName, wampSession) : undefined, [wampSession]);
 
-    const [keyManagerHelper, setKeyManagerHelper] = React.useState();
+    const [keyManagerHelper, setKeyManagerHelper] = React.useState<KeyManagerHelper>();
 
     React.useEffect(() => {
         if (walletStatus && minipoolStatus) {
@@ -76,23 +92,23 @@ const Comp = () => {
             url,
             realm
         });
-        connection.onopen = session => {
+        connection.onopen = (session: any) => {
             console.debug("CONNECTED to \nurl: " + url + " \nrealm: " + realm);
             setWampSession(session);
         };
         // connection closed, lost or unable to connect
-        connection.onclose = (reason, details) => {
-            this.setState({ connectedToDAppNode: false });
+        connection.onclose = (reason: any, details: any) => {
             console.error("CONNECTION_CLOSE", { reason, details });
+            setWampSession(undefined);
+
         };
         connection.open();
     }, []);
 
-    const rpdDaemon = async (command, callback, error) => {
+    const rpdDaemon = async (command: string, callback: (data: any) => void, error?: (error: any) => void) => {
         await axios.post(`${config.api.HTTP}/rpd`, { command: command }, { timeout: 5 * 60 * 1000 }).then((res) => {
-            const data = bignumJSON.parse(res.data);
+            const data = JSONbig.parse(res.data);
             console.log(`rocketpoold api ${command}: ` + res.data);
-            // console.log('JSON: ' + bignumJSON.stringify(data))
             callback(data);
         }).catch(e => { if (error) error(e) })
     }
@@ -165,7 +181,7 @@ const Comp = () => {
                             <div>
                                 <div className="columns">
                                     <div className="column is-half">
-                                        <NodeStatus utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} nodeSyncStatus={nodeSyncStatus} />
+                                        <NodeStatus utils={utils} nodeStatus={nodeStatus} nodeSyncStatus={nodeSyncStatus} />
                                     </div>
                                     <div className="column is-half">
                                         <WalletStatus utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />

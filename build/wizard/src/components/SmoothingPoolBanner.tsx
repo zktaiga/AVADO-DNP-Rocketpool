@@ -10,8 +10,8 @@ interface Props {
     utils: any,
     updateNodeStatus: any,
     minipoolSatus: minipoolStatusType,
-    nodeStatus: nodeStatusType,
-    keyManagerHelper: KeyManagerHelper,
+    nodeStatus?: nodeStatusType,
+    keyManagerHelper?: KeyManagerHelper,
 }
 
 const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, minipoolSatus, keyManagerHelper }: Props) => {
@@ -69,7 +69,7 @@ const SmoothingPoolBanner = ({ rpdDaemon, utils, updateNodeStatus, nodeStatus, m
     }, [nodeStatus, waitingForTx, rpdDaemon]);
 
     const setFeeRecipients = async () => {
-        keyManagerHelper.setFeeRecipients(minipoolSatus, nodeStatus.feeRecipientInfo.smoothingPoolAddress, false)
+        keyManagerHelper?.setFeeRecipients(minipoolSatus, nodeStatus!.feeRecipientInfo.smoothingPoolAddress, false)
     }
 
     const joinSmoothingPool = () => {

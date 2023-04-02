@@ -9,9 +9,9 @@ import Spinner from "./Spinner";
 interface Props {
     utils: any,
     rocketpoollogo: any,
-    nodeSyncStatus: nodeSyncProgressResponseType,
-    nodeFee: nodeFeeType,
-    rplPriceData: rplPriceDataType,
+    nodeSyncStatus?: nodeSyncProgressResponseType,
+    nodeFee?: nodeFeeType,
+    rplPriceData?: rplPriceDataType,
     minipoolStatus: minipoolStatusType
 }
 

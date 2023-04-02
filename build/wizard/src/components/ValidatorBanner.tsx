@@ -6,10 +6,10 @@ import { KeyManagerHelper } from "./KeyManagerHelper";
 import { confirmAlert } from 'react-confirm-alert';
 
 interface Props {
-    dappManagerHelper: DappManagerHelper,
+    dappManagerHelper?: DappManagerHelper | undefined,
     minipoolStatus: minipoolStatusType,
-    nodeStatus: nodeStatusType,
-    keyManagerHelper: KeyManagerHelper,
+    nodeStatus?: nodeStatusType,
+    keyManagerHelper?: KeyManagerHelper,
     setKeyManagerHelper: (keyManagerHelper: KeyManagerHelper) => void,
     utils: any
 }
@@ -37,7 +37,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
 
     const [message, setMessage] = React.useState<string>();
     React.useEffect(() => {
-        if (packages && network && consensusClient) {
+        if (packages && network && consensusClient && dappManagerHelper) {
             const packageNames = {
                 "prater": {
                     "teku": "teku.avado.dnp.dappnode.eth",
@@ -145,7 +145,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
     const setFeeRecipients = async () => {
         if (misconfiguredValidators) {
             // set for all minipool validators (for Prysm workaround: non persistend setting via API)
-            keyManagerHelper.setFeeRecipients(minipoolStatus, nodeStatus.feeRecipientInfo.smoothingPoolAddress, true)
+            keyManagerHelper!.setFeeRecipients(minipoolStatus, nodeStatus!.feeRecipientInfo.smoothingPoolAddress, true)
         }
     }
 
@@ -155,10 +155,10 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
 
         const importValidator = async (validator: string) => {
             // get keyStoreFile
-            const keyStoreFile = await dappManagerHelper.getFileContentFromContainer(`/rocketpool/data/validators/teku/keys/${validator}.json`)
+            const keyStoreFile = await dappManagerHelper!.getFileContentFromContainer(`/rocketpool/data/validators/teku/keys/${validator}.json`)
             console.log(keyStoreFile)
             // get password
-            const password = await dappManagerHelper.getFileContentFromContainer(`/rocketpool/data/validators/teku/passwords/${validator}.txt`)
+            const password = await dappManagerHelper!.getFileContentFromContainer(`/rocketpool/data/validators/teku/passwords/${validator}.txt`)
             console.log(password)
             // create message
             const message = {
@@ -169,7 +169,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
             console.log(message)
 
             // API call
-            keyManagerHelper.keyManagerAPI.post("/eth/v1/keystores", message, (res) => {
+            keyManagerHelper!.keyManagerAPI.post("/eth/v1/keystores", message, (res) => {
                 //https://ethereum.github.io/keymanager-APIs/#/Local%20Key%20Manager/ImportKeystores
                 const status = res.data.data[0].status
                 window.location.reload()

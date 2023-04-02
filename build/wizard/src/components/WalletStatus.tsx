@@ -3,7 +3,7 @@ import { nodeStatusType } from "./Types"
 
 interface Props {
     utils: any,
-    nodeStatus: nodeStatusType,
+    nodeStatus?: nodeStatusType,
     updateNodeStatus: any
 }
 

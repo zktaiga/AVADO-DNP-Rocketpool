@@ -8,10 +8,9 @@ import { rplPriceDataType, nodeSyncProgressResponseType } from "./Types"
 
 interface Props {
     utils: any,
-    nodeSyncStatus: nodeSyncProgressResponseType,
-    updateNodeStatus: any,
+    nodeSyncStatus?: nodeSyncProgressResponseType,
     setNavBar: any
-    rplPriceData: rplPriceDataType,
+    rplPriceData?: rplPriceDataType,
 }
 
 const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }: Props) => {
