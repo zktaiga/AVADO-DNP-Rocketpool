@@ -26,6 +26,7 @@ RUN chmod +x /usr/local/bin/rocketpool /usr/local/bin/rocketpoold
 
 RUN apt-get -y update && apt-get -y upgrade && apt-get -y install \
     gettext\
+    jq \
     nginx \
     sudo \
     supervisor \
