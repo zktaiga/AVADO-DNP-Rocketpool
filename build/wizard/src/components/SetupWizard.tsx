@@ -17,7 +17,7 @@ interface Props {
     utils: any,
     updateNodeStatus: any,
     minipoolStatus: minipoolStatusType,
-    nodeStatus: nodeStatusType,
+    nodeStatus?: nodeStatusType,
     walletStatus: walletStatusType,
     updateWalletStatus: any,
     rplPriceData: any,
@@ -66,7 +66,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                 && nodeStatus.accountAddress !== "0x0000000000000000000000000000000000000000"
                 && !nodeStatus.registered
                 && nodeStatus.accountBalances.eth > 0
-                && nodeStatus.accountBalances.rpl > rplPriceData.minPerMinipoolRplStake
+                && nodeStatus.accountBalances.rpl > rplPriceData.minPer16EthMinipoolRplStake
             ) {
                 setViewState(registerNode);
                 return;
@@ -101,7 +101,7 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
     }
     const isHollow = (element: any) => {
         if (isActive(element) && element.id == createMinipool.id)
-            return !nodeStatus.minipoolCounts || nodeStatus.minipoolCounts.total == 0;
+            return !nodeStatus?.minipoolCounts || nodeStatus?.minipoolCounts.total == 0;
         else
             return element.id == viewState.id;
     }
@@ -154,23 +154,26 @@ const SetupWizard = ({ utils, walletStatus, updateWalletStatus, nodeStatus, rplP
                     </div>
                 )}
             </div>
-            {(viewState.id === initWallet.id) && (<InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} onFinished={() => { setViewState(fundNode) }} />)}
-            {(viewState.id === fundNode.id) && (<FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rplPriceData={rplPriceData} />)}
-            {(viewState.id === registerNode.id) && (<RegisterNode utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
-            {(viewState.id === withdrawalAddress.id) && (<SetWithdrawalAddress utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
-            {(viewState.id === joinSmoothingPool.id) && (<JoinSmoothingPool utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
-            {(viewState.id === initializeFeeDistributor.id) && (<InitializeFeeDistributor utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
-            {(viewState.id === createMinipool.id) && (<CreateMinipool
-                utils={utils}
-                nodeStatus={nodeStatus}
-                rplPriceData={rplPriceData}
-                updateNodeStatus={updateNodeStatus}
-                updateMiniPoolStatus={updateMiniPoolStatus}
-                minipoolStatus={minipoolStatus}
-                nodeFee={nodeFee}
-                rpdDaemon={rpdDaemon}
-                setNavBar={setNavBar}
-            />)}
+            {nodeStatus && (
+                <>
+                    {(viewState.id === initWallet.id) && (<InitWallet walletStatus={walletStatus} updateWalletStatus={updateWalletStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} onFinished={() => { setViewState(fundNode) }} />)}
+                    {(viewState.id === fundNode.id) && (<FundWallet utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rplPriceData={rplPriceData} />)}
+                    {(viewState.id === registerNode.id) && (<RegisterNode utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+                    {(viewState.id === withdrawalAddress.id) && (<SetWithdrawalAddress utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+                    {(viewState.id === joinSmoothingPool.id) && (<JoinSmoothingPool utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+                    {(viewState.id === initializeFeeDistributor.id) && (<InitializeFeeDistributor utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />)}
+                    {(viewState.id === createMinipool.id) && (<CreateMinipool
+                        utils={utils}
+                        nodeStatus={nodeStatus}
+                        rplPriceData={rplPriceData}
+                        updateNodeStatus={updateNodeStatus}
+                        updateMiniPoolStatus={updateMiniPoolStatus}
+                        nodeFee={nodeFee}
+                        rpdDaemon={rpdDaemon}
+                        setNavBar={setNavBar}
+                    />)}
+                </>
+            )}
         </div>
     );
 };

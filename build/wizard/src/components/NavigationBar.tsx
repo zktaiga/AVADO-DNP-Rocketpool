@@ -1,7 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const NavigationBar = ({ navBar, setNavBar }) => {
+interface Props {
+    navBar: any,
+    setNavBar: any
+}
+const NavigationBar = ({ navBar, setNavBar } : Props) => {
 
     const [navBarIsActive, setNavBarIsActive] = React.useState(false);
 

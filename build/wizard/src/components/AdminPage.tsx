@@ -7,7 +7,13 @@ import RpdCommand from "./RpdCommand";
 
 const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
-const AdminPage = ({ wampSession, rpdDaemon, utils }) => {
+interface Props {
+    wampSession: any,
+    rpdDaemon: any,
+    utils: any
+}
+
+const AdminPage = ({ wampSession, rpdDaemon, utils } : Props) => {
     const [isRestartValidator, setIsRestartValidator] = React.useState(false);
     const [isRestartRpNode, setIsRestartRpNode] = React.useState(false);
     const [network, setNetwork] = React.useState("");
@@ -44,7 +50,7 @@ const AdminPage = ({ wampSession, rpdDaemon, utils }) => {
         const packagesRaw = await wampSession.call("listPackages.dappmanager.dnp.dappnode.eth", [],);
         const packages = JSON.parse(packagesRaw);
         if (packages.success) {
-            setNetwork(packages.result.find(r => r.name === packageName).envs.NETWORK)
+            setNetwork(packages.result.find((r:any) => r.name === packageName).envs.NETWORK)
         }
     }
 

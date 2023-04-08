@@ -6,14 +6,12 @@ import { networkType, consusClientType, minipoolStatusType, nodeStatusType } fro
 
 
 interface Props {
-    rpdDaemon: any,
-    utils: any,
-    updateNodeStatus: any,
-    nodeStatus: nodeStatusType,
+    utils?: any,
+    nodeStatus?: nodeStatusType,
     nodeSyncStatus: any
 }
 
-const NodeStatus = ({ utils, nodeStatus, updateNodeStatus, nodeSyncStatus }: Props) => {
+const NodeStatus = ({ utils, nodeStatus, nodeSyncStatus }: Props) => {
     return (
         <div>
             <h2 className="title is-3 has-text-white">Node status</h2>

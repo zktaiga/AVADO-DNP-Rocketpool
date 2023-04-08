@@ -3,8 +3,17 @@ import Spinner from "./Spinner";
 import { AutobahnContext } from "./AutobahnContext";
 import { StoreContext } from "./StoreContext";
 import InstallPackage from "./InstallPackage";
+import { rplPriceDataType, nodeSyncProgressResponseType } from "./Types"
 
-const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
+
+interface Props {
+    utils: any,
+    nodeSyncStatus?: nodeSyncProgressResponseType,
+    setNavBar: any
+    rplPriceData?: rplPriceDataType,
+}
+
+const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }: Props) => {
 
     const { packages } = React.useContext(AutobahnContext);
     const { store } = React.useContext(StoreContext);
@@ -27,13 +36,13 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
         "avado-dnp-nethermind.public.dappnode.eth",
     ]
 
-    // check if ETH1 (geth) nodeis installed
+    // check if ETH1 (geth) node is installed
     const eth1Node = Object.keys(packages).find(k => execution_engines.includes(packages[k].manifest.name));
     if (!eth1Node) {
         prerequisites.push(
             {
                 description: "A fully synced Ethereum node",
-                suggestedpackages: store.packages.filter((p) => execution_engines.includes(p.manifest.name))
+                suggestedpackages: store.packages.filter((p: any) => execution_engines.includes(p.manifest.name))
             }
         );
         extraSoftwareNeeded = true;
@@ -59,8 +68,8 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
             {
                 description: "An ETH2.0 beacon chain",
                 suggestedpackages: [
-                    store.packages.find((p) => { return p.manifest.name === "teku.avado.dnp.dappnode.eth" }),
-                    store.packages.find((p) => { return p.manifest.name === "prysm-beacon-chain-mainnet.avado.dnp.dappnode.eth" })
+                    store.packages.find((p: any) => { return p.manifest.name === "teku.avado.dnp.dappnode.eth" }),
+                    store.packages.find((p: any) => { return p.manifest.name === "prysm-beacon-chain-mainnet.avado.dnp.dappnode.eth" })
                 ]
             }
         );
@@ -86,8 +95,8 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
             {
                 description: "An ETH2.0 validator client",
                 suggestedpackages: [
-                    store.packages.find((p) => { return p.manifest.name === "teku.avado.dnp.dappnode.eth" }),
-                    store.packages.find((p) => { return p.manifest.name === "prysm-beacon-chain-mainnet.avado.dnp.dappnode.eth" })
+                    store.packages.find((p: any) => { return p.manifest.name === "teku.avado.dnp.dappnode.eth" }),
+                    store.packages.find((p: any) => { return p.manifest.name === "prysm-beacon-chain-mainnet.avado.dnp.dappnode.eth" })
                 ]
             }
         );
@@ -193,7 +202,7 @@ const Welcome = ({ utils, nodeSyncStatus, setNavBar, rplPriceData }) => {
                     {/* <li>A fully synced Ethereum node. Install the <b>Ethereum Node (Geth)</b> from the <a target="_blank" href="http://my.ava.do/#/installer">DappStore</a></li>
                     <li>A fully synced Beacon chain. Install the <b>Prysm ETH2.0 Beacon Chain</b> from the <a target="_blank" href="http://my.ava.do/#/installer">DappStore</a></li> */}
                     <li>An Ethereum wallet with 16 ETH + some gas to deposit it in your minipool (0.4 ETH should be enough)</li>
-                    <li>An Ethereum wallet with the neccesary amount of RPL to stake. {rplPriceData && (<>Minimum stake is currently <b>{Math.ceil(utils.displayAsETH(rplPriceData.minPerMinipoolRplStake))} RPL</b></>)}</li>
+                    <li>An Ethereum wallet with the necessary amount of RPL to stake. {rplPriceData && (<>Minimum stake is currently <b>{Math.ceil(utils.displayAsETH(rplPriceData.minPer16EthMinipoolRplStake))} RPL</b></>)}</li>
                     <li>An Ethereum wallet to receive your staking rewards into. This can be an empty wallet, or a cold storage wallet - as you prefer.</li>
                 </ol>
                 <p>Check the <a target="_blank" href="https://wiki.ava.do/en/tutorials/rocketpool">Avado Rocket Pool Wiki page</a> to learn what it takes to run a Rocket Pool node - and info on how to obtain RPL.</p>

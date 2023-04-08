@@ -5,11 +5,17 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Spinner from "./Spinner";
-import config from "../config";
-import { etherscanTransactionUrl } from './utils.js';
 import web3 from "web3";
+import { rplPriceDataType, nodeStatusType } from "./Types"
 
-const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => {
+interface Props {
+    utils: any,
+    rplAllowanceOK: boolean,
+    setRplAllowanceOK: any
+    rpdDaemon: any
+}
+
+const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }: Props) => {
     const [rplApproveButtonDisabled, setRplApproveButtonDisabled] = React.useState(true);
     const [txHash, setTxHash] = React.useState();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
@@ -22,7 +28,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
     const checkAllowance = () => {
         setRplApproveButtonDisabled(false);
 
-        rpdDaemon(`node stake-rpl-allowance`, (data) => {
+        rpdDaemon(`node stake-rpl-allowance`, (data: any) => {
             if (data.status === "error") {
                 setFeedback(data.error);
             } else {
@@ -50,7 +56,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => rpdDaemon(`node stake-rpl-approve-rpl ${maxApproval}`, (data) => {
+                    onClick: () => rpdDaemon(`node stake-rpl-approve-rpl ${maxApproval}`, (data: any) => {
                         if (data.status === "error") {
                             setFeedback(data.error);
                         }
@@ -69,7 +75,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
 
     React.useEffect(() => {
         if (waitingForTx && txHash) {
-            rpdDaemon(`wait ${txHash}`, (data) => {
+            rpdDaemon(`wait ${txHash}`, (data: any) => {
                 const w3 = new web3(utils.wsProvider());
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
@@ -107,7 +113,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }) => 
                 <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>
             )}
             <br />
-            <br/>
+            <br />
         </div>);
 }
 

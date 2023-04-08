@@ -1,7 +1,7 @@
 import React from "react";
 import config from "../config";
 
-const DownloadBackup = ({description}) => {
+const DownloadBackup = ({ description }: { description?: string }) => {
 
     const downloadBackup = () => {
         window.location.href = `${config.api.HTTP}/rocket-pool-backup.zip`;

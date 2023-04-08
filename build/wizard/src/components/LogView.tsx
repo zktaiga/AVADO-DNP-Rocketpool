@@ -3,7 +3,7 @@ import React from "react";
 const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
 
-const LogView = ({ wampSession }) => {
+const LogView = ({ wampSession }: { wampSession: any }) => {
     const [log, setLog] = React.useState("Loading...");
 
     React.useEffect(() => {
@@ -27,9 +27,9 @@ const LogView = ({ wampSession }) => {
         <div>
             <h2 className="title is-3 has-text-white">Latest log entries</h2>
             {/* <div className="container"> */}
-                <pre className="transcript">
-                    {log}
-                </pre>
+            <pre className="transcript">
+                {log}
+            </pre>
             {/* </div> */}
             <button className="button" onClick={getLog}>Refresh log</button>
         </div>

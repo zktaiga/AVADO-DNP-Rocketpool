@@ -3,14 +3,21 @@ import web3 from "web3";
 
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import config from "../config";
 import Spinner from "./Spinner";
+import { rplPriceDataType, nodeStatusType } from "./Types"
 
-const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
+interface Props {
+    utils: any,
+    nodeStatus: nodeStatusType,
+    updateNodeStatus: any,
+    rpdDaemon: any
+}
+
+const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }: Props) => {
     const [buttonDisabled, setButtonDisabled] = React.useState(true);
-    const [txHash, setTxHash] = React.useState();
+    const [txHash, setTxHash] = React.useState<string>();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
-    const [error, setError] = React.useState();
+    const [error, setError] = React.useState<string>();
     const [gasInfo, setGasInfo] = React.useState();
 
     React.useEffect(() => {
@@ -18,9 +25,9 @@ const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
         if (waitingForTx)
             return;
         if (nodeStatus && !nodeStatus.registered && nodeStatus.accountBalances.eth > 0) {
-            rpdDaemon(`node can-register ${timeZone()}`, (data) => {
-                if (data.status === "error") {                    
-                    setError("Error running can-register: " + data.error + (data.registrationDisabled?" Node registrations are currently disabled.":""));
+            rpdDaemon(`node can-register ${timeZone()}`, (data: any) => {
+                if (data.status === "error") {
+                    setError("Error running can-register: " + data.error + (data.registrationDisabled ? " Node registrations are currently disabled." : ""));
                     return;
                 }
                 if (data.canRegister)
@@ -31,8 +38,8 @@ const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
     }, [nodeStatus]);
 
     React.useEffect(() => {
-        if (waitingForTx) {
-            rpdDaemon(`wait ${txHash}`, (data) => {
+        if (waitingForTx && txHash) {
+            rpdDaemon(`wait ${txHash}`, (data: any) => {
                 const w3 = new web3(utils.wsProvider());
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
@@ -42,7 +49,7 @@ const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
             });
         }
 
-    }, [waitingForTx,utils]);
+    }, [waitingForTx, utils]);
 
     const timeZone = () => {
         try {
@@ -59,7 +66,7 @@ const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
             buttons: [
                 {
                     label: 'Yes',
-                    onClick: () => rpdDaemon(`node register ${timeZone()}`, (data) => {
+                    onClick: () => rpdDaemon(`node register ${timeZone()}`, (data: any) => {
                         // "data": "{\"status\":\"success\",\"error\":\"\",\"txHash\":\"0x0691e410226264f411ee7a66285a78ec5c5776352cd038f66fb651ba10365381\"}\n",
                         updateNodeStatus();
                         setTxHash(data.txHash);
@@ -75,17 +82,15 @@ const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }) => {
         });
     }
 
-    const toGwei = (wei) => parseFloat(web3.utils.fromWei(wei.toString(), 'gwei')).toFixed(4)
-
     return (
         <div>
             {nodeStatus && !nodeStatus.registered && (
                 <>
                     <h2 className="title is-3 has-text-white">Register Node</h2>
                     <p>Now you need to register your node on the Rockerpool network.</p>
-                    <br/>
+                    <br />
                     {/* {gasInfo && <p className="help is-help">Estimated gas limit {toGwei(gasInfo.estGasLimit)} gwei, Safe gas limit {toGwei(gasInfo.safeGasLimit)} gwei</p>} */}
-                    <button className="button" onClick={registerNode} disabled={buttonDisabled}>Register Node{waitingForTx? <Spinner/>:""}</button>
+                    <button className="button" onClick={registerNode} disabled={buttonDisabled}>Register Node{waitingForTx ? <Spinner /> : ""}</button>
                     {/* {waitingForTx && (
                         <p><span className="icon"><img alt="spinner" src={spinner} /></span></p>
                     )} */}

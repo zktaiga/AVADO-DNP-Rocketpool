@@ -1,6 +1,6 @@
 import React from "react";
 
-const NetworkBanner = ({network}) => {
+const NetworkBanner = ({ network }: { network: string|undefined }) => {
     return (
         <>
             {network === "prater" && (

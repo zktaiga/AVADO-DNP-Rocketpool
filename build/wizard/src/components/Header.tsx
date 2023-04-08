@@ -3,13 +3,21 @@ import SyncStatusTag from "./SyncStatusTag";
 import web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGasPump, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
-import config from "../config";
+import { rplPriceDataType, nodeSyncProgressResponseType, nodeFeeType, minipoolStatusType } from "./Types"
 import Spinner from "./Spinner";
 
+interface Props {
+    utils: any,
+    rocketpoollogo: any,
+    nodeSyncStatus?: nodeSyncProgressResponseType,
+    nodeFee?: nodeFeeType,
+    rplPriceData?: rplPriceDataType,
+    minipoolStatus: minipoolStatusType
+}
 
-const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, minipoolStatus }) => {
+const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, minipoolStatus }: Props) => {
 
-    const [gasPrice, setGasPrice] = React.useState();
+    const [gasPrice, setGasPrice] = React.useState<string>();
 
     React.useEffect(() => {
         if (!utils)
@@ -22,14 +30,14 @@ const Header = ({ utils, rocketpoollogo, nodeSyncStatus, nodeFee, rplPriceData, 
                     const currentPrice = parseFloat(web3.utils.fromWei(result, 'gwei')).toFixed(1);
                     console.log("Gas: " + currentPrice);
                     setGasPrice(currentPrice);
-                }).catch((e)=>{
+                }).catch((e) => {
                     console.log(`${e.message}`);
                 })
         }, 15 * 1000);
         return () => clearInterval(interval);
     }, [utils]);
 
-    const beaconChainDashboard = (indexes) => indexes ? (<a href={`${utils.beaconChainBaseUrl}/dashboard?validators=` + indexes.join(",")}><FontAwesomeIcon className="icon" icon={faSatelliteDish} /></a>) : "";
+    const beaconChainDashboard = (indexes: number[]) => indexes ? (<a href={`${utils.beaconChainBaseUrl}/dashboard?validators=` + indexes.join(",")}><FontAwesomeIcon className="icon" icon={faSatelliteDish} /></a>) : "";
 
     return (
         <div className="hero-body is-small is-primary py-0">
