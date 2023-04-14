@@ -36,11 +36,11 @@ class Utils {
         return <a target="_blank" rel="noopener noreferrer" href={"https://" + praterPrefix + "rocketscan.io" + path} >{child}</a>
     }
 
-    displayAsETH(number:number, fractionDigits:number) {
+    displayAsETH(number:bigint, fractionDigits:number) {
         if (!number)
             return 0;
         // https://web3js.readthedocs.io/en/v1.2.0/web3-utils.html#fromwei
-        const result = web3.utils.fromWei(String(number), 'ether');
+        const result = web3.utils.fromWei(number.toString(), 'ether');
         if (fractionDigits)
             return parseFloat(result).toFixed(fractionDigits)
         return result

@@ -1,5 +1,4 @@
 import React from "react";
-import web3 from "web3";
 
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
@@ -15,7 +14,6 @@ import Spinner from "./Spinner";
 import RpdCommand from "./RpdCommand";
 import { domainToUnicode } from "url";
 import ClaimRewardsButtons from "./ClaimRewardsButtons";
-import BN from "bn.js"
 
 interface Props {
     utils: any,
@@ -55,18 +53,18 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
         "claimedIntervals": [any]
         "unclaimedIntervals": [{
             "index": number,
-            "collateralRplAmount": number
+            "collateralRplAmount": bigint
         }]
         "invalidIntervals": [any]
-        "rplStake": number,
-        "rplPrice": number,
+        "rplStake": bigint,
+        "rplPrice": bigint,
         "activeMinipools": number
     }
 
     const [nodeRewards, setNodeRewards] = React.useState<nodeRewardsType>();
     const [rewardsInfo, setRewardsInfo] = React.useState<rewardsInfoType>();
     const [unclaimedIntervals, setUnclaimedIntervals] = React.useState<number[]>([]);
-    const [claimRPl, setClaimRPl] = React.useState<BN>(new BN(0));
+    const [claimRPl, setClaimRPl] = React.useState<bigint>(0n);
 
     const updateRewardsInformation = () => {
         if (rpdDaemon) {
@@ -76,7 +74,7 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
                 const unclaimedIntervals = data.unclaimedIntervals.map(ui => ui.index)
                 setUnclaimedIntervals(unclaimedIntervals)
 
-                setClaimRPl(data.unclaimedIntervals.reduce((prev, ui) => prev.add(new BN(ui.collateralRplAmount)), new BN(0)))
+                setClaimRPl(data.unclaimedIntervals.reduce((prev, ui) => prev + BigInt(ui.collateralRplAmount), 0n))
             });
         }
     }
@@ -88,7 +86,7 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
         setNodeRewards(undefined)
         setRewardsInfo(undefined)
         setUnclaimedIntervals([])
-        setClaimRPl(new BN(0))
+        setClaimRPl(0n)
         updateRewardsInformation()
     }
 

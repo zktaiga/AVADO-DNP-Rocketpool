@@ -23,7 +23,6 @@ import { KeyManagerHelper } from "./KeyManagerHelper";
 export const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
 const autobahn = require('autobahn-browser')
-// const JSONbig = require('json-bigint');
 
 const Comp = () => {
     const [network, setNetwork] = React.useState<string>();
@@ -109,7 +108,7 @@ const Comp = () => {
             // put quotes about bigNumbers to avoid parsing issues
             var json = res.data.replace(/([\[:])?(\d{9,})([,\}\]])/g, "$1\"$2\"$3");
             console.log(`rocketpoold api ${command}: ` + json);
-            const data = JSON.parse(res.data);
+            const data = JSON.parse(json);
             callback(data);
         }).catch(e => { if (error) error(e) })
     }
