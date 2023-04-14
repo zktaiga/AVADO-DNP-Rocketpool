@@ -44,7 +44,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }: Pro
     }
 
     const approveRpl = () => {
-        const maxApproval:bigint = 2n**256n-1n
+        const maxApproval = ((2n**256n)-1n).toString()
 
         confirmAlert({
             title: '',
