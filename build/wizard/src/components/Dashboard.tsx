@@ -108,6 +108,10 @@ const Comp = () => {
             // put quotes about bigNumbers to avoid parsing issues
             var json = res.data.replace(/([\[:])?(\d{9,})([,\}\]])/g, "$1\"$2\"$3");
             console.log(`rocketpoold api ${command}: ` + json);
+
+            // TODO: https://stackoverflow.com/questions/69644298/how-to-make-json-parse-to-treat-all-the-numbers-as-bigint
+            const isBigNumber = (num: string | number) => !Number.isSafeInteger(+num)
+
             const data = JSON.parse(json);
             callback(data);
         }).catch(e => { if (error) error(e) })

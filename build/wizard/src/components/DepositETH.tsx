@@ -46,7 +46,7 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
             if (stakedRplBalance < rplMin) {
                 setFeedback("You need to stake RPL first")
             } else {
-                if ((BigInt(nodeStatus.accountBalances.eth) / BigInt(1000000000000000000)) < 16) {
+                if ((BigInt(nodeStatus.accountBalances.eth) / 1000000000000000000n) < 16n) {
                     setFeedback("There is not enough ETH in your wallet. You need at least 16 ETH + gas.")
                 } else {
                     rpdDaemon(`node can-deposit ${ETHDepositAmount} ${selectedNodeFee} 0`, (data: any) => {

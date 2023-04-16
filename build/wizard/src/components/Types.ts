@@ -19,7 +19,7 @@ export type MinipoolDetailsType = {
   "node": NodeDetailsType,
   "user": UserDetailsType,
   "balances": balancesDetailType,
-  "nodeShareOfETHBalance": bigint,
+  "nodeShareOfETHBalance": string, // bigint,
   "validator": validatorDetailsType,
   "canStake": boolean,
   // queue
@@ -44,26 +44,26 @@ export type minipoolStatusDetailsType = {
 export type NodeDetailsType = {
   "address": string,
   "fee": number,
-  "depositBalance": bigint,
+  "depositBalance": string, // bigint,
   "refundBalance": number,
   "depositAssigned": boolean
 }
 export type UserDetailsType = {
-  "depositBalance": bigint,
+  "depositBalance": string, // bigint,
   "depositAssigned": boolean,
   "depositAssignedTime": string
 }
 export type balancesDetailType = {
-  "eth": bigint,
-  "reth": bigint,
-  "rpl": bigint,
+  "eth": string, // bigint,
+  "reth": string, // bigint,
+  "rpl": string, // bigint,
   "fixedSupplyRpl": bigint
 }
 export type validatorDetailsType = {
     "exists": boolean,
     "active": boolean,
     "index": number,
-    "balance": bigint,
+    "balance": string, // bigint,
     "nodeBalance": bigint
 }
 
@@ -79,21 +79,21 @@ export type nodeStatusType = {
   "timezoneLocation": string,
   "accountBalances": {
     "eth": bigint
-    "reth": bigint,
-    "rpl": bigint,
+    "reth": string, // bigint,
+    "rpl": string, // bigint,
     "fixedSupplyRpl": bigint
   },
   "withdrawalBalances": {
     "eth": bigint
-    "reth": bigint,
-    "rpl": bigint,
+    "reth": string, // bigint,
+    "rpl": string, // bigint,
     "fixedSupplyRpl": bigint
   },
-  "rplStake": bigint,
-  "effectiveRplStake": bigint,
-  "minimumRplStake": bigint,
-  "maximumRplStake": bigint,
-  "collateralRatio": bigint,
+  "rplStake": string, // bigint,
+  "effectiveRplStake": string, // bigint,
+  "minimumRplStake": string, // bigint,
+  "maximumRplStake": string, // bigint,
+  "collateralRatio": string, // bigint,
   "votingDelegate": string,
   "minipoolLimit": number,
   "minipoolCounts": {
@@ -116,7 +116,7 @@ export type nodeStatusType = {
     "isInOptOutCooldown": boolean,
     "optOutEpoch": number
   },
-  "feeDistributorBalance": bigint,
+  "feeDistributorBalance": string, // bigint,
   "penalizedMinipools": [string],
   "snapshotResponse": {
     "error": string,
@@ -158,11 +158,11 @@ export type walletStatusType = {
 export type rplPriceDataType = {
   "status": string,
   "error": string,
-  "rplPrice": bigint,
+  "rplPrice": string, // bigint,
   "rplPriceBlock": number
-  "minPer8EthMinipoolRplStake": bigint,
-  "maxPer8EthMinipoolRplStake": bigint,
-  "minPer16EthMinipoolRplStake": bigint,
+  "minPer8EthMinipoolRplStake": string, // bigint,
+  "maxPer8EthMinipoolRplStake": string, // bigint,
+  "minPer16EthMinipoolRplStake": string, // bigint,
   "maxPer16EthMinipoolRplStake": string
 }
 
