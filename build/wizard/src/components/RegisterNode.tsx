@@ -24,7 +24,7 @@ const RegisterNode = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }: Props)
         setButtonDisabled(true); //set default
         if (waitingForTx)
             return;
-        if (nodeStatus && !nodeStatus.registered && nodeStatus.accountBalances.eth > 0) {
+        if (nodeStatus && !nodeStatus.registered && BigInt(nodeStatus.accountBalances.eth) > 0n) {
             rpdDaemon(`node can-register ${timeZone()}`, (data: any) => {
                 if (data.status === "error") {
                     setError("Error running can-register: " + data.error + (data.registrationDisabled ? " Node registrations are currently disabled." : ""));

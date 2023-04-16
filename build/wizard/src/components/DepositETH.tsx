@@ -6,7 +6,6 @@ import web3 from "web3";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import DownloadBackup from "./DownloadBackup";
-import BN from "bn.js"
 import { rplPriceDataType, nodeStatusType, nodeFeeType } from "./Types"
 
 interface Props {
@@ -18,7 +17,7 @@ interface Props {
     updateNodeStatus: any,
     setNavBar: any,
     updateMiniPoolStatus: any,
-    targetCount: any
+    targetCount: number
     rpdDaemon: any,
 }
 
@@ -30,25 +29,24 @@ const DepositETH = ({ utils, nodeStatus, nodeFee, rplPriceData, rplAllowanceOK, 
     const [waitingForTx, setWaitingForTx] = React.useState(false);
     const [selectedNodeFee, setSelectedNodeFee] = React.useState<number>();
 
-    const ETHDepositAmount = 16000000000000000000;
+    const ETHDepositAmount: bigint = 16000000000000000000n
 
     const getNodeFeeWithSlippage = (nodeFee: number) => nodeFee * 1.0; // no more slippage
 
     React.useEffect(() => {
-        const targetCountBN = new BN(targetCount.toString());
-        const rplMin = (new BN(rplPriceData.minPer16EthMinipoolRplStake.toString())).mul(targetCountBN);
+        const rplMin = BigInt(rplPriceData.minPer16EthMinipoolRplStake) * BigInt(targetCount);
 
         if (waitingForTx)
             return;
 
         setEthButtonDisabled(true); //set default
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
-            const stakedRplBalance = new BN(nodeStatus.rplStake.toString());
+            const stakedRplBalance:bigint = BigInt(nodeStatus.rplStake)
 
-            if (stakedRplBalance.lt(rplMin)) {
+            if (stakedRplBalance < rplMin) {
                 setFeedback("You need to stake RPL first")
             } else {
-                if (nodeStatus.accountBalances.eth / 1000000000000000000 < 16) {
+                if ((BigInt(nodeStatus.accountBalances.eth) / 1000000000000000000n) < 16n) {
                     setFeedback("There is not enough ETH in your wallet. You need at least 16 ETH + gas.")
                 } else {
                     rpdDaemon(`node can-deposit ${ETHDepositAmount} ${selectedNodeFee} 0`, (data: any) => {

@@ -3,19 +3,14 @@ import web3 from "web3";
 
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import { minipoolStatusType, nodeStatusType } from "./Types"
-import { KeyManagerHelper } from "./KeyManagerHelper"
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "./Spinner";
-import BN from "bn.js"
+
 
 interface Props {
     utils: any,
     rpdDaemon: any,
     unclaimedIntervals: number[],
-    claimRPl: BN
+    claimRPl: bigint
     onRewardsClaimFinished: () => void
 }
 

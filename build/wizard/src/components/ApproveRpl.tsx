@@ -1,5 +1,4 @@
 import React from "react";
-import BN from "bn.js"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { confirmAlert } from 'react-confirm-alert';
@@ -32,8 +31,8 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }: Pro
             if (data.status === "error") {
                 setFeedback(data.error);
             } else {
-                const allowance = new BN(data.allowance.toString())
-                if (allowance.gt(new BN(0))) {
+                const allowance:bigint = BigInt(data.allowance)
+                if (allowance > 0) {
                     setRplApproveButtonDisabled(true);
                     setRplAllowanceOK(true);
                 } else {
@@ -45,10 +44,7 @@ const ApproveRpl = ({ utils, rplAllowanceOK, setRplAllowanceOK, rpdDaemon }: Pro
     }
 
     const approveRpl = () => {
-        //2**256-1
-        var maxApproval = new BN(2)
-        maxApproval = maxApproval.pow(new BN(256))
-        maxApproval = maxApproval.sub(new BN(1))
+        const maxApproval = ((2n**256n)-1n).toString()
 
         confirmAlert({
             title: '',

@@ -19,6 +19,7 @@ export type MinipoolDetailsType = {
   "node": NodeDetailsType,
   "user": UserDetailsType,
   "balances": balancesDetailType,
+  "nodeShareOfETHBalance": string, // bigint,
   "validator": validatorDetailsType,
   "canStake": boolean,
   // queue
@@ -43,27 +44,27 @@ export type minipoolStatusDetailsType = {
 export type NodeDetailsType = {
   "address": string,
   "fee": number,
-  "depositBalance": number,
+  "depositBalance": string, // bigint,
   "refundBalance": number,
   "depositAssigned": boolean
 }
 export type UserDetailsType = {
-  "depositBalance": number,
+  "depositBalance": string, // bigint,
   "depositAssigned": boolean,
   "depositAssignedTime": string
 }
 export type balancesDetailType = {
-  "eth": number,
-  "reth": number,
-  "rpl": number,
-  "fixedSupplyRpl": number
+  "eth": string, // bigint,
+  "reth": string, // bigint,
+  "rpl": string, // bigint,
+  "fixedSupplyRpl": bigint
 }
 export type validatorDetailsType = {
     "exists": boolean,
     "active": boolean,
     "index": number,
-    "balance": number,
-    "nodeBalance": number
+    "balance": string, // bigint,
+    "nodeBalance": bigint
 }
 
 // https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/node.go
@@ -77,22 +78,22 @@ export type nodeStatusType = {
   "trusted": boolean,
   "timezoneLocation": string,
   "accountBalances": {
-    "eth": number
-    "reth": number,
-    "rpl": number,
-    "fixedSupplyRpl": number
+    "eth": bigint
+    "reth": string, // bigint,
+    "rpl": string, // bigint,
+    "fixedSupplyRpl": bigint
   },
   "withdrawalBalances": {
-    "eth": number
-    "reth": number,
-    "rpl": number,
-    "fixedSupplyRpl": number
+    "eth": bigint
+    "reth": string, // bigint,
+    "rpl": string, // bigint,
+    "fixedSupplyRpl": bigint
   },
-  "rplStake": number,
-  "effectiveRplStake": number,
-  "minimumRplStake": number,
-  "maximumRplStake": number,
-  "collateralRatio": number,
+  "rplStake": string, // bigint,
+  "effectiveRplStake": string, // bigint,
+  "minimumRplStake": string, // bigint,
+  "maximumRplStake": string, // bigint,
+  "collateralRatio": string, // bigint,
   "votingDelegate": string,
   "minipoolLimit": number,
   "minipoolCounts": {
@@ -115,7 +116,7 @@ export type nodeStatusType = {
     "isInOptOutCooldown": boolean,
     "optOutEpoch": number
   },
-  "feeDistributorBalance": number,
+  "feeDistributorBalance": string, // bigint,
   "penalizedMinipools": [string],
   "snapshotResponse": {
     "error": string,
@@ -157,12 +158,12 @@ export type walletStatusType = {
 export type rplPriceDataType = {
   "status": string,
   "error": string,
-  "rplPrice": bigint,
+  "rplPrice": string, // bigint,
   "rplPriceBlock": number
-  "minPer8EthMinipoolRplStake": bigint,
-  "maxPer8EthMinipoolRplStake": bigint,
-  "minPer16EthMinipoolRplStake": bigint,
-  "maxPer16EthMinipoolRplStake": bigint
+  "minPer8EthMinipoolRplStake": string, // bigint,
+  "maxPer8EthMinipoolRplStake": string, // bigint,
+  "minPer16EthMinipoolRplStake": string, // bigint,
+  "maxPer16EthMinipoolRplStake": string
 }
 
 // https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/network.go#L9

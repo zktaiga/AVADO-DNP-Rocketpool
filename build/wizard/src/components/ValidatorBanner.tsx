@@ -62,7 +62,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
                 // TODO: Propose to use other client instead (if installed)? Toggle env is easy to implement 
             } else {
                 const tokenPath = (consensusClient === "teku") ? `/data/data-${network}/validator/key-manager/validator-api-bearer` : `/usr/share/nginx/wizard/auth-token.txt`;
-                const keyManagerAPIUrl = (consensusClient === "teku") ? "https://teku.my.ava.do:5052" : "http://eth2validator" + (network === "prater" ? "-prater" : "") + ".my.ava.do:7500"
+                const keyManagerAPIUrl = (consensusClient === "teku") ? "https://teku" + (network === "prater" ? "-prater" : "") + ".my.ava.do:5052" : "http://eth2validator" + (network === "prater" ? "-prater" : "") + ".my.ava.do:7500"
 
                 dappManagerHelper.getFileContentFromContainer(tokenPath, validatorPackage).then(
                     (apiToken) => {

@@ -23,7 +23,6 @@ import { KeyManagerHelper } from "./KeyManagerHelper";
 export const packageName = "rocketpool.avado.dnp.dappnode.eth";
 
 const autobahn = require('autobahn-browser')
-// const JSONbig = require('json-bigint');
 
 const Comp = () => {
     const [network, setNetwork] = React.useState<string>();
@@ -107,9 +106,13 @@ const Comp = () => {
     const rpdDaemon = async (command: string, callback: (data: any) => void, error?: (error: any) => void) => {
         await axios.post(`${config.api.HTTP}/rpd`, { command: command }, { timeout: 5 * 60 * 1000 }).then((res) => {
             // put quotes about bigNumbers to avoid parsing issues
-            var json = res.data.replace(/([\[:])?(\d{9,})([,\}\]])/g, "$1\"$2\"$3");
+            var json = res.data.replace(/([\[:\s])(\d{9,})([,\}\]\s])/g, "$1\"$2\"$3");
             console.log(`rocketpoold api ${command}: ` + json);
-            const data = JSON.parse(res.data);
+
+            // TODO: https://stackoverflow.com/questions/69644298/how-to-make-json-parse-to-treat-all-the-numbers-as-bigint
+            const isBigNumber = (num: string | number) => !Number.isSafeInteger(+num)
+
+            const data = JSON.parse(json);
             callback(data);
         }).catch(e => { if (error) error(e) })
     }

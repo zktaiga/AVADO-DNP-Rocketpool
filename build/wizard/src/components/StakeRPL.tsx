@@ -25,14 +25,14 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
     const [txHash, setTxHash] = React.useState();
     const [waitingForTx, setWaitingForTx] = React.useState(false);
 
-    const rplBalanceInWallet = new BN(nodeStatus.accountBalances.rpl.toString());
-    const rplMin = (new BN(rplPriceData.minPer16EthMinipoolRplStake.toString()));
-    const stakedRplBalance = new BN(nodeStatus.rplStake.toString());
+    const rplBalanceInWallet = BigInt(nodeStatus.accountBalances.rpl)
+    const rplMin = BigInt(rplPriceData.minPer16EthMinipoolRplStake)
+    const stakedRplBalance = BigInt(nodeStatus.rplStake)
+    const targetCountBN: bigint = BigInt(targetCount)
 
     const count = () => nodeStatus.minipoolCounts.total
 
     React.useEffect(() => {
-        const targetCountBN = new BN(targetCount.toString());
 
         setRplStakeButtonDisabled(true); //set default
 
@@ -42,16 +42,16 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
         if (nodeStatus && rplPriceData && rplAllowanceOK) {
             // first deposit only allowed if bigger than minium.
             // If there is a minipool already, more deposits are allowed.
-            if (count() === 0 && rplBalanceInWallet.lt(rplMin)) {
+            if (count() === 0 && rplBalanceInWallet < rplMin) {
                 setFeedback(`Not enough RPL in your wallet (${utils.displayAsETH(rplBalanceInWallet, 4)} RPL). Must be more than ${utils.displayAsETH(rplPriceData.minPer16EthMinipoolRplStake, 4)} RPL before you can stake`);
             } else {
-                console.log("Staked RPL", stakedRplBalance.toString(), "count: ", count(), "targetCount: ", rplMin.mul(targetCountBN).toString())
-                if (rplBalanceInWallet.gt(new BN(0))) {
+                console.log("Staked RPL", stakedRplBalance.toString(), "count: ", count(), "targetCount: ", rplMin * targetCountBN)
+                if (rplBalanceInWallet > 0n) {
                     console.log(`node can-stake-rpl ${rplBalanceInWallet.toString()}`);
                     rpdDaemon(`node can-stake-rpl ${rplBalanceInWallet.toString()}`, (data: any) => {
                         //{"status":"error","error":"Error getting transaction gas info: could not estimate gas limit: Could not estimate gas needed: execution reverted: Minipool count after deposit exceeds limit based on node RPL stake","canDeposit":false,"insufficientBalance":false,"insufficientRplStake":false,"invalidAmount":false,"unbondedMinipoolsAtMax":false,"depositDisabled":false,"inConsensus":false,"minipoolAddress":"0x0000000000000000000000000000000000000000","gasInfo":{"estGasLimit":0,"safeGasLimit":0}}
                         if (data.status === "error") {
-                            if (rplBalanceInWallet.gt(new BN(0))) {
+                            if (rplBalanceInWallet > 0n) {
                                 setFeedback(data.error);
                             }
                         } else {
@@ -108,14 +108,14 @@ const StakeRPL = ({ utils, nodeStatus, rplPriceData, rplAllowanceOK, updateNodeS
     return (
         <div className="">
             <h4 className="title is-4 has-text-white">2. Stake RPL</h4>
-            {stakedRplBalance && rplPriceData && nodeStatus && (
+            {stakedRplBalance>0 && rplPriceData && nodeStatus && (
 
-                (stakedRplBalance.gte(rplMin.mul(new BN(targetCount.toString())))) ? (
+                (stakedRplBalance >= (rplMin * targetCountBN)) ? (
                     <p>You have already staked {utils.displayAsETH(stakedRplBalance, 2)} RPL <span className="tag is-success"><span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span></p>
                 ) : (
                     <p>The minimum stake is currently {Math.ceil(utils.displayAsETH(rplPriceData.minPer16EthMinipoolRplStake))} RPL per minipool<br />
                         You have already staked {stakedRplBalance && (<>{utils.displayAsETH(stakedRplBalance, 2)}</>)} RPL for {count()} minipools.
-                        For {targetCount} minipools, you need {Math.ceil(utils.displayAsETH(rplMin.mul(new BN(targetCount.toString())).toString()))} RPL</p>
+                        For {targetCount} minipools, you need {Math.ceil(utils.displayAsETH(rplMin * targetCountBN))} RPL</p>
                 )
             )
             }
