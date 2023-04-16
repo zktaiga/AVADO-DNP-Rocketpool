@@ -84,7 +84,7 @@ const JoinSmoothingPool = ({ utils, nodeStatus, updateNodeStatus, rpdDaemon }: P
     }
     return (
         <div>
-            <h2 className="title is-3 has-text-white">Withdrawal address</h2>
+            <h2 className="title is-3 has-text-white">Join Smoothing pool</h2>
             <>
                 <p>Next step is joining the "Smoothing Pool".
                 </p>

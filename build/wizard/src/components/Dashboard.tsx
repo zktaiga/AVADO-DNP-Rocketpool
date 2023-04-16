@@ -106,7 +106,7 @@ const Comp = () => {
     const rpdDaemon = async (command: string, callback: (data: any) => void, error?: (error: any) => void) => {
         await axios.post(`${config.api.HTTP}/rpd`, { command: command }, { timeout: 5 * 60 * 1000 }).then((res) => {
             // put quotes about bigNumbers to avoid parsing issues
-            var json = res.data.replace(/([\[:])?(\d{9,})([,\}\]])/g, "$1\"$2\"$3");
+            var json = res.data.replace(/([\[:\s])(\d{9,})([,\}\]\s])/g, "$1\"$2\"$3");
             console.log(`rocketpoold api ${command}: ` + json);
 
             // TODO: https://stackoverflow.com/questions/69644298/how-to-make-json-parse-to-treat-all-the-numbers-as-bigint
