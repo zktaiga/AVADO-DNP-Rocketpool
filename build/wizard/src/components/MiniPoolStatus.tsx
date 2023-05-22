@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
-import { minipoolStatusType } from "./Types";
+import { MinipoolDetailsType, minipoolStatusType } from "./Types";
 import UpgradeDelegate from "./UpgradeDelegate";
+import ExitMinipool from "./ExitMinipool";
 
 interface Props {
     utils: any,
@@ -12,22 +13,29 @@ interface Props {
 
 const MiniPoolStatus = ({ utils, minipoolStatus, updateMiniPoolStatus, rpdDaemon }: Props) => {
 
-    type minipoolStepsType = "Initializing" | "Prelaunch" | "Minipool active"
+    type minipoolStepsType = "Initializing" | "Prelaunch" | "Minipool active" | "Exited" | "Closed"
     const miniPoolSteps: minipoolStepsType[] = [
         "Initializing",
         "Prelaunch",
         "Minipool active",
-        // "Exited"
+        "Exited",
+        "Closed"
     ];
 
-    const isHollow = (step: minipoolStepsType, active: boolean) => {
+    const isActive = (step: minipoolStepsType, minipool: MinipoolDetailsType) => {
+        console.log(step, minipool.status.status, minipool.validator.active, minipool.finalised)
         if (step === "Minipool active")
-            return !active;
+            return minipool.validator.exists && minipool.validator.active
+        if (step === "Exited")
+            return minipool.validator.exists && !minipool.validator.active;
+        if (step === "Closed")
+            return minipool.finalised
         return false;
 
     }
     const miniPoolStepsComment = (step: minipoolStepsType) => {
         if (step === "Prelaunch") return "(~12 hours)";
+        if (step === "Exited") return "wait for withdrawal queue";
         else return "";
     };
 
@@ -60,8 +68,8 @@ const MiniPoolStatus = ({ utils, minipoolStatus, updateMiniPoolStatus, rpdDaemon
                                     <div className="column">
                                         <ul className="steps has-content-centered">
                                             {miniPoolSteps.map((element) =>
-                                                <li className={"steps-segment" + (element === minipool.status.status ? " is-active" : "")} key={element}>
-                                                    <span className={"steps-marker" + (element === minipool.status.status && isHollow(element, minipool.validator.active) ? "" : "")}></span>
+                                                <li className={"steps-segment" + (isActive(element, minipool) ? " is-active" : "")} key={element}>
+                                                    <span className={"steps-marker" + (element === minipool.status.status && isActive(element, minipool) ? " is-hollow" : "")}></span>
                                                     <div className="steps-content">
                                                         <p className="is-size-4 has-text-white">{element}</p>
                                                         <div className="extra-data has-text-white">{miniPoolStepsComment(element)}</div>
@@ -92,7 +100,6 @@ const MiniPoolStatus = ({ utils, minipoolStatus, updateMiniPoolStatus, rpdDaemon
                                     <tr><td><b>Validator active</b></td><td>{minipool.validator.active ? "yes" : "no"}</td></tr>
                                     <tr><td><b>Validator balance</b></td><td>{utils.displayAsETH(minipool.validator.balance)}</td></tr>
                                     <tr><td><b>Expected rewards</b></td><td>{utils.displayAsETH(minipool.validator.nodeBalance)}</td></tr>
-
                                 </tbody>
                             </table>
                             <br />
@@ -114,6 +121,7 @@ const MiniPoolStatus = ({ utils, minipoolStatus, updateMiniPoolStatus, rpdDaemon
                                         </td>
                                     </tr>
                                     {/* <tr><td><b>Effective delegate</b></td><td>{utils.etherscanAddressUrl(minipool.effectiveDelegate)}</td></tr> */}
+                                    <tr><td><b></b></td><td><ExitMinipool minipool={minipool} rpdDaemon={rpdDaemon} /></td></tr>
                                 </tbody>
                             </table>
                             <p>{utils.beaconchainUrl(minipool.validatorPubkey, "More validator info on the Ethereum 2.0 Beacon Chain Explorer")}</p>
