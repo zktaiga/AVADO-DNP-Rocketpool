@@ -66,7 +66,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
 
                 dappManagerHelper.getFileContentFromContainer(tokenPath, validatorPackage).then(
                     (apiToken) => {
-                        // console.log(apiToken)
+                        console.log(apiToken)
                         if (apiToken) {
                             const keyManagerAPI = new RestApi(keyManagerAPIUrl, apiToken)
                             const keyManagerHelper = new KeyManagerHelper(keyManagerAPI, dappManagerHelper, validatorPackage);
