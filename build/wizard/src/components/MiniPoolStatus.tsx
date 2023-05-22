@@ -1,15 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import { minipoolStatusType } from "./Types";
+import UpgradeDelegate from "./UpgradeDelegate";
 
 interface Props {
     utils: any,
-    minipoolStatus: minipoolStatusType
+    minipoolStatus: minipoolStatusType,
+    updateMiniPoolStatus: any
+    rpdDaemon: any
 }
 
-const MiniPoolStatus = ({ utils, minipoolStatus } : Props ) => {
+const MiniPoolStatus = ({ utils, minipoolStatus, updateMiniPoolStatus, rpdDaemon }: Props) => {
 
-    type minipoolStepsType = "Initializing" |  "Prelaunch" | "Minipool active"
+    type minipoolStepsType = "Initializing" | "Prelaunch" | "Minipool active"
     const miniPoolSteps: minipoolStepsType[] = [
         "Initializing",
         "Prelaunch",
@@ -89,14 +92,28 @@ const MiniPoolStatus = ({ utils, minipoolStatus } : Props ) => {
                                     <tr><td><b>Validator active</b></td><td>{minipool.validator.active ? "yes" : "no"}</td></tr>
                                     <tr><td><b>Validator balance</b></td><td>{utils.displayAsETH(minipool.validator.balance)}</td></tr>
                                     <tr><td><b>Expected rewards</b></td><td>{utils.displayAsETH(minipool.validator.nodeBalance)}</td></tr>
+
                                 </tbody>
                             </table>
                             <br />
                             <table className="table">
                                 <tbody>
-                                    <tr><td><b>Use latest delegate</b></td><td>{minipool.useLatestDelegate ? "yes" : "no"}</td></tr>
-                                    <tr><td><b>Delegate address</b></td><td>{utils.etherscanAddressUrl(minipool.delegate)}</td></tr>
-                                    <tr><td><b>Effective delegate</b></td><td>{utils.etherscanAddressUrl(minipool.effectiveDelegate)}</td></tr>
+                                    {/* <tr><td><b>Use latest delegate</b></td><td>{minipool.useLatestDelegate ? "yes" : "no"}</td></tr> */}
+                                    <tr>
+                                        <td><b>Delegate address</b></td>
+                                        <td>
+                                            {utils.etherscanAddressUrl(minipool.delegate)}
+                                            <UpgradeDelegate
+                                                minipool={minipool}
+                                                minipoolStatus={minipoolStatus}
+                                                updateMiniPoolStatus={updateMiniPoolStatus}
+                                                utils={utils}
+
+                                                rpdDaemon={rpdDaemon}
+                                            />
+                                        </td>
+                                    </tr>
+                                    {/* <tr><td><b>Effective delegate</b></td><td>{utils.etherscanAddressUrl(minipool.effectiveDelegate)}</td></tr> */}
                                 </tbody>
                             </table>
                             <p>{utils.beaconchainUrl(minipool.validatorPubkey, "More validator info on the Ethereum 2.0 Beacon Chain Explorer")}</p>

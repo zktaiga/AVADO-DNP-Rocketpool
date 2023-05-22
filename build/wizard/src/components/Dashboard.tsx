@@ -192,7 +192,7 @@ const Comp = () => {
                                     </div>
                                 </div>
                                 <br />
-                                <MiniPoolStatus utils={utils} minipoolStatus={minipoolStatus} />
+                                <MiniPoolStatus utils={utils} minipoolStatus={minipoolStatus} updateMiniPoolStatus={updateMiniPoolStatus} rpdDaemon={rpdDaemon} />
                             </div>
                         )}
 
