@@ -1,12 +1,7 @@
 import React from "react";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import Spinner from "./Spinner";
-import web3 from "web3";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import DownloadBackup from "./DownloadBackup";
-import { rplPriceDataType, nodeStatusType, nodeFeeType, minipoolStatusType, MinipoolDetailsType } from "./Types"
+import { MinipoolDetailsType } from "./Types"
 
 interface Props {
     minipool: MinipoolDetailsType,
@@ -34,12 +29,12 @@ const ExitMinipool = ({ minipool, rpdDaemon }: Props) => {
     }
 
     const triggerExit = () => {
-
         rpdDaemon(`minipool exit ${minipool.address} `, (data: any) => {
             if (data.status === "error") {
                 setFeedback(data.error);
-            }
-            alert("Exit initiated.\nNote that it will take a while before the exit is complete.")
+                alert(data.error)
+            } else
+                alert("Exit initiated.\nNote that it will take a while before the exit is complete.")
         })
     }
 
@@ -47,6 +42,7 @@ const ExitMinipool = ({ minipool, rpdDaemon }: Props) => {
         return <></>
 
     return <>
+        <br />
         <div className="field">
             <button className="button" onClick={confirmExit}>Initiate validator exit</button>
         </div>
