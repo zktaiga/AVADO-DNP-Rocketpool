@@ -31,6 +31,7 @@ const StakeRPL = ({ minipoolSize, utils, nodeStatus, rplPriceData, rplAllowanceO
     const rplBalanceInWallet = BigInt(nodeStatus.accountBalances.rpl)
     const rplMin = BigInt(minMinipoolRplStake)
     const stakedRplBalance = BigInt(nodeStatus.rplStake)
+    const minimumRplStake = BigInt(nodeStatus.minimumRplStake)
     const targetCountBN: bigint = BigInt(targetCount)
 
 
@@ -49,7 +50,6 @@ const StakeRPL = ({ minipoolSize, utils, nodeStatus, rplPriceData, rplAllowanceO
             if (count() === 0 && rplBalanceInWallet < rplMin) {
                 setFeedback(`Not enough RPL in your wallet (${utils.displayAsETH(rplBalanceInWallet, 4)} RPL). Must be more than ${utils.displayAsETH(minMinipoolRplStake, 4)} RPL before you can stake`);
             } else {
-                console.log("Staked RPL", stakedRplBalance.toString(), "count: ", count(), "targetCount: ", rplMin * targetCountBN)
                 if (rplBalanceInWallet > 0n) {
                     console.log(`node can-stake-rpl ${rplBalanceInWallet.toString()}`);
                     rpdDaemon(`node can-stake-rpl ${rplBalanceInWallet.toString()}`, (data: any) => {
@@ -114,19 +114,19 @@ const StakeRPL = ({ minipoolSize, utils, nodeStatus, rplPriceData, rplAllowanceO
             <h4 className="title is-4 has-text-white">2. Stake RPL</h4>
             {stakedRplBalance > 0 && rplPriceData && nodeStatus && (
 
-                (stakedRplBalance >= (rplMin * targetCountBN)) ? (
+                (stakedRplBalance >= (minimumRplStake + rplMin)) ? (
                     <p>You have already staked {utils.displayAsETH(stakedRplBalance, 2)} RPL <span className="tag is-success"><span><FontAwesomeIcon className="icon" icon={faCheck} /></span></span></p>
                 ) : (
-                    <p>The minimum stake is currently {Math.ceil(utils.displayAsETH(minMinipoolRplStake))} RPL per minipool<br />
-                        You have already staked {stakedRplBalance && (<>{utils.displayAsETH(stakedRplBalance, 2)}</>)} RPL for {count()} minipools.
-                        For {targetCount} minipools, you need {Math.ceil(utils.displayAsETH(rplMin * targetCountBN))} RPL</p>
+                    <p>The minimum stake is currently {Math.ceil(utils.displayAsETH(minMinipoolRplStake))} RPL per {minipoolSize} ETH minipool<br />
+                        You have already staked {utils.displayAsETH(stakedRplBalance)} RPL for {count()} minipools.<br />
+                        To add an extra {minipoolSize} ETH minipool, <b>you need to stake an extra {Math.ceil(utils.displayAsETH(minimumRplStake + rplMin - stakedRplBalance))} RPL</b> to get a total stake of {Math.ceil(utils.displayAsETH(minimumRplStake + rplMin))} RPL.</p>
                 )
             )
             }
 
             {/* {stakedRplBalance && targetCount>1 && ( */}
             <>
-                <p>Stake all RPL in my hot wallet.</p>
+                <br />
                 <div className="field">
                     <button
                         className="button"

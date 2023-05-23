@@ -37,9 +37,9 @@ const DepositETH = ({ minipoolSize, utils, nodeStatus, nodeFee, rplPriceData, rp
 
     const getNodeFeeWithSlippage = (nodeFee: number) => nodeFee * 1.0; // no more slippage
 
-    React.useEffect(() => {
-        const rplMin = BigInt(minMinipoolRplStake) * BigInt(targetCount);
+    const rplMin = BigInt(minMinipoolRplStake) + BigInt(nodeStatus.minimumRplStake);
 
+    React.useEffect(() => {
         if (waitingForTx)
             return;
 
@@ -69,7 +69,7 @@ const DepositETH = ({ minipoolSize, utils, nodeStatus, nodeFee, rplPriceData, rp
             setSelectedNodeFee(getNodeFeeWithSlippage(nodeFee.nodeFee));
         }
 
-    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, targetCount, waitingForTx]);
+    }, [nodeStatus, rplPriceData, rplAllowanceOK, nodeFee, waitingForTx]);
 
 
     React.useEffect(() => {
@@ -80,6 +80,7 @@ const DepositETH = ({ minipoolSize, utils, nodeStatus, nodeFee, rplPriceData, rp
                     console.log(receipt);
                     setWaitingForTx(false);
                     updateNodeStatus();
+                    updateMiniPoolStatus();
                 });
             });
         }
