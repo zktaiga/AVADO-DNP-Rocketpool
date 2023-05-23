@@ -9,27 +9,43 @@ import DownloadBackup from "./DownloadBackup";
 import { rplPriceDataType, nodeStatusType, nodeFeeType, minipoolStatusType, MinipoolDetailsType } from "./Types"
 
 interface Props {
-    minipool: MinipoolDetailsType,
-    updateMiniPoolStatus: any,
+    nodeStatus: nodeStatusType
+    updateNodeStatus: any,
     utils: any,
     rpdDaemon: any,
 }
 
-const CloseMinipool = ({ minipool, utils, rpdDaemon, updateMiniPoolStatus }: Props) => {
+const WithdrawRpl = ({ nodeStatus, updateNodeStatus, utils, rpdDaemon }: Props) => {
+
+    const [canWithdraw, setCanWithdraw] = React.useState(false);
     const [buttonDisabled, setButtonDisabled] = React.useState(false);
     const [waitingForTx, setWaitingForTx] = React.useState(false);
     const [feedback, setFeedback] = React.useState("");
     const [txHash, setTxHash] = React.useState();
 
+    const rplStake = BigInt(nodeStatus.rplStake);
+    React.useEffect(() => {
+        if (waitingForTx)
+            return;
 
-    const getBalance = () => BigInt(minipool.validator.balance ?? "0");
-    const waitingBeforeCloseIsPossible = () => minipool.validator.exists && !minipool.validator.active && !minipool.finalised && getBalance() > 0n
-    const canClose = () => minipool.status.status === "Dissolved" || (minipool.validator.exists && !minipool.validator.active && !minipool.finalised && getBalance() == 0n)
+        setButtonDisabled(true); //set default
+        if (nodeStatus) {
+            rpdDaemon(`node can-withdraw-rpl ${rplStake}`, (data: any) => {
+                if (data.status === "error") {
+                    setFeedback(data.error);
+                } else {
+                    setFeedback("");
+                    setButtonDisabled(false);
+                    setCanWithdraw(true)
+                }
+            });
+        }
+    }, [nodeStatus, waitingForTx]);
 
-    const closeMinipool = () => {
+    const withdrawRplStake = () => {
         setButtonDisabled(true);
 
-        rpdDaemon(`minipool close ${minipool.address} `, (data: any) => {
+        rpdDaemon(`node withdraw-rpl ${rplStake}`, (data: any) => { //rocketpool api node withdraw-rpl amount
             if (data.status === "error") {
                 setFeedback(data.error);
             }
@@ -46,25 +62,19 @@ const CloseMinipool = ({ minipool, utils, rpdDaemon, updateMiniPoolStatus }: Pro
                 w3.eth.getTransactionReceipt(txHash).then((receipt) => {
                     console.log(receipt);
                     setWaitingForTx(false);
-                    updateMiniPoolStatus();
+                    updateNodeStatus();
                 });
             });
         }
     }, [waitingForTx, txHash, utils]);
 
 
-    if (waitingBeforeCloseIsPossible())
-        return <><br />Waiting for final validator withdrawal, before this minipool can be closed</>
-
-    if (!canClose())
+    if (buttonDisabled)
         return <></>
 
     return <>
-        <br />
-        <p>Minipool can be closed:</p>
-        <br />
         <div className="field">
-            <button className="button" disabled={buttonDisabled} onClick={closeMinipool}>Close minipool {waitingForTx ? <Spinner /> : ""}</button>
+            <button className="button" disabled={buttonDisabled} onClick={withdrawRplStake}>Withdraw {utils.displayAsETH(nodeStatus.rplStake, 2)} RPL {waitingForTx ? <Spinner /> : ""}</button>
         </div>
         {txHash && <p>{utils.etherscanTransactionUrl(txHash, "Transaction details on Etherscan")}</p>}
         {feedback && <p className="help is-danger">{feedback}</p>}
@@ -72,4 +82,4 @@ const CloseMinipool = ({ minipool, utils, rpdDaemon, updateMiniPoolStatus }: Pro
 }
 
 
-export default CloseMinipool
+export default WithdrawRpl

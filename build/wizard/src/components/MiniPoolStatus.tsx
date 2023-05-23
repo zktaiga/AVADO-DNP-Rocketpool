@@ -24,15 +24,22 @@ const MiniPoolStatus = ({ utils, minipoolStatus, updateMiniPoolStatus, rpdDaemon
     ];
 
     const isActive = (step: minipoolStepsType, minipool: MinipoolDetailsType) => {
+        if (step === "Initializing" || step === "Prelaunch")
+            return step === minipool.status.status
+
         if (step === "Minipool active")
-            return minipool.validator.exists && minipool.validator.active
+            return !minipool.finalised && minipool.validator.exists && minipool.validator.active
         if (step === "Exited")
-            return minipool.validator.exists && !minipool.validator.active;
+            return !minipool.finalised && minipool.validator.exists && !minipool.validator.active;
         if (step === "Closed")
             return minipool.finalised
         return false;
-
     }
+
+    const isHollow = (step: minipoolStepsType, minipool: MinipoolDetailsType) => {
+        return false
+    }
+
     const miniPoolStepsComment = (step: minipoolStepsType) => {
         if (step === "Prelaunch") return "(~12 hours)";
         if (step === "Exited") return "wait for withdrawal queue";
@@ -69,7 +76,7 @@ const MiniPoolStatus = ({ utils, minipoolStatus, updateMiniPoolStatus, rpdDaemon
                                         <ul className="steps has-content-centered">
                                             {miniPoolSteps.map((element) =>
                                                 <li className={"steps-segment" + (isActive(element, minipool) ? " is-active" : "")} key={element}>
-                                                    <span className={"steps-marker" + (element === minipool.status.status && isActive(element, minipool) ? " is-hollow" : "")}></span>
+                                                    <span className={"steps-marker" + (isHollow(element, minipool) ? " is-hollow" : "")}></span>
                                                     <div className="steps-content">
                                                         <p className="is-size-4 has-text-white">{element}</p>
                                                         <div className="extra-data has-text-white">{miniPoolStepsComment(element)}</div>

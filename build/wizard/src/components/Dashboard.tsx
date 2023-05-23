@@ -185,7 +185,7 @@ const Comp = () => {
                             <div>
                                 <div className="columns">
                                     <div className="column is-half">
-                                        <NodeStatus utils={utils} nodeStatus={nodeStatus} nodeSyncStatus={nodeSyncStatus} />
+                                        <NodeStatus utils={utils} nodeStatus={nodeStatus} nodeSyncStatus={nodeSyncStatus} updateNodeStatus={updateNodeStatus} rpdDaemon={rpdDaemon} />
                                     </div>
                                     <div className="column is-half">
                                         <WalletStatus utils={utils} nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} />
