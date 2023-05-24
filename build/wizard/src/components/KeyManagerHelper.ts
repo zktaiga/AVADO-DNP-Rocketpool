@@ -34,13 +34,13 @@ export class KeyManagerHelper {
             });
     }
 
-    public setFeeRecipients(minipoolSatus: minipoolStatusType, feeRecipientAddress: string, refresh?: boolean ) {
+    public setFeeRecipients(minipoolSatus: minipoolStatusType, feeRecipientAddress: string, refresh?: boolean) {
         if (!minipoolSatus.minipools)
             return;
-        
-        const pubKeys = minipoolSatus.minipools.map(minipool => "0x"+ minipool.validatorPubkey)
+
+        const pubKeys = minipoolSatus.minipools.map(minipool => "0x" + minipool.validatorPubkey)
         console.log(`Setting feerecipient for ${pubKeys} to ${feeRecipientAddress}`)
-        
+
         pubKeys.forEach(pubKey => this.setFeeRecipient(pubKey, feeRecipientAddress))
 
         if (this.validatorPackage.includes("eth2validator"))
@@ -69,7 +69,8 @@ export class KeyManagerHelper {
 
         // Create content
         const proposer_configs = Object.fromEntries(new Map(pubKeys.map(key => {
-            return ["0x"+key, {
+            console.log("Validator pubkey:", key)
+            return [key, {
                 "fee_recipient": feeRecipientAddress,
                 "builder": {
                     "enabled": mevBoost,

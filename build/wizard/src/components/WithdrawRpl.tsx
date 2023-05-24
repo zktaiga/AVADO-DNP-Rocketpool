@@ -63,6 +63,7 @@ const WithdrawRpl = ({ nodeStatus, updateNodeStatus, utils, rpdDaemon }: Props) 
                     console.log(receipt);
                     setWaitingForTx(false);
                     updateNodeStatus();
+                    setCanWithdraw(false)
                 });
             });
         }

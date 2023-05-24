@@ -18,7 +18,7 @@ const NodeStatus = ({ utils, nodeStatus, nodeSyncStatus, updateNodeStatus, rpdDa
     return (
         <div>
             <h2 className="title is-3 has-text-white">Node status</h2>
-            {nodeStatus && (
+            {nodeStatus && nodeSyncStatus && (
                 <div>
                     <table className="table">
                         <tbody>

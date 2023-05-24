@@ -74,7 +74,7 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, upd
                             <button className="button" onClick={() => { addAnother(8) }}>Stake more RPL</button>
                             <br />
                             {supportedMinipoolSizes.map(miniPoolSize => <>
-                                <button className="button" onClick={() => { addAnother(miniPoolSize) }}>Add another {miniPoolSize} ETH minipool / stake more RPL</button>
+                                <button key={miniPoolSize.toString()} className="button" onClick={() => { addAnother(miniPoolSize) }}>Add another {miniPoolSize} ETH minipool / stake more RPL</button>
                                 <br />
                             </>)
                             }
