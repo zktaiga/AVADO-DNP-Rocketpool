@@ -197,7 +197,7 @@ const Comp = () => {
                         )}
 
                         {navBar === "Rewards" && (
-                            <RewardsPage utils={utils} rpdDaemon={rpdDaemon} />
+                            <RewardsPage utils={utils} rpdDaemon={rpdDaemon} updateNodeStatus={updateNodeStatus} />
                         )}
                         {navBar === "Admin" && (
                             <AdminPage utils={utils} wampSession={wampSession} rpdDaemon={rpdDaemon} />

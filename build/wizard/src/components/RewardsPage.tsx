@@ -17,11 +17,12 @@ import ClaimRewardsButtons from "./ClaimRewardsButtons";
 
 interface Props {
     utils: any,
+    updateNodeStatus: any,
     rpdDaemon: any,
 }
 
 // https://github.com/rocket-pool/smartnode/blob/master/rocketpool-cli/node/rewards.go
-const RewardsPage = ({ utils, rpdDaemon }: Props) => {
+const RewardsPage = ({ utils, rpdDaemon, updateNodeStatus }: Props) => {
 
     // https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/node.go#L260
     type nodeRewardsType = {
@@ -88,6 +89,7 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
         setUnclaimedIntervals([])
         setClaimRPl(0n)
         updateRewardsInformation()
+        updateNodeStatus()
     }
 
     if (!nodeRewards || !rewardsInfo) {
@@ -143,7 +145,7 @@ const RewardsPage = ({ utils, rpdDaemon }: Props) => {
                     <li>ETH: <b>{nodeRewards.unclaimedEthRewards.toFixed(4)} ETH</b></li>
                     <li>RPL: <b>{nodeRewards.unclaimedRplRewards.toFixed(4)} RPL</b></li>
                 </ul>
-                <ClaimRewardsButtons utils={utils} rpdDaemon={rpdDaemon} unclaimedIntervals={unclaimedIntervals} claimRPl={claimRPl} onRewardsClaimFinished={onRewardsClaimFinished}/>
+                <ClaimRewardsButtons utils={utils} rpdDaemon={rpdDaemon} unclaimedIntervals={unclaimedIntervals} claimRPl={claimRPl} onRewardsClaimFinished={onRewardsClaimFinished} />
             </div>
         </div >
     );
