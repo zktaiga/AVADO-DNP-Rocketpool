@@ -221,7 +221,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
                         <section className="hero is-danger">
                             <div className="hero-body is-small">
                                 {missingValidators.map(validator => {
-                                    return <p className="has-text-centered">Minipool {validator} is not imported in your Beacon Chain validator.</p>
+                                    return <p key={validator} className="has-text-centered">Minipool {validator} is not imported in your Beacon Chain validator.</p>
                                 })}
                                 <div className="has-text-centered">
                                     <div className="content">

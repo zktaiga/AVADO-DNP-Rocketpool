@@ -69,7 +69,7 @@ const WithdrawRpl = ({ nodeStatus, updateNodeStatus, utils, rpdDaemon }: Props) 
     }, [waitingForTx, txHash, utils]);
 
 
-    if (buttonDisabled)
+    if (!canWithdraw)
         return <></>
 
     return <>
