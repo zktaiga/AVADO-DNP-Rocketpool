@@ -6,6 +6,11 @@ import StakeRPL from "./StakeRPL";
 import DepositETH from "./DepositETH";
 import DownloadBackup from "./DownloadBackup";
 import { rplPriceDataType, nodeStatusType, nodeFeeType } from "./Types"
+import MiniPoolStatus from "./MiniPoolStatus";
+import CreateMinipoolSteps from "./CreateMinipoolSteps";
+
+export const supportedMinipoolSizes = [8, 16] as const;
+export type minipoolSizeType = typeof supportedMinipoolSizes[number]
 
 interface Props {
     utils: any,
@@ -18,9 +23,9 @@ interface Props {
     setNavBar: any
 }
 
-const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, updateMiniPoolStatus, nodeFee, rpdDaemon, setNavBar } : Props) => {
-    const [rplAllowanceOK, setRplAllowanceOK] = React.useState(false);
+const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, updateMiniPoolStatus, nodeFee, rpdDaemon, setNavBar }: Props) => {
     const [targetCount, setTargetCount] = React.useState(1);
+    const [targetMiniPoolSize, setTargetMiniPoolSize] = React.useState<minipoolSizeType>(8)
 
     const currentMiniPoolCount = () => {
         if (nodeStatus?.minipoolCounts?.total)
@@ -29,8 +34,9 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, upd
             return 0
     }
 
-    const addAnother = () => {
+    const addAnother = (miniPoolSize: minipoolSizeType) => {
         setTargetCount(currentMiniPoolCount() + 1);
+        setTargetMiniPoolSize(miniPoolSize)
     }
 
     return (
@@ -65,37 +71,27 @@ const CreateMinipool = ({ utils, nodeStatus, rplPriceData, updateNodeStatus, upd
                                 </div>
                             </div>
                             <br />
-                            <button className="button" onClick={() => { addAnother() }}>Add another minipool / stake more RPL</button>
+                            <button className="button" onClick={() => { addAnother(8) }}>Stake more RPL</button>
+                            <br />
+                            {supportedMinipoolSizes.map(miniPoolSize => <>
+                                <button key={miniPoolSize.toString()} className="button" onClick={() => { addAnother(miniPoolSize) }}>Add another {miniPoolSize} ETH minipool / stake more RPL</button>
+                                <br />
+                            </>)
+                            }
                         </div>
                     ) : (
-                        <div>
-                            <p>Create a minipool. This involves 3 steps</p>
-                            <br />
-                            <div>
-                                <ApproveRpl utils={utils} rplAllowanceOK={rplAllowanceOK} setRplAllowanceOK={setRplAllowanceOK} rpdDaemon={rpdDaemon} />
-                                <StakeRPL
-                                    targetCount={targetCount}
-                                    utils={utils}
-                                    nodeStatus={nodeStatus}
-                                    rplPriceData={rplPriceData}
-                                    rplAllowanceOK={rplAllowanceOK}
-                                    updateNodeStatus={updateNodeStatus}
-                                    rpdDaemon={rpdDaemon}
-                                />
-                                <DepositETH
-                                    targetCount={targetCount}
-                                    utils={utils}
-                                    nodeStatus={nodeStatus}
-                                    nodeFee={nodeFee}
-                                    rplPriceData={rplPriceData}
-                                    rplAllowanceOK={rplAllowanceOK}
-                                    updateNodeStatus={updateNodeStatus}
-                                    updateMiniPoolStatus={updateMiniPoolStatus}
-                                    rpdDaemon={rpdDaemon}
-                                    setNavBar={setNavBar}
-                                />
-                            </div>
-                        </div>
+                        <CreateMinipoolSteps
+                            minipoolSize={targetMiniPoolSize}
+                            targetCount={targetCount}
+                            utils={utils}
+                            nodeStatus={nodeStatus}
+                            rplPriceData={rplPriceData}
+                            updateNodeStatus={updateNodeStatus}
+                            updateMiniPoolStatus={updateMiniPoolStatus}
+                            nodeFee={nodeFee}
+                            rpdDaemon={rpdDaemon}
+                            setNavBar={setNavBar}
+                        />
                     )}
                 </>
             )}

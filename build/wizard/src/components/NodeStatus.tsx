@@ -3,19 +3,22 @@ import SyncStatusTag from "./SyncStatusTag";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
 import { networkType, consusClientType, minipoolStatusType, nodeStatusType } from "./Types"
+import WithdrawRpl from "./WithdrawRpl";
 
 
 interface Props {
     utils?: any,
     nodeStatus?: nodeStatusType,
-    nodeSyncStatus: any
+    nodeSyncStatus: any,
+    updateNodeStatus: any,
+    rpdDaemon: any,
 }
 
-const NodeStatus = ({ utils, nodeStatus, nodeSyncStatus }: Props) => {
+const NodeStatus = ({ utils, nodeStatus, nodeSyncStatus, updateNodeStatus, rpdDaemon }: Props) => {
     return (
         <div>
             <h2 className="title is-3 has-text-white">Node status</h2>
-            {nodeStatus && (
+            {nodeStatus && nodeSyncStatus && (
                 <div>
                     <table className="table">
                         <tbody>
@@ -41,7 +44,13 @@ const NodeStatus = ({ utils, nodeStatus, nodeSyncStatus }: Props) => {
                                     {utils.rocketscanUrl("/address/" + nodeStatus.withdrawalAddress, <FontAwesomeIcon icon={faRocket} />)}
                                 </td>
                             </tr>
-                            <tr><td><b>RPL Stake</b></td><td>{utils.displayAsETH(nodeStatus.rplStake, 2)} RPL</td></tr>
+                            <tr>
+                                <td><b>RPL Stake</b></td>
+                                <td>
+                                    {utils.displayAsETH(nodeStatus.rplStake, 2)} RPL
+                                    <WithdrawRpl nodeStatus={nodeStatus} updateNodeStatus={updateNodeStatus} utils={utils} rpdDaemon={rpdDaemon} />
+                                </td>
+                            </tr>
                             <tr><td><b>Time zone</b></td><td>{nodeStatus.timezoneLocation}</td></tr>
                             <tr><td><b>Smoothing pool joined</b></td><td>{nodeStatus.feeRecipientInfo.isInSmoothingPool ? "yes" : "no"}</td></tr>
                             <tr><td><b>Fee distributor initialized</b></td><td>{nodeStatus.isFeeDistributorInitialized ? "yes" : "no"}</td></tr>

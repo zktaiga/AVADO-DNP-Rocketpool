@@ -66,7 +66,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
 
                 dappManagerHelper.getFileContentFromContainer(tokenPath, validatorPackage).then(
                     (apiToken) => {
-                        // console.log(apiToken)
+                        console.log(apiToken)
                         if (apiToken) {
                             const keyManagerAPI = new RestApi(keyManagerAPIUrl, apiToken)
                             const keyManagerHelper = new KeyManagerHelper(keyManagerAPI, dappManagerHelper, validatorPackage);
@@ -89,10 +89,11 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
     const ERROR = "-1"
 
     React.useEffect(() => {
-        if (keyManagerHelper && minipoolStatus?.minipools) {
+        const activeMiniPools = minipoolStatus?.minipools?.filter(m => !m.finalised)
+        if (keyManagerHelper && activeMiniPools) {
 
             const setAllValidatorsInfo = async () => {
-                const pubKeys = minipoolStatus.minipools.map(minipool => "0x" + minipool.validatorPubkey)
+                const pubKeys = activeMiniPools.map(minipool => "0x" + minipool.validatorPubkey)
                 const feerecepients: validatorInfoType[] = await Promise.all(
                     pubKeys.map(async key => {
                         return {
@@ -220,7 +221,7 @@ const ValidatorBanner = ({ dappManagerHelper, minipoolStatus, setKeyManagerHelpe
                         <section className="hero is-danger">
                             <div className="hero-body is-small">
                                 {missingValidators.map(validator => {
-                                    return <p className="has-text-centered">Minipool {validator} is not imported in your Beacon Chain validator.</p>
+                                    return <p key={validator} className="has-text-centered">Minipool {validator} is not imported in your Beacon Chain validator.</p>
                                 })}
                                 <div className="has-text-centered">
                                     <div className="content">

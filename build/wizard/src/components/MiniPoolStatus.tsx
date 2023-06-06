@@ -1,30 +1,48 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRocket } from "@fortawesome/free-solid-svg-icons";
-import { minipoolStatusType } from "./Types";
+import { faRocket, faSatelliteDish } from "@fortawesome/free-solid-svg-icons";
+import { MinipoolDetailsType, minipoolStatusType } from "./Types";
+import UpgradeDelegate from "./UpgradeDelegate";
+import ExitMinipool from "./ExitMinipool";
+import CloseMinipool from "./CloseMinipool";
 
 interface Props {
     utils: any,
-    minipoolStatus: minipoolStatusType
+    minipoolStatus: minipoolStatusType,
+    updateMiniPoolStatus: any
+    rpdDaemon: any
 }
 
-const MiniPoolStatus = ({ utils, minipoolStatus } : Props ) => {
+const MiniPoolStatus = ({ utils, minipoolStatus, updateMiniPoolStatus, rpdDaemon }: Props) => {
 
-    type minipoolStepsType = "Initializing" |  "Prelaunch" | "Minipool active"
+    type minipoolStepsType = "Initializing" | "Prelaunch" | "Minipool active" | "Exited" | "Closed"
     const miniPoolSteps: minipoolStepsType[] = [
         "Initializing",
         "Prelaunch",
         "Minipool active",
-        // "Exited"
+        "Exited",
+        "Closed"
     ];
 
-    const isHollow = (step: minipoolStepsType, active: boolean) => {
-        if (step === "Minipool active")
-            return !active;
-        return false;
+    const isActive = (step: minipoolStepsType, minipool: MinipoolDetailsType) => {
+        if (step === "Initializing" || step === "Prelaunch")
+            return step === minipool.status.status
 
+        if (step === "Minipool active")
+            return !minipool.finalised && minipool.validator.exists && minipool.validator.active
+        if (step === "Exited")
+            return !minipool.finalised && minipool.validator.exists && !minipool.validator.active;
+        if (step === "Closed")
+            return minipool.finalised
+        return false;
     }
+
+    const isHollow = (step: minipoolStepsType, minipool: MinipoolDetailsType) => {
+        return false
+    }
+
     const miniPoolStepsComment = (step: minipoolStepsType) => {
         if (step === "Prelaunch") return "(~12 hours)";
+        if (step === "Exited") return "wait for withdrawal queue";
         else return "";
     };
 
@@ -57,8 +75,8 @@ const MiniPoolStatus = ({ utils, minipoolStatus } : Props ) => {
                                     <div className="column">
                                         <ul className="steps has-content-centered">
                                             {miniPoolSteps.map((element) =>
-                                                <li className={"steps-segment" + (element === minipool.status.status ? " is-active" : "")} key={element}>
-                                                    <span className={"steps-marker" + (element === minipool.status.status && isHollow(element, minipool.validator.active) ? "" : "")}></span>
+                                                <li className={"steps-segment" + (isActive(element, minipool) ? " is-active" : "")} key={element}>
+                                                    <span className={"steps-marker" + (isHollow(element, minipool) ? " is-hollow" : "")}></span>
                                                     <div className="steps-content">
                                                         <p className="is-size-4 has-text-white">{element}</p>
                                                         <div className="extra-data has-text-white">{miniPoolStepsComment(element)}</div>
@@ -79,26 +97,46 @@ const MiniPoolStatus = ({ utils, minipoolStatus } : Props ) => {
                                             {utils.rocketscanUrl("/minipool/" + minipool.address, <FontAwesomeIcon icon={faRocket} />)}{" "}
                                         </td>
                                     </tr>
+                                    <tr><td><b>Validator pubkey</b></td><td>{utils.beaconchainUrl(minipool.validatorPubkey, <><>{"0x" + minipool.validatorPubkey.substring(0, 20) + "..." + minipool.validatorPubkey.substring(76)}</> <FontAwesomeIcon icon={faSatelliteDish} /></>)}</td></tr>
                                     <tr><td><b>Status updated</b></td><td>{minipool.status.statusTime}</td></tr>
-                                    <tr><td><b>Node fee</b></td><td>{utils.displayAsPercentage(minipool.node.fee * 100)}</td></tr>
-                                    <tr><td><b>Node deposit</b></td><td>{utils.displayAsETH(minipool.node.depositBalance)} ETH</td></tr>
-                                    <tr><td><b>RP ETH assigned</b></td><td>{minipool.user.depositAssignedTime}</td></tr>
-                                    <tr><td><b>RP deposit</b></td><td>{utils.displayAsETH(minipool.user.depositBalance)} ETH</td></tr>
-                                    <tr><td><b>Validator pubkey</b></td><td>{utils.beaconchainUrl(minipool.validatorPubkey, "0x" + minipool.validatorPubkey.substring(0, 20) + "..." + minipool.validatorPubkey.substring(76))}</td></tr>
-                                    <tr><td><b>Validator index</b></td><td>{minipool.validator.index !== 0 ? utils.beaconchainUrl(minipool.validator.index) : "n/a"}</td></tr>
-                                    <tr><td><b>Validator active</b></td><td>{minipool.validator.active ? "yes" : "no"}</td></tr>
-                                    <tr><td><b>Validator balance</b></td><td>{utils.displayAsETH(minipool.validator.balance)}</td></tr>
-                                    <tr><td><b>Expected rewards</b></td><td>{utils.displayAsETH(minipool.validator.nodeBalance)}</td></tr>
+                                    {!minipool.finalised && (
+                                        <>
+                                            <tr><td><b>Node fee</b></td><td>{utils.displayAsPercentage(minipool.node.fee * 100)}</td></tr>
+                                            <tr><td><b>Node deposit</b></td><td>{utils.displayAsETH(minipool.node.depositBalance)} ETH</td></tr>
+                                            <tr><td><b>RP ETH assigned</b></td><td>{minipool.user.depositAssignedTime}</td></tr>
+                                            <tr><td><b>RP deposit</b></td><td>{utils.displayAsETH(minipool.user.depositBalance)} ETH</td></tr>
+                                            <tr><td><b>Validator index</b></td><td>{minipool.validator.index !== 0 ? utils.beaconchainUrl(minipool.validator.index) : "n/a"}</td></tr>
+                                            <tr><td><b>Validator active</b></td><td>{minipool.validator.active ? "yes" : "no"}</td></tr>
+                                            <tr><td><b>Validator balance</b></td><td>{utils.displayAsETH(minipool.validator.balance)}</td></tr>
+                                            <tr><td><b>Expected rewards</b></td><td>{utils.displayAsETH(minipool.validator.nodeBalance)}</td></tr>
+                                        </>
+                                    )}
                                 </tbody>
                             </table>
                             <br />
-                            <table className="table">
-                                <tbody>
-                                    <tr><td><b>Use latest delegate</b></td><td>{minipool.useLatestDelegate ? "yes" : "no"}</td></tr>
-                                    <tr><td><b>Delegate address</b></td><td>{utils.etherscanAddressUrl(minipool.delegate)}</td></tr>
-                                    <tr><td><b>Effective delegate</b></td><td>{utils.etherscanAddressUrl(minipool.effectiveDelegate)}</td></tr>
-                                </tbody>
-                            </table>
+                            {!minipool.finalised && (
+                                <table className="table">
+                                    <tbody>
+                                        {/* <tr><td><b>Use latest delegate</b></td><td>{minipool.useLatestDelegate ? "yes" : "no"}</td></tr> */}
+                                        <tr>
+                                            <td><b>Delegate address</b></td>
+                                            <td>
+                                                {utils.etherscanAddressUrl(minipool.delegate)}
+                                                <UpgradeDelegate
+                                                    minipool={minipool}
+                                                    minipoolStatus={minipoolStatus}
+                                                    updateMiniPoolStatus={updateMiniPoolStatus}
+                                                    utils={utils}
+                                                    rpdDaemon={rpdDaemon}
+                                                />
+                                                <ExitMinipool minipool={minipool} rpdDaemon={rpdDaemon} />
+                                                <CloseMinipool minipool={minipool} updateMiniPoolStatus={updateMiniPoolStatus} utils={utils} rpdDaemon={rpdDaemon} />
+                                            </td>
+                                        </tr>
+                                        {/* <tr><td><b>Effective delegate</b></td><td>{utils.etherscanAddressUrl(minipool.effectiveDelegate)}</td></tr> */}
+                                    </tbody>
+                                </table>
+                            )}
                             <p>{utils.beaconchainUrl(minipool.validatorPubkey, "More validator info on the Ethereum 2.0 Beacon Chain Explorer")}</p>
                         </div>
                     </div>

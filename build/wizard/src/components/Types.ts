@@ -3,6 +3,7 @@ export type networkType = "prater" | "mainnet"
 export type consusClientType = "teku" | "prysm"
 
 // https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/minipool.go
+// https://github.com/rocket-pool/rocketpool-go/blob/master/types/minipool.go
 export type minipoolStatusType = {
   "status": "success" | "error",
   "error": string,
@@ -34,10 +35,10 @@ export type MinipoolDetailsType = {
   "timeUntilDissolve": number,
   "penalties": number,
   "reduceBondTime": any,
-	"reduceBondCancelled": boolean
+  "reduceBondCancelled": boolean
 }
 export type minipoolStatusDetailsType = {
-  "status": string,
+  "status": "Initialized" | "Prelaunch" | "Staking" | "Withdrawable" | "Dissolved",
   "statusBlock": number,
   "statusTime": string
 }
@@ -60,11 +61,11 @@ export type balancesDetailType = {
   "fixedSupplyRpl": bigint
 }
 export type validatorDetailsType = {
-    "exists": boolean,
-    "active": boolean,
-    "index": number,
-    "balance": string, // bigint,
-    "nodeBalance": bigint
+  "exists": boolean,
+  "active": boolean,
+  "index": number,
+  "balance": string, // bigint,
+  "nodeBalance": bigint
 }
 
 // https://github.com/rocket-pool/smartnode/blob/master/shared/types/api/node.go
